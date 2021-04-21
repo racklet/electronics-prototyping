@@ -289,7 +289,7 @@ Wire Wire Line
 Text Notes 2450 3100 0    50   ~ 0
 External control for starting the regulator\n(and driven load)\n
 $Comp
-L Connector:USB_C_Receptacle_USB2.0 J1
+L LMR14050SDDA_reference-rescue:USB_C_Receptacle_USB2.0-Connector J1
 U 1 1 5E9DA227
 P 10100 3800
 F 0 "J1" H 10207 4667 50  0000 C CNN
@@ -1189,7 +1189,7 @@ Wire Wire Line
 Wire Wire Line
 	5900 5350 6300 5350
 $Comp
-L Connector:USB_C_Receptacle_USB2.0 J10
+L LMR14050SDDA_reference-rescue:USB_C_Receptacle_USB2.0-Connector J10
 U 1 1 5EA7B416
 P 10100 6450
 F 0 "J10" H 10207 7317 50  0000 C CNN
