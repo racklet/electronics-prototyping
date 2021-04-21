@@ -1,6 +1,6 @@
-# base-repo-layout
+# Electronics Prototyping
 
-Template (base) repository file layout for Racklet projects.
+This repository holds the designs for various hardware prototypes.
 
 ## Contributing
 
