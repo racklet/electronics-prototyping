@@ -96,8 +96,6 @@ Wire Wire Line
 Wire Wire Line
 	4950 2550 5300 2550
 Connection ~ 4950 2550
-Wire Wire Line
-	5350 3100 5300 3100
 $Comp
 L Sensor_Current:ACS723xLCTR-10AU U2
 U 1 1 6082C4DA
@@ -226,7 +224,7 @@ Wire Wire Line
 	7000 4500 7000 2900
 Text Label 6400 4500 0    50   ~ 0
 V_adc_v
-Text GLabel 5300 3100 0    50   Input ~ 0
+Text GLabel 4450 3450 0    50   Input ~ 0
 5V1
 Text Notes 5450 3900 0    50   ~ 0
 Voltage measurement
@@ -309,16 +307,14 @@ $EndComp
 $Comp
 L Device:Jumper JP1
 U 1 1 60999573
-P 6850 2800
-F 0 "JP1" H 6850 3064 50  0000 C CNN
-F 1 "Ammeter" H 6850 2973 50  0000 C CNN
-F 2 "Connector_PinHeader_2.54mm:PinHeader_1x02_P2.54mm_Vertical" H 6850 2800 50  0001 C CNN
-F 3 "~" H 6850 2800 50  0001 C CNN
-	1    6850 2800
+P 4800 3450
+F 0 "JP1" H 4800 3714 50  0000 C CNN
+F 1 "Ammeter" H 4800 3623 50  0000 C CNN
+F 2 "Connector_PinHeader_2.54mm:PinHeader_1x02_P2.54mm_Vertical" H 4800 3450 50  0001 C CNN
+F 3 "~" H 4800 3450 50  0001 C CNN
+	1    4800 3450
 	1    0    0    -1  
 $EndComp
-Wire Wire Line
-	6150 2800 6550 2800
 $Comp
 L Mechanical:MountingHole H3
 U 1 1 6099D34A
@@ -363,40 +359,20 @@ F 3 "~" H 2400 4950 50  0001 C CNN
 	1    2400 4950
 	1    0    0    -1  
 $EndComp
-Wire Wire Line
-	7150 2800 7700 2800
-$Comp
-L Connector:TestPoint TP1
-U 1 1 609A74C8
-P 7000 1400
-F 0 "TP1" H 7058 1518 50  0000 L CNN
-F 1 "V(IN)" H 7058 1427 50  0000 L CNN
-F 2 "TestPoint:TestPoint_Pad_D2.0mm" H 7200 1400 50  0001 C CNN
-F 3 "~" H 7200 1400 50  0001 C CNN
-	1    7000 1400
-	1    0    0    -1  
-$EndComp
 Text Label 3650 2550 0    50   ~ 0
 V_in
-Text Label 7000 1500 3    50   ~ 0
-V_in
-Wire Wire Line
-	7000 1500 7000 1400
-$Comp
-L Connector:TestPoint TP2
-U 1 1 609AF447
-P 7400 1400
-F 0 "TP2" H 7458 1518 50  0000 L CNN
-F 1 "V(ACS_I)" H 7458 1427 50  0000 L CNN
-F 2 "TestPoint:TestPoint_Pad_D2.0mm" H 7600 1400 50  0001 C CNN
-F 3 "~" H 7600 1400 50  0001 C CNN
-	1    7400 1400
-	1    0    0    -1  
-$EndComp
 Wire Wire Line
 	7400 1500 7400 1400
 Text Label 7400 1500 3    50   ~ 0
 V_adc_i
+Text Notes 6950 1050 0    50   ~ 0
+Test points\nIN - input voltage from wall wart\nADC_I - ACS723 current measurement voltage\nADC_V - Voltage after ACS723 (Pi4 input voltage)
+Wire Wire Line
+	7000 1500 7000 1400
+Text Label 7000 1500 3    50   ~ 0
+V_in
+Wire Wire Line
+	7800 1400 7800 1500
 Text Label 7800 1500 3    50   ~ 0
 V_adc_v
 $Comp
@@ -410,8 +386,36 @@ F 3 "~" H 8000 1400 50  0001 C CNN
 	1    7800 1400
 	1    0    0    -1  
 $EndComp
+$Comp
+L Connector:TestPoint TP2
+U 1 1 609AF447
+P 7400 1400
+F 0 "TP2" H 7458 1518 50  0000 L CNN
+F 1 "V(ACS_I)" H 7458 1427 50  0000 L CNN
+F 2 "TestPoint:TestPoint_Pad_D2.0mm" H 7600 1400 50  0001 C CNN
+F 3 "~" H 7600 1400 50  0001 C CNN
+	1    7400 1400
+	1    0    0    -1  
+$EndComp
+$Comp
+L Connector:TestPoint TP1
+U 1 1 609A74C8
+P 7000 1400
+F 0 "TP1" H 7058 1518 50  0000 L CNN
+F 1 "V(IN)" H 7058 1427 50  0000 L CNN
+F 2 "TestPoint:TestPoint_Pad_D2.0mm" H 7200 1400 50  0001 C CNN
+F 3 "~" H 7200 1400 50  0001 C CNN
+	1    7000 1400
+	1    0    0    -1  
+$EndComp
 Wire Wire Line
-	7800 1400 7800 1500
-Text Notes 6950 1050 0    50   ~ 0
-Test points\nIN - input voltage from wall wart\nADC_I - ACS723 current measurement voltage\nADC_V - Voltage after ACS723 (Pi4 input voltage)
+	6150 2800 7700 2800
+Wire Wire Line
+	4450 3450 4500 3450
+Wire Wire Line
+	5200 3100 5200 3450
+Wire Wire Line
+	5200 3450 5100 3450
+Wire Wire Line
+	5200 3100 5350 3100
 $EndSCHEMATC
