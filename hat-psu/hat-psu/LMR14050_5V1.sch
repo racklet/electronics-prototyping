@@ -28,8 +28,6 @@ F 3 "https://www.ti.com/lit/ds/symlink/lmr14050.pdf" H 4550 3600 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 Wire Wire Line
-	4600 4500 4500 4500
-Wire Wire Line
 	4500 4500 4500 4550
 $Comp
 L power:GND #PWR?
@@ -442,4 +440,9 @@ Wire Wire Line
 	7250 3850 7550 3850
 Wire Wire Line
 	5200 2700 5600 2700
+Wire Wire Line
+	4600 4500 4500 4500
+Connection ~ 4500 4500
+Text Notes 5750 5000 0    50   ~ 0
+Increase V_out voltage slightly?
 $EndSCHEMATC

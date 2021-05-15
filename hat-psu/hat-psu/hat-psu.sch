@@ -23,9 +23,7 @@ F3 "V_in" I L 3900 2550 50
 F4 "V_out" O R 4650 2550 50 
 $EndSheet
 Wire Wire Line
-	5750 2600 5750 2550
-Wire Wire Line
-	5750 2550 5300 2550
+	5750 2600 5750 2150
 Wire Wire Line
 	3900 2400 2850 2400
 $Comp
@@ -64,44 +62,23 @@ Wire Wire Line
 	5350 2800 5300 2800
 Wire Wire Line
 	5300 2800 5300 2550
-Connection ~ 5300 2550
-$Comp
-L power:GND #PWR02
-U 1 1 6081E28E
-P 4950 2850
-F 0 "#PWR02" H 4950 2600 50  0001 C CNN
-F 1 "GND" H 4955 2677 50  0000 C CNN
-F 2 "" H 4950 2850 50  0001 C CNN
-F 3 "" H 4950 2850 50  0001 C CNN
-	1    4950 2850
-	1    0    0    -1  
-$EndComp
-Wire Wire Line
-	4950 2850 4950 2800
 $Comp
 L Device:C_Small C7
 U 1 1 6081D6DC
-P 4950 2700
-F 0 "C7" H 5042 2746 50  0000 L CNN
-F 1 "100n" H 5042 2655 50  0000 L CNN
-F 2 "Capacitor_SMD:C_0603_1608Metric" H 4950 2700 50  0001 C CNN
-F 3 "~" H 4950 2700 50  0001 C CNN
-	1    4950 2700
-	1    0    0    -1  
+P 5550 2300
+F 0 "C7" H 5642 2346 50  0000 L CNN
+F 1 "100n" H 5642 2255 50  0000 L CNN
+F 2 "Capacitor_SMD:C_0603_1608Metric" H 5550 2300 50  0001 C CNN
+F 3 "~" H 5550 2300 50  0001 C CNN
+	1    5550 2300
+	-1   0    0    -1  
 $EndComp
-Wire Wire Line
-	4650 2550 4950 2550
-Wire Wire Line
-	4950 2550 4950 2600
-Wire Wire Line
-	4950 2550 5300 2550
-Connection ~ 4950 2550
 $Comp
 L Sensor_Current:ACS723xLCTR-10AU U2
 U 1 1 6082C4DA
 P 5750 3000
-F 0 "U2" H 5750 3650 50  0000 C CNN
-F 1 "ACS723xLCTR-10AU" H 5750 3550 50  0000 C CNN
+F 0 "U2" H 6150 3500 50  0000 C CNN
+F 1 "ACS723xLCTR-10AU" H 6200 3400 50  0000 C CNN
 F 2 "Package_SO:SOIC-8_3.9x4.9mm_P1.27mm" H 5850 2650 50  0001 L CIN
 F 3 "http://www.allegromicro.com/~/media/Files/Datasheets/ACS723-Datasheet.ashx?la=en" H 5750 3000 50  0001 C CNN
 	1    5750 3000
@@ -153,16 +130,7 @@ F 3 "" H 5750 3500 50  0001 C CNN
 	1    5750 3500
 	1    0    0    -1  
 $EndComp
-Wire Wire Line
-	5750 3400 5750 3450
-Wire Wire Line
-	5750 3450 6200 3450
-Wire Wire Line
-	6200 3100 6200 3450
-Connection ~ 5750 3450
-Wire Wire Line
-	5750 3450 5750 3500
-Text Notes 5400 2250 0    50   ~ 0
+Text Notes 5850 2400 0    50   ~ 0
 Current measurement
 $Comp
 L power:GND #PWR0111
@@ -413,9 +381,84 @@ Wire Wire Line
 Wire Wire Line
 	4450 3450 4500 3450
 Wire Wire Line
-	5200 3100 5200 3450
+	5300 3100 5300 3450
 Wire Wire Line
-	5200 3450 5100 3450
+	5300 3450 5100 3450
 Wire Wire Line
-	5200 3100 5350 3100
+	5300 3100 5350 3100
+Wire Notes Line
+	3600 3750 3600 1900
+Wire Notes Line
+	3600 1900 2400 1900
+Wire Notes Line
+	2400 1900 2400 3750
+Wire Notes Line
+	2400 3750 3600 3750
+Wire Notes Line
+	7050 3950 7050 2400
+Wire Notes Line
+	7050 2400 8300 2400
+Wire Notes Line
+	8300 2400 8300 3950
+Wire Notes Line
+	8300 3950 7050 3950
+$Comp
+L Connector_Generic:Conn_01x02 J?
+U 1 1 609EFA09
+P 1850 2450
+F 0 "J?" H 1768 2125 50  0000 C CNN
+F 1 "Conn_01x02" H 1768 2216 50  0000 C CNN
+F 2 "" H 1850 2450 50  0001 C CNN
+F 3 "~" H 1850 2450 50  0001 C CNN
+	1    1850 2450
+	-1   0    0    1   
+$EndComp
+Text Notes 3300 900  0    50   ~ 0
+! Think about HAT backpowering
+Wire Wire Line
+	5750 3400 5750 3500
+$Comp
+L power:VBUS #PWR0113
+U 1 1 609F1BE2
+P 5750 2000
+F 0 "#PWR0113" H 5750 1850 50  0001 C CNN
+F 1 "VBUS" H 5765 2173 50  0000 C CNN
+F 2 "" H 5750 2000 50  0001 C CNN
+F 3 "" H 5750 2000 50  0001 C CNN
+	1    5750 2000
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:VBUS #PWR0114
+U 1 1 609F1E09
+P 6200 3100
+F 0 "#PWR0114" H 6200 2950 50  0001 C CNN
+F 1 "VBUS" H 6215 3273 50  0000 C CNN
+F 2 "" H 6200 3100 50  0001 C CNN
+F 3 "" H 6200 3100 50  0001 C CNN
+	1    6200 3100
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	4650 2550 5300 2550
+$Comp
+L power:GND #PWR0115
+U 1 1 609F48BC
+P 5550 2400
+F 0 "#PWR0115" H 5550 2150 50  0001 C CNN
+F 1 "GND" H 5555 2227 50  0000 C CNN
+F 2 "" H 5550 2400 50  0001 C CNN
+F 3 "" H 5550 2400 50  0001 C CNN
+	1    5550 2400
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	5550 2200 5550 2150
+Wire Wire Line
+	5550 2150 5750 2150
+Connection ~ 5750 2150
+Wire Wire Line
+	5750 2150 5750 2000
+Text Notes 3300 1000 0    50   ~ 0
+! Reverse polarity protection?
 $EndSCHEMATC
