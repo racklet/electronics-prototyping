@@ -3,7 +3,7 @@ EELAYER 30 0
 EELAYER END
 $Descr A4 11693 8268
 encoding utf-8
-Sheet 2 2
+Sheet 2 3
 Title "LMR14040 DC-DC converter configured for 5.1V output"
 Date "2021-04-21"
 Rev "2"

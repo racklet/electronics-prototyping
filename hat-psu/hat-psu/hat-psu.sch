@@ -3,7 +3,7 @@ EELAYER 30 0
 EELAYER END
 $Descr A4 11693 8268
 encoding utf-8
-Sheet 1 2
+Sheet 1 3
 Title ""
 Date ""
 Rev ""
@@ -14,124 +14,81 @@ Comment3 ""
 Comment4 ""
 $EndDescr
 $Sheet
-S 3900 2300 750  500 
+S 900  7000 750  500 
 U 608055DF
 F0 "LMR14050_5V1" 50
 F1 "LMR14050_5V1.sch" 50
-F2 "en" I L 3900 2400 50 
-F3 "V_in" I L 3900 2550 50 
-F4 "V_out" O R 4650 2550 50 
+F2 "en" I L 900 7100 50 
+F3 "V_in" I L 900 7250 50 
+F4 "V_out" O R 1650 7250 50 
 $EndSheet
 Wire Wire Line
-	5750 2600 5750 2150
-Wire Wire Line
-	3900 2400 2850 2400
+	4650 2900 3600 2900
 $Comp
 L Connector:Conn_01x02_Male J1
 U 1 1 60810CA8
-P 2650 2400
-F 0 "J1" H 2700 2600 50  0000 C CNN
-F 1 "en" H 2700 2500 50  0000 C CNN
-F 2 "Connector_PinHeader_2.54mm:PinHeader_1x02_P2.54mm_Vertical" H 2650 2400 50  0001 C CNN
-F 3 "~" H 2650 2400 50  0001 C CNN
-	1    2650 2400
+P 3400 2900
+F 0 "J1" H 3450 3100 50  0000 C CNN
+F 1 "en" H 3450 3000 50  0000 C CNN
+F 2 "Connector_PinHeader_2.54mm:PinHeader_1x02_P2.54mm_Vertical" H 3400 2900 50  0001 C CNN
+F 3 "~" H 3400 2900 50  0001 C CNN
+	1    3400 2900
 	1    0    0    -1  
 $EndComp
 Wire Wire Line
-	2850 2500 2900 2500
+	3600 3000 3650 3000
 Wire Wire Line
-	2900 2500 2900 2550
+	3650 3000 3650 3050
 $Comp
 L power:GND #PWR01
 U 1 1 608119F0
-P 2900 2550
-F 0 "#PWR01" H 2900 2300 50  0001 C CNN
-F 1 "GND" H 2905 2377 50  0000 C CNN
-F 2 "" H 2900 2550 50  0001 C CNN
-F 3 "" H 2900 2550 50  0001 C CNN
-	1    2900 2550
+P 3650 3050
+F 0 "#PWR01" H 3650 2800 50  0001 C CNN
+F 1 "GND" H 3655 2877 50  0000 C CNN
+F 2 "" H 3650 3050 50  0001 C CNN
+F 3 "" H 3650 3050 50  0001 C CNN
+	1    3650 3050
 	1    0    0    -1  
 $EndComp
 Wire Wire Line
-	3900 2550 3450 2550
+	4650 3050 4200 3050
 Wire Wire Line
-	3450 2550 3450 3100
-Wire Wire Line
-	6150 3100 6200 3100
-Wire Wire Line
-	5350 2800 5300 2800
-Wire Wire Line
-	5300 2800 5300 2550
-$Comp
-L Device:C_Small C7
-U 1 1 6081D6DC
-P 5550 2300
-F 0 "C7" H 5642 2346 50  0000 L CNN
-F 1 "100n" H 5642 2255 50  0000 L CNN
-F 2 "Capacitor_SMD:C_0603_1608Metric" H 5550 2300 50  0001 C CNN
-F 3 "~" H 5550 2300 50  0001 C CNN
-	1    5550 2300
-	-1   0    0    -1  
-$EndComp
-$Comp
-L Sensor_Current:ACS723xLCTR-10AU U2
-U 1 1 6082C4DA
-P 5750 3000
-F 0 "U2" H 6150 3500 50  0000 C CNN
-F 1 "ACS723xLCTR-10AU" H 6200 3400 50  0000 C CNN
-F 2 "Package_SO:SOIC-8_3.9x4.9mm_P1.27mm" H 5850 2650 50  0001 L CIN
-F 3 "http://www.allegromicro.com/~/media/Files/Datasheets/ACS723-Datasheet.ashx?la=en" H 5750 3000 50  0001 C CNN
-	1    5750 3000
-	1    0    0    -1  
-$EndComp
+	4200 3050 4200 3600
 $Comp
 L Connector:Barrel_Jack_Switch J2
 U 1 1 6080AE45
-P 2850 3200
-F 0 "J2" H 2907 3517 50  0000 C CNN
-F 1 "Barrel_Jack_Switch" H 2907 3426 50  0000 C CNN
-F 2 "Connector_BarrelJack:BarrelJack_Wuerth_6941xx301002" H 2900 3160 50  0001 C CNN
-F 3 "~" H 2900 3160 50  0001 C CNN
-	1    2850 3200
+P 3600 3700
+F 0 "J2" H 3657 4017 50  0000 C CNN
+F 1 "Barrel_Jack_Switch" H 3657 3926 50  0000 C CNN
+F 2 "Connector_BarrelJack:BarrelJack_Wuerth_6941xx301002" H 3650 3660 50  0001 C CNN
+F 3 "~" H 3650 3660 50  0001 C CNN
+	1    3600 3700
 	1    0    0    -1  
 $EndComp
 Wire Wire Line
-	3150 3300 3200 3300
+	3900 3800 3950 3800
 Wire Wire Line
-	3450 3300 3450 3350
+	4200 3800 4200 3850
 $Comp
 L power:GND #PWR0110
 U 1 1 6080FDE2
-P 3450 3350
-F 0 "#PWR0110" H 3450 3100 50  0001 C CNN
-F 1 "GND" H 3455 3177 50  0000 C CNN
-F 2 "" H 3450 3350 50  0001 C CNN
-F 3 "" H 3450 3350 50  0001 C CNN
-	1    3450 3350
+P 4200 3850
+F 0 "#PWR0110" H 4200 3600 50  0001 C CNN
+F 1 "GND" H 4205 3677 50  0000 C CNN
+F 2 "" H 4200 3850 50  0001 C CNN
+F 3 "" H 4200 3850 50  0001 C CNN
+	1    4200 3850
 	1    0    0    -1  
 $EndComp
 Wire Wire Line
-	3150 3200 3200 3200
+	3900 3700 3950 3700
 Wire Wire Line
-	3200 3200 3200 3300
-Connection ~ 3200 3300
+	3950 3700 3950 3800
+Connection ~ 3950 3800
 Wire Wire Line
-	3200 3300 3450 3300
+	3950 3800 4200 3800
 Wire Wire Line
-	3150 3100 3450 3100
-$Comp
-L power:GND #PWR03
-U 1 1 6080FCE0
-P 5750 3500
-F 0 "#PWR03" H 5750 3250 50  0001 C CNN
-F 1 "GND" H 5755 3327 50  0000 C CNN
-F 2 "" H 5750 3500 50  0001 C CNN
-F 3 "" H 5750 3500 50  0001 C CNN
-	1    5750 3500
-	1    0    0    -1  
-$EndComp
-Text Notes 5850 2400 0    50   ~ 0
-Current measurement
+	3900 3600 4200 3600
 $Comp
 L power:GND #PWR0111
 U 1 1 60832E6C
@@ -154,180 +111,53 @@ F 3 "~" H 1150 1000 50  0001 C CNN
 	1    1150 1000
 	1    0    0    -1  
 $EndComp
-$Comp
-L Connector:Conn_01x03_Male J3
-U 1 1 60834467
-P 7900 2900
-F 0 "J3" H 7872 2832 50  0000 R CNN
-F 1 "measurement" H 8100 2650 50  0000 R CNN
-F 2 "Connector_PinHeader_2.54mm:PinHeader_1x03_P2.54mm_Vertical" H 7900 2900 50  0001 C CNN
-F 3 "~" H 7900 2900 50  0001 C CNN
-	1    7900 2900
-	-1   0    0    1   
-$EndComp
-Wire Wire Line
-	7700 3000 7550 3000
-Wire Wire Line
-	7550 3000 7550 3050
-$Comp
-L power:GND #PWR05
-U 1 1 60838E63
-P 7550 3050
-F 0 "#PWR05" H 7550 2800 50  0001 C CNN
-F 1 "GND" H 7555 2877 50  0000 C CNN
-F 2 "" H 7550 3050 50  0001 C CNN
-F 3 "" H 7550 3050 50  0001 C CNN
-	1    7550 3050
-	1    0    0    -1  
-$EndComp
-Text Notes 2550 3550 0    50   ~ 0
+Text Notes 3300 4050 0    50   ~ 0
 Voltage Input
-Text Notes 6100 5050 0    50   ~ 0
-With these resistor values the 5.1V\nrail will correspond to 3.06V\ngiving some room measurement\naround the target voltage\n(can measure up to 5.5V with 3.3V DAC)
-Text Label 6200 2800 0    50   ~ 0
-V_adc_i
-Wire Wire Line
-	7000 2900 7700 2900
-Wire Wire Line
-	7000 4500 7000 2900
-Text Label 6400 4500 0    50   ~ 0
-V_adc_v
-Text GLabel 4450 3450 0    50   Input ~ 0
-5V1
-Text Notes 5450 3900 0    50   ~ 0
-Voltage measurement
-Wire Wire Line
-	5700 4500 5700 4450
-Connection ~ 5700 4500
-Wire Wire Line
-	5700 4500 7000 4500
-$Comp
-L power:GND #PWR04
-U 1 1 6081ED5C
-P 5700 4900
-F 0 "#PWR04" H 5700 4650 50  0001 C CNN
-F 1 "GND" H 5705 4727 50  0000 C CNN
-F 2 "" H 5700 4900 50  0001 C CNN
-F 3 "" H 5700 4900 50  0001 C CNN
-	1    5700 4900
-	1    0    0    -1  
-$EndComp
-Wire Wire Line
-	5700 4850 5700 4900
-Wire Wire Line
-	5700 4550 5700 4500
-$Comp
-L Device:R R5
-U 1 1 6081DC05
-P 5700 4700
-F 0 "R5" H 5770 4746 50  0000 L CNN
-F 1 "3.3k" H 5770 4655 50  0000 L CNN
-F 2 "Resistor_SMD:R_0603_1608Metric" V 5630 4700 50  0001 C CNN
-F 3 "~" H 5700 4700 50  0001 C CNN
-	1    5700 4700
-	1    0    0    -1  
-$EndComp
-$Comp
-L Device:R R4
-U 1 1 6081D6FF
-P 5700 4300
-F 0 "R4" H 5770 4346 50  0000 L CNN
-F 1 "2.2k" H 5770 4255 50  0000 L CNN
-F 2 "Resistor_SMD:R_0603_1608Metric" V 5630 4300 50  0001 C CNN
-F 3 "~" H 5700 4300 50  0001 C CNN
-	1    5700 4300
-	1    0    0    -1  
-$EndComp
-Wire Wire Line
-	5700 4050 5700 4150
-Wire Wire Line
-	5600 4050 5700 4050
-Text GLabel 5600 4050 0    50   Input ~ 0
-5V1
-Text GLabel 7300 3550 0    50   Input ~ 0
-5V1
-$Comp
-L power:GND #PWR0112
-U 1 1 60839721
-P 7300 3650
-F 0 "#PWR0112" H 7300 3400 50  0001 C CNN
-F 1 "GND" H 7305 3477 50  0000 C CNN
-F 2 "" H 7300 3650 50  0001 C CNN
-F 3 "" H 7300 3650 50  0001 C CNN
-	1    7300 3650
-	1    0    0    -1  
-$EndComp
-Wire Wire Line
-	7300 3550 7400 3550
-Wire Wire Line
-	7300 3650 7400 3650
-$Comp
-L Connector:Conn_01x02_Male J4
-U 1 1 6083A844
-P 7600 3650
-F 0 "J4" H 7650 3850 50  0000 C CNN
-F 1 "pi_5V" H 7650 3750 50  0000 C CNN
-F 2 "Connector_PinHeader_2.54mm:PinHeader_1x02_P2.54mm_Vertical" H 7600 3650 50  0001 C CNN
-F 3 "~" H 7600 3650 50  0001 C CNN
-	1    7600 3650
-	-1   0    0    1   
-$EndComp
-$Comp
-L Device:Jumper JP1
-U 1 1 60999573
-P 4800 3450
-F 0 "JP1" H 4800 3714 50  0000 C CNN
-F 1 "Ammeter" H 4800 3623 50  0000 C CNN
-F 2 "Connector_PinHeader_2.54mm:PinHeader_1x02_P2.54mm_Vertical" H 4800 3450 50  0001 C CNN
-F 3 "~" H 4800 3450 50  0001 C CNN
-	1    4800 3450
-	1    0    0    -1  
-$EndComp
 $Comp
 L Mechanical:MountingHole H3
 U 1 1 6099D34A
-P 2400 4750
-F 0 "H3" H 2500 4796 50  0000 L CNN
-F 1 "MountingHole" H 2500 4705 50  0000 L CNN
-F 2 "MountingHole:MountingHole_4.3mm_M4" H 2400 4750 50  0001 C CNN
-F 3 "~" H 2400 4750 50  0001 C CNN
-	1    2400 4750
+P 1300 5250
+F 0 "H3" H 1400 5296 50  0000 L CNN
+F 1 "MountingHole" H 1400 5205 50  0000 L CNN
+F 2 "MountingHole:MountingHole_4.3mm_M4" H 1300 5250 50  0001 C CNN
+F 3 "~" H 1300 5250 50  0001 C CNN
+	1    1300 5250
 	1    0    0    -1  
 $EndComp
 $Comp
 L Mechanical:MountingHole H2
 U 1 1 6099DCD7
-P 2400 4550
-F 0 "H2" H 2500 4596 50  0000 L CNN
-F 1 "MountingHole" H 2500 4505 50  0000 L CNN
-F 2 "MountingHole:MountingHole_4.3mm_M4" H 2400 4550 50  0001 C CNN
-F 3 "~" H 2400 4550 50  0001 C CNN
-	1    2400 4550
+P 1300 5050
+F 0 "H2" H 1400 5096 50  0000 L CNN
+F 1 "MountingHole" H 1400 5005 50  0000 L CNN
+F 2 "MountingHole:MountingHole_4.3mm_M4" H 1300 5050 50  0001 C CNN
+F 3 "~" H 1300 5050 50  0001 C CNN
+	1    1300 5050
 	1    0    0    -1  
 $EndComp
 $Comp
 L Mechanical:MountingHole H1
 U 1 1 6099DFD8
-P 2400 4350
-F 0 "H1" H 2500 4396 50  0000 L CNN
-F 1 "MountingHole" H 2500 4305 50  0000 L CNN
-F 2 "MountingHole:MountingHole_4.3mm_M4" H 2400 4350 50  0001 C CNN
-F 3 "~" H 2400 4350 50  0001 C CNN
-	1    2400 4350
+P 1300 4850
+F 0 "H1" H 1400 4896 50  0000 L CNN
+F 1 "MountingHole" H 1400 4805 50  0000 L CNN
+F 2 "MountingHole:MountingHole_4.3mm_M4" H 1300 4850 50  0001 C CNN
+F 3 "~" H 1300 4850 50  0001 C CNN
+	1    1300 4850
 	1    0    0    -1  
 $EndComp
 $Comp
 L Mechanical:MountingHole H4
 U 1 1 6099E18F
-P 2400 4950
-F 0 "H4" H 2500 4996 50  0000 L CNN
-F 1 "MountingHole" H 2500 4905 50  0000 L CNN
-F 2 "MountingHole:MountingHole_4.3mm_M4" H 2400 4950 50  0001 C CNN
-F 3 "~" H 2400 4950 50  0001 C CNN
-	1    2400 4950
+P 1300 5450
+F 0 "H4" H 1400 5496 50  0000 L CNN
+F 1 "MountingHole" H 1400 5405 50  0000 L CNN
+F 2 "MountingHole:MountingHole_4.3mm_M4" H 1300 5450 50  0001 C CNN
+F 3 "~" H 1300 5450 50  0001 C CNN
+	1    1300 5450
 	1    0    0    -1  
 $EndComp
-Text Label 3650 2550 0    50   ~ 0
+Text Label 4400 3050 0    50   ~ 0
 V_in
 Wire Wire Line
 	7400 1500 7400 1400
@@ -376,89 +206,261 @@ F 3 "~" H 7200 1400 50  0001 C CNN
 	1    7000 1400
 	1    0    0    -1  
 $EndComp
-Wire Wire Line
-	6150 2800 7700 2800
-Wire Wire Line
-	4450 3450 4500 3450
-Wire Wire Line
-	5300 3100 5300 3450
-Wire Wire Line
-	5300 3450 5100 3450
-Wire Wire Line
-	5300 3100 5350 3100
 Wire Notes Line
-	3600 3750 3600 1900
+	4350 4250 4350 2400
 Wire Notes Line
-	3600 1900 2400 1900
+	4350 2400 3150 2400
 Wire Notes Line
-	2400 1900 2400 3750
+	3150 2400 3150 4250
 Wire Notes Line
-	2400 3750 3600 3750
-Wire Notes Line
-	7050 3950 7050 2400
-Wire Notes Line
-	7050 2400 8300 2400
-Wire Notes Line
-	8300 2400 8300 3950
-Wire Notes Line
-	8300 3950 7050 3950
-$Comp
-L Connector_Generic:Conn_01x02 J?
-U 1 1 609EFA09
-P 1850 2450
-F 0 "J?" H 1768 2125 50  0000 C CNN
-F 1 "Conn_01x02" H 1768 2216 50  0000 C CNN
-F 2 "" H 1850 2450 50  0001 C CNN
-F 3 "~" H 1850 2450 50  0001 C CNN
-	1    1850 2450
-	-1   0    0    1   
-$EndComp
+	3150 4250 4350 4250
 Text Notes 3300 900  0    50   ~ 0
 ! Think about HAT backpowering
+Text Notes 3300 1000 0    50   ~ 0
+! Reverse polarity protection?
+Text Notes 900  6850 0    50   ~ 0
+5.1V DCDC
+Text Notes 3200 2200 0    50   ~ 0
+Rethink input connectors
+$Sheet
+S 4650 2750 550  400 
+U 60A0E5A4
+F0 "BD9E302EFJ-5V1" 50
+F1 "BD9E302EFJ-5V1.sch" 50
+F2 "VOUT" O R 5200 2900 50 
+F3 "VIN" I L 4650 2900 50 
+F4 "EN" I L 4650 3050 50 
+$EndSheet
 Wire Wire Line
-	5750 3400 5750 3500
-$Comp
-L power:VBUS #PWR0113
-U 1 1 609F1BE2
-P 5750 2000
-F 0 "#PWR0113" H 5750 1850 50  0001 C CNN
-F 1 "VBUS" H 5765 2173 50  0000 C CNN
-F 2 "" H 5750 2000 50  0001 C CNN
-F 3 "" H 5750 2000 50  0001 C CNN
-	1    5750 2000
-	1    0    0    -1  
-$EndComp
-$Comp
-L power:VBUS #PWR0114
-U 1 1 609F1E09
-P 6200 3100
-F 0 "#PWR0114" H 6200 2950 50  0001 C CNN
-F 1 "VBUS" H 6215 3273 50  0000 C CNN
-F 2 "" H 6200 3100 50  0001 C CNN
-F 3 "" H 6200 3100 50  0001 C CNN
-	1    6200 3100
-	1    0    0    -1  
-$EndComp
+	7600 2500 7600 2350
+Connection ~ 7600 2500
 Wire Wire Line
-	4650 2550 5300 2550
+	7400 2500 7600 2500
+Wire Wire Line
+	7400 2550 7400 2500
 $Comp
 L power:GND #PWR0115
 U 1 1 609F48BC
-P 5550 2400
-F 0 "#PWR0115" H 5550 2150 50  0001 C CNN
-F 1 "GND" H 5555 2227 50  0000 C CNN
-F 2 "" H 5550 2400 50  0001 C CNN
-F 3 "" H 5550 2400 50  0001 C CNN
-	1    5550 2400
+P 7400 2750
+F 0 "#PWR0115" H 7400 2500 50  0001 C CNN
+F 1 "GND" H 7405 2577 50  0000 C CNN
+F 2 "" H 7400 2750 50  0001 C CNN
+F 3 "" H 7400 2750 50  0001 C CNN
+	1    7400 2750
 	1    0    0    -1  
 $EndComp
 Wire Wire Line
-	5550 2200 5550 2150
+	5200 2900 7150 2900
+$Comp
+L power:VBUS #PWR0114
+U 1 1 609F1E09
+P 8050 3450
+F 0 "#PWR0114" H 8050 3300 50  0001 C CNN
+F 1 "VBUS" H 8065 3623 50  0000 C CNN
+F 2 "" H 8050 3450 50  0001 C CNN
+F 3 "" H 8050 3450 50  0001 C CNN
+	1    8050 3450
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:VBUS #PWR0113
+U 1 1 609F1BE2
+P 7600 2350
+F 0 "#PWR0113" H 7600 2200 50  0001 C CNN
+F 1 "VBUS" H 7615 2523 50  0000 C CNN
+F 2 "" H 7600 2350 50  0001 C CNN
+F 3 "" H 7600 2350 50  0001 C CNN
+	1    7600 2350
+	1    0    0    -1  
+$EndComp
 Wire Wire Line
-	5550 2150 5750 2150
-Connection ~ 5750 2150
+	7600 3750 7600 3850
+Wire Notes Line
+	10150 4300 8900 4300
+Wire Notes Line
+	10150 2750 10150 4300
+Wire Notes Line
+	8900 2750 10150 2750
+Wire Notes Line
+	8900 4300 8900 2750
 Wire Wire Line
-	5750 2150 5750 2000
-Text Notes 3300 1000 0    50   ~ 0
-! Reverse polarity protection?
+	7150 3450 7200 3450
+Wire Wire Line
+	7150 3800 6950 3800
+Wire Wire Line
+	7150 3450 7150 3800
+Wire Wire Line
+	6300 3800 6350 3800
+Wire Wire Line
+	8000 3150 9550 3150
+$Comp
+L Device:Jumper JP1
+U 1 1 60999573
+P 6650 3800
+F 0 "JP1" H 6650 4064 50  0000 C CNN
+F 1 "Ammeter" H 6650 3973 50  0000 C CNN
+F 2 "Connector_PinHeader_2.54mm:PinHeader_1x02_P2.54mm_Vertical" H 6650 3800 50  0001 C CNN
+F 3 "~" H 6650 3800 50  0001 C CNN
+	1    6650 3800
+	1    0    0    -1  
+$EndComp
+$Comp
+L Connector:Conn_01x02_Male J4
+U 1 1 6083A844
+P 9450 4000
+F 0 "J4" H 9500 4200 50  0000 C CNN
+F 1 "pi_5V" H 9500 4100 50  0000 C CNN
+F 2 "Connector_PinHeader_2.54mm:PinHeader_1x02_P2.54mm_Vertical" H 9450 4000 50  0001 C CNN
+F 3 "~" H 9450 4000 50  0001 C CNN
+	1    9450 4000
+	-1   0    0    1   
+$EndComp
+Wire Wire Line
+	9150 4000 9250 4000
+Wire Wire Line
+	9150 3900 9250 3900
+$Comp
+L power:GND #PWR0112
+U 1 1 60839721
+P 9150 4000
+F 0 "#PWR0112" H 9150 3750 50  0001 C CNN
+F 1 "GND" H 9155 3827 50  0000 C CNN
+F 2 "" H 9150 4000 50  0001 C CNN
+F 3 "" H 9150 4000 50  0001 C CNN
+	1    9150 4000
+	1    0    0    -1  
+$EndComp
+Text GLabel 9150 3900 0    50   Input ~ 0
+5V1
+Text GLabel 7450 4400 0    50   Input ~ 0
+5V1
+Wire Wire Line
+	7450 4400 7550 4400
+Wire Wire Line
+	7550 4400 7550 4500
+$Comp
+L Device:R R4
+U 1 1 6081D6FF
+P 7550 4650
+F 0 "R4" H 7620 4696 50  0000 L CNN
+F 1 "2.2k" H 7620 4605 50  0000 L CNN
+F 2 "Resistor_SMD:R_0603_1608Metric" V 7480 4650 50  0001 C CNN
+F 3 "~" H 7550 4650 50  0001 C CNN
+	1    7550 4650
+	1    0    0    -1  
+$EndComp
+$Comp
+L Device:R R5
+U 1 1 6081DC05
+P 7550 5050
+F 0 "R5" H 7620 5096 50  0000 L CNN
+F 1 "3.3k" H 7620 5005 50  0000 L CNN
+F 2 "Resistor_SMD:R_0603_1608Metric" V 7480 5050 50  0001 C CNN
+F 3 "~" H 7550 5050 50  0001 C CNN
+	1    7550 5050
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	7550 4900 7550 4850
+Wire Wire Line
+	7550 5200 7550 5250
+$Comp
+L power:GND #PWR04
+U 1 1 6081ED5C
+P 7550 5250
+F 0 "#PWR04" H 7550 5000 50  0001 C CNN
+F 1 "GND" H 7555 5077 50  0000 C CNN
+F 2 "" H 7550 5250 50  0001 C CNN
+F 3 "" H 7550 5250 50  0001 C CNN
+	1    7550 5250
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	7550 4850 8850 4850
+Connection ~ 7550 4850
+Wire Wire Line
+	7550 4850 7550 4800
+Text Notes 7300 4250 0    50   ~ 0
+Voltage measurement
+Text GLabel 6300 3800 0    50   Input ~ 0
+5V1
+Text Label 8250 4850 0    50   ~ 0
+V_adc_v
+Wire Wire Line
+	8850 4850 8850 3250
+Wire Wire Line
+	8850 3250 9550 3250
+Text Label 8050 3150 0    50   ~ 0
+V_adc_i
+Text Notes 7950 5400 0    50   ~ 0
+With these resistor values the 5.1V\nrail will correspond to 3.06V\ngiving some room measurement\naround the target voltage\n(can measure up to 5.5V with 3.3V DAC)
+$Comp
+L power:GND #PWR05
+U 1 1 60838E63
+P 9400 3400
+F 0 "#PWR05" H 9400 3150 50  0001 C CNN
+F 1 "GND" H 9405 3227 50  0000 C CNN
+F 2 "" H 9400 3400 50  0001 C CNN
+F 3 "" H 9400 3400 50  0001 C CNN
+	1    9400 3400
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	9400 3350 9400 3400
+Wire Wire Line
+	9550 3350 9400 3350
+$Comp
+L Connector:Conn_01x03_Male J3
+U 1 1 60834467
+P 9750 3250
+F 0 "J3" H 9722 3182 50  0000 R CNN
+F 1 "measurement" H 9950 3000 50  0000 R CNN
+F 2 "Connector_PinHeader_2.54mm:PinHeader_1x03_P2.54mm_Vertical" H 9750 3250 50  0001 C CNN
+F 3 "~" H 9750 3250 50  0001 C CNN
+	1    9750 3250
+	-1   0    0    1   
+$EndComp
+Text Notes 7700 2750 0    50   ~ 0
+Current measurement
+$Comp
+L power:GND #PWR03
+U 1 1 6080FCE0
+P 7600 3850
+F 0 "#PWR03" H 7600 3600 50  0001 C CNN
+F 1 "GND" H 7605 3677 50  0000 C CNN
+F 2 "" H 7600 3850 50  0001 C CNN
+F 3 "" H 7600 3850 50  0001 C CNN
+	1    7600 3850
+	1    0    0    -1  
+$EndComp
+$Comp
+L Sensor_Current:ACS723xLCTR-10AU U2
+U 1 1 6082C4DA
+P 7600 3350
+F 0 "U2" H 8000 3850 50  0000 C CNN
+F 1 "ACS723xLCTR-10AU" H 8050 3750 50  0000 C CNN
+F 2 "Package_SO:SOIC-8_3.9x4.9mm_P1.27mm" H 7700 3000 50  0001 L CIN
+F 3 "http://www.allegromicro.com/~/media/Files/Datasheets/ACS723-Datasheet.ashx?la=en" H 7600 3350 50  0001 C CNN
+	1    7600 3350
+	1    0    0    -1  
+$EndComp
+$Comp
+L Device:C_Small C7
+U 1 1 6081D6DC
+P 7400 2650
+F 0 "C7" H 7492 2696 50  0000 L CNN
+F 1 "100n" H 7492 2605 50  0000 L CNN
+F 2 "Capacitor_SMD:C_0603_1608Metric" H 7400 2650 50  0001 C CNN
+F 3 "~" H 7400 2650 50  0001 C CNN
+	1    7400 2650
+	-1   0    0    -1  
+$EndComp
+Wire Wire Line
+	7150 3150 7150 2900
+Wire Wire Line
+	7200 3150 7150 3150
+Wire Wire Line
+	8000 3450 8050 3450
+Wire Wire Line
+	7600 2950 7600 2500
 $EndSCHEMATC
