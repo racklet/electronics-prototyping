@@ -21,7 +21,7 @@ F_osc = 550000  # Hertz (this can't be changed)
 
 # Variables
 # TODO: Take these as command line arguments?
-V_in = 12  # Volts, input voltage
+V_in = 24  # Volts, input voltage
 A_max = 3  # Amperes, maximum output current
 dI_L = 1.0  # Amperes, inductor ripple current
 V_fb = 0.8  # Volts, feedback reference voltage
@@ -34,7 +34,7 @@ R_C_out = 2E-3  # Ohms, equivalent series resistance of C_out
 
 V_out_min = 5.1  # Volts, minimum voltage for V_out
 
-R_div_max = 700E3  # 700 KOhm maximum from the spec
+R_div_max = 700E3  # 700 KOhm maximum from the specification
 R_div_min = 500E3  # 500 KOhm minimum
 
 
@@ -50,6 +50,7 @@ def generate_resistors(multipliers):
 
 
 def resolve_V_out():
+    resolved = False
     (b_voltage, b_R1, b_R2) = (math.inf, 0, 0)
     for d_R1, d_R2 in itertools.permutations(generate_resistors([10000, 100000]), 2):
         d_sum = d_R1 + d_R2
@@ -59,29 +60,28 @@ def resolve_V_out():
         if value < V_out_min:
             continue
         if value < b_voltage:
+            resolved = True
             (b_voltage, b_R1, b_R2) = (value, d_R1, d_R2)
-
-    assert (b_voltage < math.inf)
-    assert (b_R1 > 0)
-    assert (b_R2 > 0)
+    assert resolved
     return b_voltage, b_R1, b_R2
 
 
 V_out, R1, R2 = resolve_V_out()
 
-# Enable fast transient response
-fast_transient = True
+# Enable fast load response
+fast_response = True
 
-# These frequencies are resolved from the application examples.
-# The spec states that F_crs should typically be around 20 KHz,
-# but we'll go with the values that are actually used.
-F_crs = 48000 if fast_transient else 32000  # Hertz
+# According to the datasheet F_crs should typically be around 20 KHz. For
+# the two fast load response application examples it has been set to around
+# 24 KHz, and for the two others it is around 16 Khz (reverse-engineered
+# from the equation for the phase compensation resistor R3).
+F_crs = 24000 if fast_response else 16000  # Hertz
 
-# The values from the application examples land somewhere between
-# 0.0325 and 0.04875 times times F_crs for the fast transient and
-# between 0.04875 and 0.073125 for the slow transient. All of the
-# examples use a 6.8 nF capacitor for C2 though.
-F_z = (avg(0.0325, 0.04875) if fast_transient else avg(0.04875, 0.073125)) * F_crs
+# The datasheet recommends inserting a zero point under 1/6 of F_crs.
+# All application examples use a 6.8 nF capacitance for C2, based on
+# which the actual multipliers are roughly 1/12 with fast load response
+# and 1/6 without.
+F_z = (1/12 if fast_response else 1 / 6) * F_crs
 
 
 # Inductance of the external inductor L
@@ -108,7 +108,7 @@ def C1_capacitance():
 
 
 def C2_capacitance():
-    return min(1 / (2 * math.pi * R3_resistance() * F_z), 15E-9)  # Upper limit from spec sheet
+    return min(1 / (2 * math.pi * R3_resistance() * F_z), 15E-9)  # Upper limit from the datasheet
 
 
 def sub(s):
@@ -130,7 +130,7 @@ configuration = [
     [f"C{sub('out')} capacitance", C_C_out],
     [f"C{sub('out')} ESR", R_C_out],
     [f"Minimum V{sub('out')}", V_out_min],
-    ["Fast transient response", fast_transient],
+    ["Fast load response", fast_response],
     [f"F{sub('CRS')} frequency", F_crs],
     [f"F{sub('Z')} frequency", F_z],
 ]
