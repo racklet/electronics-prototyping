@@ -156,6 +156,9 @@ node_modules/
 .env
 .env.test
 
+# Python
+__pycache__
+
 # Misc
 tmp
 .DS_Store
