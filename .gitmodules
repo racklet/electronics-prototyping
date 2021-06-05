@@ -1,0 +1,3 @@
+[submodule "hat-psu/hat-psu/libs/racklet-kicad-lib"]
+	path = hat-psu/hat-psu/libs/racklet-kicad-lib
+	url = git@github.com:racklet/racklet-kicad-lib.git
