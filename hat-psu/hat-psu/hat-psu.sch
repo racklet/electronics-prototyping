@@ -201,8 +201,8 @@ $Comp
 L Connector_Generic:Conn_02x04_Odd_Even J4
 U 1 1 60A52FC7
 P 1250 2950
-F 0 "J4" H 1300 3350 50  0000 C CNN
-F 1 "Backplane connector" H 1450 3250 50  0000 C CNN
+F 0 "J4" H 1250 3500 50  0000 C CNN
+F 1 "Backplane connector" H 1300 3350 50  0000 C CNN
 F 2 "Connector_PinHeader_2.54mm:PinHeader_2x04_P2.54mm_Horizontal" H 1250 2950 50  0001 C CNN
 F 3 "~" H 1250 2950 50  0001 C CNN
 	1    1250 2950
@@ -212,19 +212,6 @@ Text Label 1050 2950 2    50   ~ 0
 USB_D+
 Text Label 1050 3050 2    50   ~ 0
 USB_D-
-Text Label 1050 2850 2    50   ~ 0
-USB_5V
-$Comp
-L power:GND #PWR04
-U 1 1 60A610C9
-P 1650 3200
-F 0 "#PWR04" H 1650 2950 50  0001 C CNN
-F 1 "GND" H 1655 3027 50  0000 C CNN
-F 2 "" H 1650 3200 50  0001 C CNN
-F 3 "" H 1650 3200 50  0001 C CNN
-	1    1650 3200
-	1    0    0    -1  
-$EndComp
 Text Notes 3650 5000 0    50   ~ 0
 R3 value selects I2C address as specified\nin the PAC1921 datasheet on page 23\nopen -> 0011_000
 Text Label 3800 3000 2    50   ~ 0
@@ -332,40 +319,7 @@ $EndComp
 Wire Wire Line
 	1650 2000 1650 2050
 Wire Wire Line
-	2350 2850 1650 2850
-Wire Wire Line
-	1550 2950 1650 2950
-Wire Wire Line
-	1650 2950 1650 2850
-Connection ~ 1650 2850
-Wire Wire Line
-	1650 2850 1550 2850
-Wire Wire Line
 	2350 1800 2350 2850
-Wire Wire Line
-	1550 3050 1650 3050
-Wire Wire Line
-	1650 3050 1650 3150
-Wire Wire Line
-	1550 3150 1650 3150
-Connection ~ 1650 3150
-Wire Wire Line
-	1650 3150 1650 3200
-$Comp
-L power:GND #PWR022
-U 1 1 60BFE076
-P 1000 3200
-F 0 "#PWR022" H 1000 2950 50  0001 C CNN
-F 1 "GND" H 1005 3027 50  0000 C CNN
-F 2 "" H 1000 3200 50  0001 C CNN
-F 3 "" H 1000 3200 50  0001 C CNN
-	1    1000 3200
-	1    0    0    -1  
-$EndComp
-Wire Wire Line
-	1050 3150 1000 3150
-Wire Wire Line
-	1000 3150 1000 3200
 $Comp
 L Switch:SW_SPDT SW1
 U 1 1 60C1AE7E
@@ -532,9 +486,7 @@ Wire Wire Line
 	4400 2850 4850 2850
 Connection ~ 5000 2850
 Wire Wire Line
-	7150 4500 7250 4500
-Text Label 7150 4500 2    50   ~ 0
-USB_5V
+	6650 4500 7250 4500
 Wire Wire Line
 	7150 4600 7250 4600
 Text Label 7150 4700 2    50   ~ 0
@@ -653,7 +605,6 @@ Wire Wire Line
 	6000 3700 6000 3750
 Wire Wire Line
 	2650 2850 2350 2850
-Connection ~ 2350 2850
 Wire Wire Line
 	3850 2850 3350 2850
 Connection ~ 3350 2850
@@ -681,4 +632,71 @@ F2 "VOUT" O R 4400 2850 50
 F3 "VIN" I L 3850 2850 50 
 F4 "EN" I L 3850 3000 50 
 $EndSheet
+$Comp
+L power:VBUS #PWR0104
+U 1 1 60BFD071
+P 6650 4500
+F 0 "#PWR0104" H 6650 4350 50  0001 C CNN
+F 1 "VBUS" H 6665 4673 50  0000 C CNN
+F 2 "" H 6650 4500 50  0001 C CNN
+F 3 "" H 6650 4500 50  0001 C CNN
+	1    6650 4500
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:VBUS #PWR0105
+U 1 1 60BFF460
+P 1050 2850
+F 0 "#PWR0105" H 1050 2700 50  0001 C CNN
+F 1 "VBUS" V 1065 2977 50  0000 L CNN
+F 2 "" H 1050 2850 50  0001 C CNN
+F 3 "" H 1050 2850 50  0001 C CNN
+	1    1050 2850
+	0    -1   -1   0   
+$EndComp
+Text GLabel 1050 3150 0    50   Input ~ 0
+VIN
+Text GLabel 1650 2800 1    50   Input ~ 0
+VIN
+Wire Wire Line
+	1550 2850 1650 2850
+Connection ~ 2350 2850
+Wire Wire Line
+	1650 2800 1650 2850
+Connection ~ 1650 2850
+Wire Wire Line
+	1650 2850 2350 2850
+$Comp
+L power:VBUS #PWR0106
+U 1 1 60C027EA
+P 1550 3150
+F 0 "#PWR0106" H 1550 3000 50  0001 C CNN
+F 1 "VBUS" V 1565 3278 50  0000 L CNN
+F 2 "" H 1550 3150 50  0001 C CNN
+F 3 "" H 1550 3150 50  0001 C CNN
+	1    1550 3150
+	0    1    1    0   
+$EndComp
+Wire Wire Line
+	1550 3050 2000 3050
+Wire Wire Line
+	2000 3050 2000 2950
+Wire Wire Line
+	2000 2950 1550 2950
+Wire Wire Line
+	2000 3050 2000 3100
+Connection ~ 2000 3050
+$Comp
+L power:GND #PWR0107
+U 1 1 60C0707F
+P 2000 3100
+F 0 "#PWR0107" H 2000 2850 50  0001 C CNN
+F 1 "GND" H 2005 2927 50  0000 C CNN
+F 2 "" H 2000 3100 50  0001 C CNN
+F 3 "" H 2000 3100 50  0001 C CNN
+	1    2000 3100
+	1    0    0    -1  
+$EndComp
+Text Notes 9450 4250 0    50   ~ 0
+TODO: Add 3V3 LDO
 $EndSCHEMATC
