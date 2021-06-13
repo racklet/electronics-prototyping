@@ -4,14 +4,14 @@ EELAYER END
 $Descr A4 11693 8268
 encoding utf-8
 Sheet 2 5
-Title ""
-Date ""
-Rev ""
-Comp ""
-Comment1 ""
-Comment2 ""
+Title "Compute unit HAT attachment"
+Date "2021-06-13"
+Rev "0.1.1"
+Comp "Racklet"
+Comment1 "https://racklet.io"
+Comment2 "https://github.com/racklet/racklet"
 Comment3 ""
-Comment4 ""
+Comment4 "Author: Verneri Hirvonen"
 $EndDescr
 $Comp
 L Connector_Generic:Conn_02x20_Odd_Even J3

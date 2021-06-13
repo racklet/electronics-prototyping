@@ -4,12 +4,12 @@ EELAYER END
 $Descr A4 11693 8268
 encoding utf-8
 Sheet 5 5
-Title "12V-24V to 5.1V DCDC buck converter"
-Date ""
-Rev "0.1.0"
+Title "Compute unit HAT attachment"
+Date "2021-06-13"
+Rev "0.1.1"
 Comp "Racklet"
-Comment1 ""
-Comment2 ""
+Comment1 "https://racklet.io"
+Comment2 "https://github.com/racklet/racklet"
 Comment3 "https://github.com/racklet/racklet"
 Comment4 "Author: Verneri Hirvonen"
 $EndDescr

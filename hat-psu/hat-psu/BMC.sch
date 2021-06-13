@@ -4,14 +4,14 @@ EELAYER END
 $Descr A4 11693 8268
 encoding utf-8
 Sheet 4 5
-Title ""
-Date ""
-Rev ""
-Comp ""
-Comment1 ""
-Comment2 ""
+Title "Compute unit HAT attachment"
+Date "2021-06-13"
+Rev "0.1.1"
+Comp "Racklet"
+Comment1 "https://racklet.io"
+Comment2 "https://github.com/racklet/racklet"
 Comment3 ""
-Comment4 ""
+Comment4 "Author: Verneri Hirvonen"
 $EndDescr
 Text HLabel 3250 2850 0    50   Output ~ 0
 PAC_CLK
@@ -24,7 +24,7 @@ PAC1921 power monitoring\nsensor interface
 Wire Notes Line
 	3850 2650 5050 2650
 Wire Notes Line
-	5050 2650 5050 5000
+	5050 2650 5050 5650
 Text Notes 3900 2600 0    50   ~ 0
 TODO: Replace with BMC
 Wire Wire Line
@@ -119,9 +119,9 @@ USB_D-
 Text HLabel 3250 4600 0    50   Input ~ 0
 USB_D+
 Wire Notes Line
-	5050 5000 3850 5000
+	5050 5650 3850 5650
 Wire Notes Line
-	3850 5000 3850 2650
+	3850 5650 3850 2650
 Text HLabel 3250 4500 0    50   Input ~ 0
 USB_5V
 $Comp
@@ -137,4 +137,34 @@ F 3 "~" H 4150 4600 50  0001 C CNN
 $EndComp
 Wire Wire Line
 	3950 4500 3250 4500
+$Comp
+L Connector:Conn_01x02_Male J9
+U 1 1 60C6AA56
+P 4200 5550
+F 0 "J9" H 4172 5432 50  0000 R CNN
+F 1 "BMC_3V3" H 4172 5523 50  0000 R CNN
+F 2 "Connector_PinHeader_2.54mm:PinHeader_1x02_P2.54mm_Vertical" H 4200 5550 50  0001 C CNN
+F 3 "~" H 4200 5550 50  0001 C CNN
+	1    4200 5550
+	-1   0    0    1   
+$EndComp
+$Comp
+L power:GND #PWR04
+U 1 1 60C6B798
+P 3700 5600
+F 0 "#PWR04" H 3700 5350 50  0001 C CNN
+F 1 "GND" H 3705 5427 50  0000 C CNN
+F 2 "" H 3700 5600 50  0001 C CNN
+F 3 "" H 3700 5600 50  0001 C CNN
+	1    3700 5600
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	3700 5600 3700 5550
+Wire Wire Line
+	3700 5550 4000 5550
+Wire Wire Line
+	4000 5450 3250 5450
+Text HLabel 3250 5450 0    50   Input ~ 0
+3V3
 $EndSCHEMATC

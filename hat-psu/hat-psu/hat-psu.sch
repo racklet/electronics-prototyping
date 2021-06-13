@@ -5,11 +5,11 @@ $Descr A4 11693 8268
 encoding utf-8
 Sheet 1 5
 Title "Compute unit HAT attachment"
-Date ""
-Rev "0.1.0"
+Date "2021-06-13"
+Rev "0.1.1"
 Comp "Racklet"
-Comment1 ""
-Comment2 ""
+Comment1 "https://racklet.io"
+Comment2 "https://github.com/racklet/racklet"
 Comment3 ""
 Comment4 "Author: Verneri Hirvonen"
 $EndDescr
@@ -123,8 +123,6 @@ Text Notes 5550 2200 0    50   ~ 0
 Power measurement
 Wire Wire Line
 	3800 3000 3850 3000
-Text Notes 8800 1000 0    50   ~ 0
-TODO: Where does this come in from?? :D
 Text Notes 4950 2700 0    50   ~ 0
 current sense shunt\nTODO: Does this\nhave to be 10mohm?
 $Sheet
@@ -152,47 +150,8 @@ F 3 "" H 9050 3300 50  0001 C CNN
 $EndComp
 Wire Wire Line
 	7900 2850 6800 2850
-Text Notes 7000 6850 0    50   ~ 0
+Text Notes 7000 6500 0    50   ~ 0
 This schematic follows the Raspberry Pi HAT design guide:\nhttps://github.com/raspberrypi/hats/blob/master/designguide.md
-$Comp
-L power:VDD #PWR016
-U 1 1 60B0393C
-P 8650 1100
-F 0 "#PWR016" H 8650 950 50  0001 C CNN
-F 1 "VDD" H 8665 1273 50  0000 C CNN
-F 2 "" H 8650 1100 50  0001 C CNN
-F 3 "" H 8650 1100 50  0001 C CNN
-	1    8650 1100
-	1    0    0    -1  
-$EndComp
-$Comp
-L power:GND #PWR017
-U 1 1 60B0405C
-P 8650 1400
-F 0 "#PWR017" H 8650 1150 50  0001 C CNN
-F 1 "GND" H 8655 1227 50  0000 C CNN
-F 2 "" H 8650 1400 50  0001 C CNN
-F 3 "" H 8650 1400 50  0001 C CNN
-	1    8650 1400
-	1    0    0    -1  
-$EndComp
-$Comp
-L Device:C_Small C1
-U 1 1 60B04A0E
-P 8650 1250
-F 0 "C1" H 8742 1296 50  0000 L CNN
-F 1 "0.1u" H 8742 1205 50  0000 L CNN
-F 2 "Capacitor_SMD:C_0603_1608Metric" H 8650 1250 50  0001 C CNN
-F 3 "~" H 8650 1250 50  0001 C CNN
-	1    8650 1250
-	1    0    0    -1  
-$EndComp
-Wire Wire Line
-	8650 1400 8650 1350
-Wire Wire Line
-	8650 1150 8650 1100
-Text Notes 8600 800  0    50   ~ 0
-PAC bypass caps
 Text Notes 1100 2200 0    50   ~ 0
 DC Jack
 Wire Wire Line
@@ -230,43 +189,43 @@ Wire Wire Line
 	8700 2850 9200 2850
 Text Notes 7900 2600 0    50   ~ 0
 Backpowering diode circuit
-Text Notes 1800 7300 0    50   ~ 0
-Green LED:\nV_f = 2.20V\nI = 0.010A\nR = (5.10V - 2.20V) / 0.010A\n  = 290 ohm ≈ 330 ohm
-Text Notes 1000 6350 0    50   ~ 0
-5.1V rail indicator LED
-Text GLabel 1400 6600 1    50   Input ~ 0
+Text Notes 2150 7050 0    50   ~ 0
+5V1 Green LED:\nV_f = 2.20V\nI = 0.010A\nR = (5.10V - 2.20V) / 0.010A\n  = 290 ohm ≈ 330 ohm
+Text Notes 950  6200 0    50   ~ 0
+Power indicators
+Text GLabel 1050 6750 1    50   Input ~ 0
 5V1
 $Comp
 L power:GND #PWR012
 U 1 1 60A8DC82
-P 1400 7200
-F 0 "#PWR012" H 1400 6950 50  0001 C CNN
-F 1 "GND" H 1405 7027 50  0000 C CNN
-F 2 "" H 1400 7200 50  0001 C CNN
-F 3 "" H 1400 7200 50  0001 C CNN
-	1    1400 7200
+P 1050 7350
+F 0 "#PWR012" H 1050 7100 50  0001 C CNN
+F 1 "GND" H 1055 7177 50  0000 C CNN
+F 2 "" H 1050 7350 50  0001 C CNN
+F 3 "" H 1050 7350 50  0001 C CNN
+	1    1050 7350
 	1    0    0    -1  
 $EndComp
 $Comp
 L Device:R R10
 U 1 1 60A8CF46
-P 1400 7050
-F 0 "R10" H 1470 7096 50  0000 L CNN
-F 1 "330" H 1470 7005 50  0000 L CNN
-F 2 "Resistor_SMD:R_0805_2012Metric" V 1330 7050 50  0001 C CNN
-F 3 "~" H 1400 7050 50  0001 C CNN
-	1    1400 7050
+P 1050 7200
+F 0 "R10" H 1120 7246 50  0000 L CNN
+F 1 "330" H 1120 7155 50  0000 L CNN
+F 2 "Resistor_SMD:R_0805_2012Metric" V 980 7200 50  0001 C CNN
+F 3 "~" H 1050 7200 50  0001 C CNN
+	1    1050 7200
 	1    0    0    -1  
 $EndComp
 $Comp
 L Device:LED D2
 U 1 1 60A8C560
-P 1400 6750
-F 0 "D2" V 1439 6632 50  0000 R CNN
-F 1 "GREEN" V 1348 6632 50  0000 R CNN
-F 2 "LED_SMD:LED_0805_2012Metric" H 1400 6750 50  0001 C CNN
-F 3 "~" H 1400 6750 50  0001 C CNN
-	1    1400 6750
+P 1050 6900
+F 0 "D2" V 1089 6782 50  0000 R CNN
+F 1 "GREEN" V 998 6782 50  0000 R CNN
+F 2 "LED_SMD:LED_0805_2012Metric" H 1050 6900 50  0001 C CNN
+F 3 "~" H 1050 6900 50  0001 C CNN
+	1    1050 6900
 	0    -1   -1   0   
 $EndComp
 $Comp
@@ -320,36 +279,6 @@ Wire Wire Line
 	1650 2000 1650 2050
 Wire Wire Line
 	2350 1800 2350 2850
-$Comp
-L Switch:SW_SPDT SW1
-U 1 1 60C1AE7E
-P 5800 1600
-F 0 "SW1" H 5800 1885 50  0000 C CNN
-F 1 "SW_SPDT" H 5800 1794 50  0000 C CNN
-F 2 "Connector_PinHeader_2.54mm:PinHeader_1x03_P2.54mm_Vertical" H 5800 1600 50  0001 C CNN
-F 3 "~" H 5800 1600 50  0001 C CNN
-	1    5800 1600
-	1    0    0    -1  
-$EndComp
-Text Label 6000 1500 0    50   ~ 0
-USB_5V
-Text GLabel 6050 1700 2    50   Input ~ 0
-5V1
-Wire Wire Line
-	6050 1700 6000 1700
-$Comp
-L power:VDD #PWR023
-U 1 1 60C1F9AC
-P 5450 1600
-F 0 "#PWR023" H 5450 1450 50  0001 C CNN
-F 1 "VDD" H 5465 1773 50  0000 C CNN
-F 2 "" H 5450 1600 50  0001 C CNN
-F 3 "" H 5450 1600 50  0001 C CNN
-	1    5450 1600
-	1    0    0    -1  
-$EndComp
-Wire Wire Line
-	5600 1600 5450 1600
 Text Notes 5150 1200 0    50   ~ 0
 Select VDD source with a jumper:\n1. USB power from backplane\n2. DCDC 5.1V Pi PSU voltage rail
 $Comp
@@ -366,24 +295,13 @@ $EndComp
 $Comp
 L power:VDD #PWR0102
 U 1 1 60C31923
-P 1150 800
-F 0 "#PWR0102" H 1150 650 50  0001 C CNN
-F 1 "VDD" H 1165 973 50  0000 C CNN
-F 2 "" H 1150 800 50  0001 C CNN
-F 3 "" H 1150 800 50  0001 C CNN
-	1    1150 800 
+P 1250 800
+F 0 "#PWR0102" H 1250 650 50  0001 C CNN
+F 1 "VDD" H 1265 973 50  0000 C CNN
+F 2 "" H 1250 800 50  0001 C CNN
+F 3 "" H 1250 800 50  0001 C CNN
+	1    1250 800 
 	1    0    0    -1  
-$EndComp
-$Comp
-L power:PWR_FLAG #FLG0101
-U 1 1 60C322F5
-P 1150 800
-F 0 "#FLG0101" H 1150 875 50  0001 C CNN
-F 1 "PWR_FLAG" H 1150 973 50  0000 C CNN
-F 2 "" H 1150 800 50  0001 C CNN
-F 3 "~" H 1150 800 50  0001 C CNN
-	1    1150 800 
-	-1   0    0    1   
 $EndComp
 $Comp
 L racklet:PAC1921 U1
@@ -440,17 +358,6 @@ F 3 "" H 4500 4350 50  0001 C CNN
 $EndComp
 Wire Wire Line
 	4500 4350 4500 4300
-$Comp
-L power:VDD #PWR011
-U 1 1 60BE7450
-P 4600 3650
-F 0 "#PWR011" H 4600 3500 50  0001 C CNN
-F 1 "VDD" H 4615 3823 50  0000 C CNN
-F 2 "" H 4600 3650 50  0001 C CNN
-F 3 "" H 4600 3650 50  0001 C CNN
-	1    4600 3650
-	1    0    0    -1  
-$EndComp
 Wire Wire Line
 	4700 3950 4600 3950
 Wire Wire Line
@@ -486,7 +393,7 @@ Wire Wire Line
 	4400 2850 4850 2850
 Connection ~ 5000 2850
 Wire Wire Line
-	6650 4500 7250 4500
+	6600 4500 7250 4500
 Wire Wire Line
 	7150 4600 7250 4600
 Text Label 7150 4700 2    50   ~ 0
@@ -505,17 +412,6 @@ Wire Wire Line
 Wire Wire Line
 	6650 3650 6650 3750
 $Comp
-L Connector:TestPoint TP1
-U 1 1 60ACB7DA
-P 6650 3650
-F 0 "TP1" H 6708 3768 50  0000 L CNN
-F 1 "SCL" H 6708 3677 50  0000 L CNN
-F 2 "TestPoint:TestPoint_Pad_D1.5mm" H 6850 3650 50  0001 C CNN
-F 3 "~" H 6850 3650 50  0001 C CNN
-	1    6650 3650
-	1    0    0    -1  
-$EndComp
-$Comp
 L Connector:TestPoint TP2
 U 1 1 60ACB508
 P 6900 3650
@@ -529,7 +425,7 @@ $EndComp
 Wire Wire Line
 	6300 3850 6900 3850
 $Sheet
-S 7250 3600 800  1850
+S 7250 3350 800  2050
 U 60AC90CC
 F0 "BMC" 50
 F1 "BMC.sch" 50
@@ -541,33 +437,23 @@ F6 "PAC_DAC" I L 7250 4050 50
 F7 "USB_D-" I L 7250 4700 50 
 F8 "USB_D+" I L 7250 4600 50 
 F9 "USB_5V" I L 7250 4500 50 
+F10 "3V3" I L 7250 3450 50 
 $EndSheet
-Text Notes 7250 3450 0    50   ~ 0
+Text Notes 7250 3250 0    50   ~ 0
 TODO: Design BMC
-Text Notes 7350 5350 0    50   ~ 0
+Text Notes 7350 5100 0    50   ~ 0
 TODO:\nAdd connections\nto compute
-Text Notes 4800 6200 0    50   ~ 0
+Text Notes 5100 6050 0    50   ~ 0
 Pull up values were determined with the assumption that:\n* bus capacitance ≈ 50pF\n* bus frequency = 400kHz\nIf the bus capacitance is higher than expected\nsmaller resistors or lower bus speeds can be used.
 Text Label 7150 4300 2    50   ~ 0
 DCDC_EN
 Wire Wire Line
 	7250 4300 7150 4300
-$Comp
-L power:VDD #PWR015
-U 1 1 60AC82ED
-P 6150 3400
-F 0 "#PWR015" H 6150 3250 50  0001 C CNN
-F 1 "VDD" H 6165 3573 50  0000 C CNN
-F 2 "" H 6150 3400 50  0001 C CNN
-F 3 "" H 6150 3400 50  0001 C CNN
-	1    6150 3400
-	1    0    0    -1  
-$EndComp
 Wire Wire Line
 	6150 3450 6000 3450
 Connection ~ 6150 3450
 Wire Wire Line
-	6150 3450 6150 3400
+	6150 3450 6150 3350
 Wire Wire Line
 	6000 3450 6000 3500
 Wire Wire Line
@@ -598,7 +484,6 @@ F 3 "~" H 6000 3600 50  0001 C CNN
 	1    6000 3600
 	1    0    0    -1  
 $EndComp
-Connection ~ 6650 3750
 Wire Wire Line
 	6000 3750 6650 3750
 Wire Wire Line
@@ -635,12 +520,12 @@ $EndSheet
 $Comp
 L power:VBUS #PWR0104
 U 1 1 60BFD071
-P 6650 4500
-F 0 "#PWR0104" H 6650 4350 50  0001 C CNN
-F 1 "VBUS" H 6665 4673 50  0000 C CNN
-F 2 "" H 6650 4500 50  0001 C CNN
-F 3 "" H 6650 4500 50  0001 C CNN
-	1    6650 4500
+P 6600 4500
+F 0 "#PWR0104" H 6600 4350 50  0001 C CNN
+F 1 "VBUS" H 6615 4673 50  0000 C CNN
+F 2 "" H 6600 4500 50  0001 C CNN
+F 3 "" H 6600 4500 50  0001 C CNN
+	1    6600 4500
 	1    0    0    -1  
 $EndComp
 $Comp
@@ -697,6 +582,239 @@ F 3 "" H 2000 3100 50  0001 C CNN
 	1    2000 3100
 	1    0    0    -1  
 $EndComp
-Text Notes 9450 4250 0    50   ~ 0
-TODO: Add 3V3 LDO
+$Comp
+L Connector:TestPoint TP1
+U 1 1 60ACB7DA
+P 6650 3650
+F 0 "TP1" H 6708 3768 50  0000 L CNN
+F 1 "SCL" H 6708 3677 50  0000 L CNN
+F 2 "TestPoint:TestPoint_Pad_D1.5mm" H 6850 3650 50  0001 C CNN
+F 3 "~" H 6850 3650 50  0001 C CNN
+	1    6650 3650
+	1    0    0    -1  
+$EndComp
+Connection ~ 6650 3750
+Wire Wire Line
+	7250 3450 7100 3450
+Wire Wire Line
+	7100 3450 7100 3350
+Text Label 7100 3350 2    50   ~ 0
+BMC_3V3
+Text Label 2950 4200 0    50   ~ 0
+BMC_3V3
+$Comp
+L racklet:MIC5504-3.3YM5-TR U3
+U 1 1 60C73EE6
+P 2050 4300
+F 0 "U3" H 2050 4665 50  0000 C CNN
+F 1 "MIC5504-3.3YM5-TR" H 2050 4574 50  0000 C CNN
+F 2 "Package_TO_SOT_SMD:SOT-23-5_HandSoldering" H 2100 4750 50  0001 C CNN
+F 3 "https://ww1.microchip.com/downloads/en/DeviceDoc/MIC5501-02-03-04-300mA-Single-Output-LDO-in-Small-Packages-DS20006006B.pdf" H 2050 4500 50  0001 C CNN
+	1    2050 4300
+	1    0    0    -1  
+$EndComp
+$Comp
+L Device:C_Small C9
+U 1 1 60C74CCB
+P 2700 4350
+F 0 "C9" H 2792 4396 50  0000 L CNN
+F 1 "1u" H 2792 4305 50  0000 L CNN
+F 2 "Capacitor_SMD:C_0603_1608Metric" H 2700 4350 50  0001 C CNN
+F 3 "~" H 2700 4350 50  0001 C CNN
+	1    2700 4350
+	1    0    0    -1  
+$EndComp
+$Comp
+L Device:C_Small C8
+U 1 1 60C75210
+P 1350 4350
+F 0 "C8" H 1442 4396 50  0000 L CNN
+F 1 "1u" H 1442 4305 50  0000 L CNN
+F 2 "Capacitor_SMD:C_0603_1608Metric" H 1350 4350 50  0001 C CNN
+F 3 "~" H 1350 4350 50  0001 C CNN
+	1    1350 4350
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	1700 4300 1650 4300
+Wire Wire Line
+	1650 4300 1650 4200
+Wire Wire Line
+	1650 4200 1700 4200
+Wire Wire Line
+	1650 4200 1350 4200
+Connection ~ 1650 4200
+$Comp
+L power:GND #PWR018
+U 1 1 60C78F62
+P 2050 4700
+F 0 "#PWR018" H 2050 4450 50  0001 C CNN
+F 1 "GND" H 2055 4527 50  0000 C CNN
+F 2 "" H 2050 4700 50  0001 C CNN
+F 3 "" H 2050 4700 50  0001 C CNN
+	1    2050 4700
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	2400 4200 2700 4200
+Wire Wire Line
+	2700 4250 2700 4200
+Connection ~ 2700 4200
+Wire Wire Line
+	2700 4200 2950 4200
+Wire Wire Line
+	2050 4700 2050 4650
+Wire Wire Line
+	2700 4450 2700 4650
+Wire Wire Line
+	2700 4650 2050 4650
+Connection ~ 2050 4650
+Wire Wire Line
+	2050 4650 2050 4600
+Wire Wire Line
+	2050 4650 1350 4650
+Wire Wire Line
+	1350 4650 1350 4450
+Wire Wire Line
+	1350 4250 1350 4200
+Connection ~ 1350 4200
+Wire Wire Line
+	1350 4200 950  4200
+$Comp
+L power:VBUS #PWR014
+U 1 1 60C85D7C
+P 950 4200
+F 0 "#PWR014" H 950 4050 50  0001 C CNN
+F 1 "VBUS" V 965 4327 50  0000 L CNN
+F 2 "" H 950 4200 50  0001 C CNN
+F 3 "" H 950 4200 50  0001 C CNN
+	1    950  4200
+	1    0    0    -1  
+$EndComp
+Text Notes 900  3800 0    50   ~ 0
+Regulate BCM 3.3V supply from USB bus (backplane power rail)\nso that it can be controlled independently from the compute power
+$Comp
+L power:VBUS #PWR0108
+U 1 1 60C91355
+P 4600 3650
+F 0 "#PWR0108" H 4600 3500 50  0001 C CNN
+F 1 "VBUS" H 4500 3800 50  0000 L CNN
+F 2 "" H 4600 3650 50  0001 C CNN
+F 3 "" H 4600 3650 50  0001 C CNN
+	1    4600 3650
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:VBUS #PWR011
+U 1 1 60C91F69
+P 1650 800
+F 0 "#PWR011" H 1650 650 50  0001 C CNN
+F 1 "VBUS" H 1550 950 50  0000 L CNN
+F 2 "" H 1650 800 50  0001 C CNN
+F 3 "" H 1650 800 50  0001 C CNN
+	1    1650 800 
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:PWR_FLAG #FLG01
+U 1 1 60C93399
+P 1650 800
+F 0 "#FLG01" H 1650 875 50  0001 C CNN
+F 1 "PWR_FLAG" H 1650 973 50  0000 C CNN
+F 2 "" H 1650 800 50  0001 C CNN
+F 3 "~" H 1650 800 50  0001 C CNN
+	1    1650 800 
+	-1   0    0    1   
+$EndComp
+$Comp
+L power:PWR_FLAG #FLG0101
+U 1 1 60C322F5
+P 1250 800
+F 0 "#FLG0101" H 1250 875 50  0001 C CNN
+F 1 "PWR_FLAG" H 1250 973 50  0000 C CNN
+F 2 "" H 1250 800 50  0001 C CNN
+F 3 "~" H 1250 800 50  0001 C CNN
+	1    1250 800 
+	-1   0    0    1   
+$EndComp
+$Comp
+L power:GND #PWR022
+U 1 1 60CA3AA5
+P 1650 7350
+F 0 "#PWR022" H 1650 7100 50  0001 C CNN
+F 1 "GND" H 1655 7177 50  0000 C CNN
+F 2 "" H 1650 7350 50  0001 C CNN
+F 3 "" H 1650 7350 50  0001 C CNN
+	1    1650 7350
+	1    0    0    -1  
+$EndComp
+$Comp
+L Device:R R11
+U 1 1 60CA3AAB
+P 1650 7200
+F 0 "R11" H 1720 7246 50  0000 L CNN
+F 1 "100" H 1720 7155 50  0000 L CNN
+F 2 "Resistor_SMD:R_0805_2012Metric" V 1580 7200 50  0001 C CNN
+F 3 "~" H 1650 7200 50  0001 C CNN
+	1    1650 7200
+	1    0    0    -1  
+$EndComp
+$Comp
+L Device:LED D1
+U 1 1 60CA3AB1
+P 1650 6900
+F 0 "D1" V 1689 6782 50  0000 R CNN
+F 1 "GREEN" V 1598 6782 50  0000 R CNN
+F 2 "LED_SMD:LED_0805_2012Metric" H 1650 6900 50  0001 C CNN
+F 3 "~" H 1650 6900 50  0001 C CNN
+	1    1650 6900
+	0    -1   -1   0   
+$EndComp
+Text Label 1650 6750 1    50   ~ 0
+BMC_3V3
+Text Notes 2150 7550 0    50   ~ 0
+3V3 Green LED:\nV_f = 2.20V\nI = 0.010A\nR = (3.30V - 2.20V) / 0.010A\n  = 109 ohm ≈ 100 ohm
+Wire Notes Line
+	6150 4100 6150 5600
+$Comp
+L power:VBUS #PWR016
+U 1 1 60CC9E7D
+P 8650 1100
+F 0 "#PWR016" H 8650 950 50  0001 C CNN
+F 1 "VBUS" H 8550 1250 50  0000 L CNN
+F 2 "" H 8650 1100 50  0001 C CNN
+F 3 "" H 8650 1100 50  0001 C CNN
+	1    8650 1100
+	1    0    0    -1  
+$EndComp
+Text Notes 8400 800  0    50   ~ 0
+PAC bypass caps
+Wire Wire Line
+	8650 1150 8650 1100
+Wire Wire Line
+	8650 1400 8650 1350
+$Comp
+L Device:C_Small C1
+U 1 1 60B04A0E
+P 8650 1250
+F 0 "C1" H 8742 1296 50  0000 L CNN
+F 1 "0.1u" H 8742 1205 50  0000 L CNN
+F 2 "Capacitor_SMD:C_0603_1608Metric" H 8650 1250 50  0001 C CNN
+F 3 "~" H 8650 1250 50  0001 C CNN
+	1    8650 1250
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:GND #PWR017
+U 1 1 60B0405C
+P 8650 1400
+F 0 "#PWR017" H 8650 1150 50  0001 C CNN
+F 1 "GND" H 8655 1227 50  0000 C CNN
+F 2 "" H 8650 1400 50  0001 C CNN
+F 3 "" H 8650 1400 50  0001 C CNN
+	1    8650 1400
+	1    0    0    -1  
+$EndComp
+Text Label 6150 3350 2    50   ~ 0
+BMC_3V3
 $EndSCHEMATC
