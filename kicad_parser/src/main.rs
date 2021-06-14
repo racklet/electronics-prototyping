@@ -25,7 +25,7 @@ fn main() -> Result<(), Box<dyn Error>> {
 }
 
 // parse_schematic turns a schematic at path p into the recursive Schematic struct.
-fn parse_schematic(p: &Path, id: String) -> Result<Schematic, Box<dyn Error>>  {
+fn parse_schematic(p: &Path, id: String) -> Result<Schematic, Box<dyn Error>> {
     // Read the schematic using kicad_parse_gen
     let kisch = kicad_parse_gen::read_schematic(p)?;
 
@@ -159,7 +159,8 @@ fn parse_schematic(p: &Path, id: String) -> Result<Schematic, Box<dyn Error>>  {
     for sub_sheet in &kisch.sheets {
         // TODO: Use absolute paths, relative to the current schematic
         let p = Path::new(&sub_sheet.filename);
-        sch.sub_schematics.push(parse_schematic(p, sub_sheet.name.clone())?);
+        sch.sub_schematics
+            .push(parse_schematic(p, sub_sheet.name.clone())?);
     }
 
     // Finally, return the parsed schematic
@@ -203,7 +204,7 @@ fn parse_globals_into(kisch: &kicad_schematic::Schematic, globals: &mut Vec<Attr
 
             // attr_name and expr must be non-empty
             if attr_name.is_empty() || expr.is_empty() {
-                continue
+                continue;
             }
 
             // Push the new attribute into the given vector
