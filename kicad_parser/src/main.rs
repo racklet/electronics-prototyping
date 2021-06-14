@@ -26,7 +26,7 @@ fn main() -> Result<(), Box<dyn Error>> {
 }
 
 // parse_schematic turns a schematic at path p into the recursive Schematic struct.
-fn parse_schematic(p: &Path) -> Result<Schematic, Box<dyn Error>>  {
+fn parse_schematic(p: &Path) -> Result<Schematic, Box<dyn Error>> {
     // Read the schematic using kicad_parse_gen
     let kisch = kicad_parse_gen::read_schematic(p)?;
 
@@ -35,9 +35,12 @@ fn parse_schematic(p: &Path) -> Result<Schematic, Box<dyn Error>>  {
         &kisch.description.comment1,
         &kisch.description.comment2,
         &kisch.description.comment3,
-        &kisch.description.comment4
-    ].iter().flat_map(|c| str_if_nonempty(c)).collect();
-    
+        &kisch.description.comment4,
+    ]
+    .iter()
+    .flat_map(|c| str_if_nonempty(c))
+    .collect();
+
     // Build the metadata for this schematic, and instantiate empty vectors to be filled in
     let mut sch = Schematic {
         meta: SchematicMeta {
@@ -67,9 +70,9 @@ fn parse_schematic(p: &Path) -> Result<Schematic, Box<dyn Error>>  {
             reference: comp.reference.clone(),
             package: str_unwrap(
                 get_component_attr(&comp, "Footprint")
-                .map(|s| s.split_once(":")
-                    .map(|strs| strs.0.to_owned()))
-                    .flatten()),
+                    .map(|s| s.split_once(":").map(|strs| strs.0.to_owned()))
+                    .flatten(),
+            ),
             category: comp.name.to_owned(),
             model: get_component_attr(&comp, "Model"),
             datasheet: get_component_attr(&comp, "UserDocLink"),
@@ -84,10 +87,15 @@ fn parse_schematic(p: &Path) -> Result<Schematic, Box<dyn Error>>  {
             let key_lower = f.name.to_lowercase().clone();
             match m.insert(key_lower, f.name.clone()) {
                 None => (), // key didn't exist before, all ok
-                Some(oldval) => return Err(Box::new(errorf(&format!("duplicate keys: {} and {}", oldval, f.name))))
+                Some(oldval) => {
+                    return Err(Box::new(errorf(&format!(
+                        "duplicate keys: {} and {}",
+                        oldval, f.name
+                    ))))
+                }
             }
         }
-        
+
         // Walk through the attributes, and look for one that ends with _expr or _expression
         for f in &comp.fields {
             let fname = f.name.to_lowercase();
@@ -96,15 +104,21 @@ fn parse_schematic(p: &Path) -> Result<Schematic, Box<dyn Error>>  {
                 fname.trim_end_matches("_expr")
             } else if fname.ends_with("_expression") {
                 fname.trim_end_matches("_expression")
-            } else { continue };
+            } else {
+                continue;
+            };
 
             // The unit value can be found from the main key + the "_unit" suffix
             let unit_key = main_key.to_owned() + "_unit";
 
             // Create a new attribute with the given parameters.
-            c.attributes.push(Attribute{
+            c.attributes.push(Attribute {
                 // Special case: if the main key is "value", it is the default attribute, and hence name can be ""
-                name: if main_key == "value" { String::new() } else { main_key.to_owned() },
+                name: if main_key == "value" {
+                    String::new()
+                } else {
+                    main_key.to_owned()
+                },
                 // Get the main key value. It is ok if it's empty, too.
                 value: str_unwrap(get_component_attr_mapped(&comp, main_key, &m)),
                 // As this field corresponds to the main key expression attribute, we can get the expression directly
@@ -115,13 +129,25 @@ fn parse_schematic(p: &Path) -> Result<Schematic, Box<dyn Error>>  {
         }
 
         // Only register to the list if it has any expressions, or if it has iccc_show = true set.
-        if c.attributes.len() > 0 || is_true_str(&str_unwrap(get_component_attr_mapped(&comp, "iccc_show", &m))) {
+        if c.attributes.len() > 0
+            || is_true_str(&str_unwrap(get_component_attr_mapped(
+                &comp,
+                "iccc_show",
+                &m,
+            )))
+        {
             // Validate that reference and package aren't empty.
             if c.reference.is_empty() {
-                return Err(Box::new(errorf(&format!("{}: Component.reference is a mandatory field", &comp.name))));
+                return Err(Box::new(errorf(&format!(
+                    "{}: Component.reference is a mandatory field",
+                    &comp.name
+                ))));
             }
             if c.package.is_empty() {
-                return Err(Box::new(errorf(&format!("{}: Component.package is a mandatory field", &comp.name))));
+                return Err(Box::new(errorf(&format!(
+                    "{}: Component.package is a mandatory field",
+                    &comp.name
+                ))));
             }
             // Grow the components vector.
             sch.components.push(c);
@@ -154,10 +180,10 @@ fn parse_globals_into(kisch: &kicad_schematic::Schematic, globals: &mut Vec<Attr
             _ => continue,
         };
 
-        // The text element contains literal "\n" elements. 
+        // The text element contains literal "\n" elements.
         for line in text_element.text.split("\\n") {
             // Format: Foo[.Bar.Baz..] = <expr> [; <unit>]
-            
+
             // First, split by the equals sign. If the equals sign does not exist,
             // just continue.
             let (attr_name, expr) = match line.split_once("=") {
@@ -178,11 +204,11 @@ fn parse_globals_into(kisch: &kicad_schematic::Schematic, globals: &mut Vec<Attr
 
             // Expr must be non-empty
             if expr.trim().is_empty() {
-                continue
+                continue;
             }
 
             // Push the new attribute into the given vector
-            globals.push(Attribute{
+            globals.push(Attribute {
                 name: attr_name.to_owned(),
                 value: String::new(),
                 expression: expr.to_owned(),
@@ -216,8 +242,14 @@ fn get_component_attr(comp: &kicad_schematic::Component, key: &str) -> Option<St
 // get_component_attr_mapped works like get_component_attr, but allows "key" to be case-insensitive, as long as
 // "key" exists in hashmap "m" which maps the incase-sensitive key to a case-sensitive key that can be used for
 // get_component_attr.
-fn get_component_attr_mapped(comp: &kicad_schematic::Component, key: &str, m: &HashMap<String, String>) -> Option<String> {
-    m.get(key).map(|attr_key| get_component_attr(comp, attr_key)).flatten()
+fn get_component_attr_mapped(
+    comp: &kicad_schematic::Component,
+    key: &str,
+    m: &HashMap<String, String>,
+) -> Option<String> {
+    m.get(key)
+        .map(|attr_key| get_component_attr(comp, attr_key))
+        .flatten()
 }
 
 // str_if_nonempty trims the string reference s, and returns it as owned in an Option if non-empty.
@@ -244,7 +276,9 @@ struct StringError {
 }
 
 fn errorf(s: &str) -> StringError {
-    StringError{str: String::from(s)}
+    StringError {
+        str: String::from(s),
+    }
 }
 
 impl fmt::Display for StringError {

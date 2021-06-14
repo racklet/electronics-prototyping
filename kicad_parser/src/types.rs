@@ -1,14 +1,14 @@
-use serde::{Serialize, Deserialize};
+use serde::{Deserialize, Serialize};
 
 #[derive(Serialize, Deserialize, Debug)]
 #[serde(rename_all = "camelCase")]
 pub struct Schematic {
     pub meta: SchematicMeta,
-    #[serde(skip_serializing_if="Vec::is_empty")]
+    #[serde(skip_serializing_if = "Vec::is_empty")]
     pub globals: Vec<Attribute>,
-    #[serde(skip_serializing_if="Vec::is_empty")]
+    #[serde(skip_serializing_if = "Vec::is_empty")]
     pub components: Vec<Component>,
-    #[serde(skip_serializing_if="Vec::is_empty")]
+    #[serde(skip_serializing_if = "Vec::is_empty")]
     pub sub_schematics: Vec<Schematic>,
 }
 
@@ -16,15 +16,15 @@ pub struct Schematic {
 #[serde(rename_all = "camelCase")]
 pub struct SchematicMeta {
     pub file_name: String,
-    #[serde(skip_serializing_if="Option::is_none")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub title: Option<String>,
-    #[serde(skip_serializing_if="Option::is_none")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub date: Option<String>,
-    #[serde(skip_serializing_if="Option::is_none")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub revision: Option<String>,
-    #[serde(skip_serializing_if="Option::is_none")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub company: Option<String>,
-    #[serde(skip_serializing_if="Vec::is_empty")]
+    #[serde(skip_serializing_if = "Vec::is_empty")]
     pub comments: Vec<String>,
 }
 
@@ -34,11 +34,11 @@ pub struct Component {
     pub reference: String,
     pub package: String,
     pub category: String,
-    #[serde(skip_serializing_if="Option::is_none")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub model: Option<String>,
-    #[serde(skip_serializing_if="Option::is_none")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub datasheet: Option<String>,
-    #[serde(skip_serializing_if="Vec::is_empty")]
+    #[serde(skip_serializing_if = "Vec::is_empty")]
     pub attributes: Vec<Attribute>,
 }
 
@@ -48,6 +48,6 @@ pub struct Attribute {
     pub name: String,
     pub value: String,
     pub expression: String,
-    #[serde(skip_serializing_if="Option::is_none")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub unit: Option<String>,
 }
