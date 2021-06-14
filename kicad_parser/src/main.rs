@@ -7,6 +7,7 @@ use std::fmt;
 use std::path::Path;
 use std::error::Error;
 use std::collections::HashMap;
+use kicad_parse_gen::schematic as kicad_schematic;
 
 // Main function, can return different kinds of errors
 fn main() -> Result<(), Box<dyn Error>> {
@@ -126,6 +127,8 @@ fn parse_schematic(p: &Path) -> Result<Schematic, Box<dyn Error>>  {
         }
     }
 
+    parse_globals_into(&kisch, &mut sch.globals);
+
     // Recursively traverse and parse the sub-schematics
     for sub_sheet in &kisch.sheets {
         // TODO: Use absolute paths, relative to the current schematic
@@ -135,6 +138,57 @@ fn parse_schematic(p: &Path) -> Result<Schematic, Box<dyn Error>>  {
 
     // Finally, return the parsed schematic
     Ok(sch)
+}
+
+// parse_globals_into parses text notes from the schematic into globals
+fn parse_globals_into(kisch: &kicad_schematic::Schematic, globals: &mut Vec<Attribute>) {
+    // Loop through the elements of the schematic, which includes text notes as well.
+    for el in &kisch.elements {
+        // Only match Text elements that have type Note
+        let text_element = match el {
+            kicad_schematic::Element::Text(t) => match t.t {
+                kicad_schematic::TextType::Note => t,
+                _ => continue,
+            },
+            _ => continue,
+        };
+
+        // The text element contains literal "\n" elements. 
+        for line in text_element.text.split("\\n") {
+            // Format: Foo[.Bar.Baz..] = <expr> [; <unit>]
+            
+            // First, split by the equals sign. If the equals sign does not exist,
+            // just continue.
+            let (attr_name, expr) = match line.split_once("=") {
+                None => continue,
+                Some(a) => a,
+            };
+
+            // Then, split the "remaining" part expr into two parts by ";", where
+            // the first part overwrites expr, and the other part optionally becomes unit.
+            let (expr, unit) = match expr.split_once(";") {
+                None => (expr, None),
+                Some(a) => (a.0, Some(a.1)),
+            };
+
+            // Trim whitespace for all variables
+            let (attr_name, expr) = (attr_name.trim(), expr.trim());
+            let unit = unit.map(|u| u.trim().to_owned());
+
+            // Expr must be non-empty
+            if expr.trim().is_empty() {
+                continue
+            }
+
+            // Push the new attribute into the given vector
+            globals.push(Attribute{
+                name: attr_name.to_owned(),
+                value: String::new(),
+                expression: expr.to_owned(),
+                unit: unit,
+            })
+        }
+    }
 }
 
 // is_true_str returns true is s is a "true-like" string like "true" or "1", otherwise false
@@ -154,14 +208,14 @@ fn str_borrow_unwrap(opt: Option<&str>) -> String {
 
 // get_component_attr gets the component attribute value for a case-sensitive key, but returns
 // None if the value is "" or "~".
-fn get_component_attr(comp: &kicad_parse_gen::schematic::Component, key: &str) -> Option<String> {
+fn get_component_attr(comp: &kicad_schematic::Component, key: &str) -> Option<String> {
     str_if_nonempty_opt(comp.get_field_value(key))
 }
 
 // get_component_attr_mapped works like get_component_attr, but allows "key" to be case-insensitive, as long as
 // "key" exists in hashmap "m" which maps the incase-sensitive key to a case-sensitive key that can be used for
 // get_component_attr.
-fn get_component_attr_mapped(comp: &kicad_parse_gen::schematic::Component, key: &str, m: &HashMap<String, String>) -> Option<String> {
+fn get_component_attr_mapped(comp: &kicad_schematic::Component, key: &str, m: &HashMap<String, String>) -> Option<String> {
     m.get(key).map(|attr_key| get_component_attr(comp, attr_key)).flatten()
 }
 
