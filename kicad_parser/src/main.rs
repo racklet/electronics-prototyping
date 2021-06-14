@@ -3,24 +3,25 @@ mod types;
 use types::*;
 
 // std imports
-use std::fmt;
-use std::path::Path;
-use std::error::Error;
-use std::collections::HashMap;
 use kicad_parse_gen::schematic as kicad_schematic;
+use std::collections::HashMap;
+use std::error::Error;
+use std::path::Path;
+use std::{env, fmt};
 
 // Main function, can return different kinds of errors
 fn main() -> Result<(), Box<dyn Error>> {
-    let p = std::path::Path::new("hat-psu.sch");
+    let args: Vec<String> = env::args().collect();
+    let p = std::path::Path::new(args.get(1).ok_or("expected file as first argument")?);
     let sch = parse_schematic(&p)?;
-    
+
     // Marshal as YAML
     // First use the JSON parser to convert the struct into an "intermediate representation": a Serde::Value.
     let json_val = serde_json::to_value(&sch)?;
     // Then, marshal the intermediate representation to YAML, avoiding errors like https://github.com/dtolnay/serde-yaml/issues/87
     let serialized = serde_yaml::to_string(&json_val)?;
-    println!("serialized yaml = {}", serialized);
-    
+    println!("{}", serialized);
+
     Ok(())
 }
 
