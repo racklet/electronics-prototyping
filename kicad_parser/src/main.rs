@@ -2,7 +2,6 @@
 mod types;
 use types::*;
 
-// std imports
 use kicad_parse_gen::schematic as kicad_schematic;
 use std::collections::HashMap;
 use std::error::Error;
@@ -16,7 +15,7 @@ fn main() -> Result<(), Box<dyn Error>> {
     let sch = parse_schematic(&p)?;
 
     // Marshal as YAML
-    // First use the JSON parser to convert the struct into an "intermediate representation": a Serde::Value.
+    // First use the JSON parser to convert the struct into an "intermediate representation": a Serde::Value
     let json_val = serde_json::to_value(&sch)?;
     // Then, marshal the intermediate representation to YAML, avoiding errors like https://github.com/dtolnay/serde-yaml/issues/87
     let serialized = serde_yaml::to_string(&json_val)?;
@@ -25,7 +24,7 @@ fn main() -> Result<(), Box<dyn Error>> {
     Ok(())
 }
 
-// parse_schematic turns a schematic at path p into the recursive Schematic struct.
+// parse_schematic turns a schematic at path p into the recursive Schematic struct
 fn parse_schematic(p: &Path) -> Result<Schematic, Box<dyn Error>> {
     // Read the schematic using kicad_parse_gen
     let kisch = kicad_parse_gen::read_schematic(p)?;
@@ -49,7 +48,7 @@ fn parse_schematic(p: &Path) -> Result<Schematic, Box<dyn Error>> {
             date: str_if_nonempty(&kisch.description.date),
             revision: str_if_nonempty(&kisch.description.rev),
             company: str_if_nonempty(&kisch.description.comp),
-            comments: comments,
+            comments,
         },
         // TODO: Parse globals from Text objects
         globals: vec![],
@@ -64,7 +63,7 @@ fn parse_schematic(p: &Path) -> Result<Schematic, Box<dyn Error>> {
             return Err(Box::new(errorf("Every component must have a name")));
         }
 
-        // Fill in the metadata about the component. reference and package fields are validated to be non-empty
+        // Fill in the metadata about the component. Reference and package fields are validated to be non-empty
         // later, once we know if the component should be included in the result.
         let mut c = Component {
             reference: comp.reference.clone(),
@@ -86,7 +85,7 @@ fn parse_schematic(p: &Path) -> Result<Schematic, Box<dyn Error>> {
             // Optimistically try to insert key_lower into m, and error if there was a duplicate
             let key_lower = f.name.to_lowercase().clone();
             match m.insert(key_lower, f.name.clone()) {
-                None => (), // key didn't exist before, all ok
+                None => (), // Key didn't exist before, all ok
                 Some(oldval) => {
                     return Err(Box::new(errorf(&format!(
                         "duplicate keys: {} and {}",
@@ -99,7 +98,7 @@ fn parse_schematic(p: &Path) -> Result<Schematic, Box<dyn Error>> {
         // Walk through the attributes, and look for one that ends with _expr or _expression
         for f in &comp.fields {
             let fname = f.name.to_lowercase();
-            // Strip the expr suffixes from the lower-cased fname, or skip it if the suffix isn't correct.
+            // Strip the expr suffixes from the lower-cased fname, or skip it if the suffix isn't correct
             let main_key = if fname.ends_with("_expr") {
                 fname.trim_end_matches("_expr")
             } else if fname.ends_with("_expression") {
@@ -111,7 +110,7 @@ fn parse_schematic(p: &Path) -> Result<Schematic, Box<dyn Error>> {
             // The unit value can be found from the main key + the "_unit" suffix
             let unit_key = main_key.to_owned() + "_unit";
 
-            // Create a new attribute with the given parameters.
+            // Create a new attribute with the given parameters
             c.attributes.push(Attribute {
                 // Special case: if the main key is "value", it is the default attribute, and hence name can be ""
                 name: if main_key == "value" {
@@ -128,7 +127,7 @@ fn parse_schematic(p: &Path) -> Result<Schematic, Box<dyn Error>> {
             });
         }
 
-        // Only register to the list if it has any expressions, or if it has iccc_show = true set.
+        // Only register to the list if it has any expressions, or if it has iccc_show = true set
         if c.attributes.len() > 0
             || is_true_str(&str_unwrap(get_component_attr_mapped(
                 &comp,
@@ -136,7 +135,7 @@ fn parse_schematic(p: &Path) -> Result<Schematic, Box<dyn Error>> {
                 &m,
             )))
         {
-            // Validate that reference and package aren't empty.
+            // Validate that reference and package aren't empty
             if c.reference.is_empty() {
                 return Err(Box::new(errorf(&format!(
                     "{}: Component.reference is a mandatory field",
@@ -149,7 +148,7 @@ fn parse_schematic(p: &Path) -> Result<Schematic, Box<dyn Error>> {
                     &comp.name
                 ))));
             }
-            // Grow the components vector.
+            // Grow the components vector
             sch.components.push(c);
         }
     }
@@ -169,7 +168,7 @@ fn parse_schematic(p: &Path) -> Result<Schematic, Box<dyn Error>> {
 
 // parse_globals_into parses text notes from the schematic into globals
 fn parse_globals_into(kisch: &kicad_schematic::Schematic, globals: &mut Vec<Attribute>) {
-    // Loop through the elements of the schematic, which includes text notes as well.
+    // Loop through the elements of the schematic, which includes text notes as well
     for el in &kisch.elements {
         // Only match Text elements that have type Note
         let text_element = match el {
@@ -180,7 +179,7 @@ fn parse_globals_into(kisch: &kicad_schematic::Schematic, globals: &mut Vec<Attr
             _ => continue,
         };
 
-        // The text element contains literal "\n" elements.
+        // The text element contains literal "\n" elements
         for line in text_element.text.split("\\n") {
             // Format: Foo[.Bar.Baz..] = <expr> [; <unit>]
 
@@ -192,7 +191,7 @@ fn parse_globals_into(kisch: &kicad_schematic::Schematic, globals: &mut Vec<Attr
             };
 
             // Then, split the "remaining" part expr into two parts by ";", where
-            // the first part overwrites expr, and the other part optionally becomes unit.
+            // the first part overwrites expr, and the other part optionally becomes unit
             let (expr, unit) = match expr.split_once(";") {
                 None => (expr, None),
                 Some(a) => (a.0, Some(a.1)),
@@ -212,7 +211,7 @@ fn parse_globals_into(kisch: &kicad_schematic::Schematic, globals: &mut Vec<Attr
                 name: attr_name.to_owned(),
                 value: String::new(),
                 expression: expr.to_owned(),
-                unit: unit,
+                unit,
             })
         }
     }
@@ -223,25 +222,25 @@ fn is_true_str(s: &str) -> bool {
     s == "true" || s == "1"
 }
 
-// str_unwrap unwraps the String option such that if opt is None, a new, empty String is returned.
+// str_unwrap unwraps the String option such that if opt is None, a new, empty String is returned
 fn str_unwrap(opt: Option<String>) -> String {
     opt.unwrap_or_else(|| String::new())
 }
 
-// str_borrow_unwrap is like str_unwrap, but for an Option containing a string reference.
+// str_borrow_unwrap is like str_unwrap, but for an Option containing a string reference
 fn str_borrow_unwrap(opt: Option<&str>) -> String {
     opt.unwrap_or("").to_owned()
 }
 
 // get_component_attr gets the component attribute value for a case-sensitive key, but returns
-// None if the value is "" or "~".
+// None if the value is "" or "~"
 fn get_component_attr(comp: &kicad_schematic::Component, key: &str) -> Option<String> {
     str_if_nonempty_opt(comp.get_field_value(key))
 }
 
 // get_component_attr_mapped works like get_component_attr, but allows "key" to be case-insensitive, as long as
-// "key" exists in hashmap "m" which maps the incase-sensitive key to a case-sensitive key that can be used for
-// get_component_attr.
+// "key" exists in hashmap "m" which maps the case-insensitive key to a case-sensitive key that can be used for
+// get_component_attr
 fn get_component_attr_mapped(
     comp: &kicad_schematic::Component,
     key: &str,
@@ -269,7 +268,7 @@ fn str_if_nonempty_opt(s_opt: Option<String>) -> Option<String> {
     s_opt.map(|s| str_if_nonempty(&s)).flatten()
 }
 
-// A struct implementing the Error trait, carrying just a simple message.
+// A struct implementing the Error trait, carrying just a simple message
 #[derive(Debug)]
 struct StringError {
     str: String,

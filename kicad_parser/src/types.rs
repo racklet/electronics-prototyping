@@ -1,5 +1,7 @@
 use serde::{Deserialize, Serialize};
 
+// These types are used to structure the YAML-formatted output
+
 #[derive(Serialize, Deserialize, Debug)]
 #[serde(rename_all = "camelCase")]
 pub struct Schematic {
