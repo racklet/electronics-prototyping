@@ -12,7 +12,7 @@ use std::{env, fmt};
 fn main() -> Result<(), Box<dyn Error>> {
     let args: Vec<String> = env::args().collect();
     let p = std::path::Path::new(args.get(1).ok_or("expected file as first argument")?);
-    let sch = parse_schematic(&p)?;
+    let sch = parse_schematic(&p, String::new())?;
 
     // Marshal as YAML
     // First use the JSON parser to convert the struct into an "intermediate representation": a Serde::Value
@@ -24,8 +24,8 @@ fn main() -> Result<(), Box<dyn Error>> {
     Ok(())
 }
 
-// parse_schematic turns a schematic at path p into the recursive Schematic struct
-fn parse_schematic(p: &Path) -> Result<Schematic, Box<dyn Error>> {
+// parse_schematic turns a schematic at path p into the recursive Schematic struct.
+fn parse_schematic(p: &Path, id: String) -> Result<Schematic, Box<dyn Error>>  {
     // Read the schematic using kicad_parse_gen
     let kisch = kicad_parse_gen::read_schematic(p)?;
 
@@ -42,6 +42,7 @@ fn parse_schematic(p: &Path) -> Result<Schematic, Box<dyn Error>> {
 
     // Build the metadata for this schematic, and instantiate empty vectors to be filled in
     let mut sch = Schematic {
+        id: id,
         meta: SchematicMeta {
             file_name: str_borrow_unwrap(p.file_name().map(|s| s.to_str()).flatten()),
             title: str_if_nonempty(&kisch.description.title),
@@ -50,7 +51,6 @@ fn parse_schematic(p: &Path) -> Result<Schematic, Box<dyn Error>> {
             company: str_if_nonempty(&kisch.description.comp),
             comments,
         },
-        // TODO: Parse globals from Text objects
         globals: vec![],
         components: vec![],
         sub_schematics: vec![],
@@ -159,7 +159,7 @@ fn parse_schematic(p: &Path) -> Result<Schematic, Box<dyn Error>> {
     for sub_sheet in &kisch.sheets {
         // TODO: Use absolute paths, relative to the current schematic
         let p = Path::new(&sub_sheet.filename);
-        sch.sub_schematics.push(parse_schematic(p)?);
+        sch.sub_schematics.push(parse_schematic(p, sub_sheet.name.clone())?);
     }
 
     // Finally, return the parsed schematic
@@ -201,9 +201,9 @@ fn parse_globals_into(kisch: &kicad_schematic::Schematic, globals: &mut Vec<Attr
             let (attr_name, expr) = (attr_name.trim(), expr.trim());
             let unit = unit.map(|u| u.trim().to_owned());
 
-            // Expr must be non-empty
-            if expr.trim().is_empty() {
-                continue;
+            // attr_name and expr must be non-empty
+            if attr_name.is_empty() || expr.is_empty() {
+                continue
             }
 
             // Push the new attribute into the given vector

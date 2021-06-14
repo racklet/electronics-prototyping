@@ -5,6 +5,8 @@ use serde::{Deserialize, Serialize};
 #[derive(Serialize, Deserialize, Debug)]
 #[serde(rename_all = "camelCase")]
 pub struct Schematic {
+    // The "top-level" schematic has id ""
+    pub id: String,
     pub meta: SchematicMeta,
     #[serde(skip_serializing_if = "Vec::is_empty")]
     pub globals: Vec<Attribute>,
