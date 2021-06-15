@@ -1,5 +1,5 @@
 use std::collections::HashMap;
-use evalexpr::{Context, ContextWithMutableVariables, HashMapContext};
+use evalexpr::{ContextWithMutableVariables, HashMapContext};
 
 pub struct Expression {
 	expr: String,
@@ -19,24 +19,23 @@ pub fn resolve(expressions: &HashMap<String, Expression>) -> HashMapContext {
 	let mut c = HashMapContext::new();
 
 	for id in expressions.keys() {
-		println!("{}", id);
-		evaluate(&mut c, expressions, id.to_owned());
+		evaluate(&mut c, expressions, id.into());
 	}
 
 	c
 }
 
-fn evaluate<T: Context + ContextWithMutableVariables>(c: &mut T, e: &HashMap<String, Expression>, id: String) {
+fn evaluate<T: ContextWithMutableVariables>(c: &mut T, e: &HashMap<String, Expression>, id: String) {
 	if c.get_value(&id).is_some() {
-		println!("Already resolved: {}", id);
 		return;
 	}
 
-	let node = evalexpr::build_operator_tree(&e[&id].expr).expect("no err"); // TODO: Error handling
+	let node = evalexpr::build_operator_tree(&e[&id].expr // TODO: Error handling
+	).expect("no err"); // TODO: Error handling
 	for dep in node.iter_variable_identifiers() {
-		println!("Recursive call for: {}", dep);
 		evaluate(c, e, String::from(dep));
 	}
 
-	c.set_value(id, node.eval_with_context(c).unwrap()).unwrap(); // TODO: Error handling
+	let val = node.eval_with_context(c).unwrap(); // TODO: Error handling
+	c.set_value(id, val).unwrap(); // TODO: Error handling
 }

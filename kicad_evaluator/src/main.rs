@@ -4,8 +4,6 @@ use std::error::Error;
 use std::env;
 use std::path::Path;
 use std::collections::HashMap;
-use std::lazy::Lazy;
-use evalexpr::{ContextWithMutableVariables, ContextWithMutableFunctions, Function, Value, Context};
 
 mod resolver;
 use resolver::Expression;
@@ -42,7 +40,8 @@ fn main() -> Result<(), Box<dyn Error>> {
 
 	let mut input = HashMap::new();
 	input.insert("a", "5");
-	input.insert("b", "a + c");
+	input.insert("d", "b * 2");
+	input.insert("x", "b = a + c");
 	input.insert("c", "6");
 
 	let mut expr = HashMap::<String, Expression>::new();
@@ -66,7 +65,7 @@ fn main() -> Result<(), Box<dyn Error>> {
 
 	let c = resolver::resolve(&expr);
 
-	println!("{:?}", c.get_value("b"));
+	println!("{:?}", c.get_value("d"));
 
 	Ok(())
 }
