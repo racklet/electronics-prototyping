@@ -1,0 +1,4 @@
+(sym_lib_table
+  (lib (name LMR14050)(type Legacy)(uri ${KIPRJMOD}/../../kicad_libraries/symbols/LMR14050.lib)(options "")(descr ""))
+  (lib (name racklet)(type Legacy)(uri ${KIPRJMOD}/libs/racklet-kicad-lib/racklet.lib)(options "")(descr ""))
+)
