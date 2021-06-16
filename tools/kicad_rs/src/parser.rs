@@ -1,22 +1,18 @@
+use kicad_parse_gen::schematic as kicad_schematic;
 use std::collections::HashMap;
-use std::error::Error;
 use std::path::Path;
 
-use kicad_parse_gen::schematic as kicad_schematic;
-
-use crate::error::errorf;
+use crate::error::{errorf, DynamicResult};
 use crate::types::*;
 
-type ParseResult<T> = Result<T, Box<dyn Error>>;
-
 impl Schematic {
-    pub fn parse(p: &Path) -> ParseResult<Schematic> {
+    pub fn parse(p: &Path) -> DynamicResult<Schematic> {
         parse_schematic(p, String::new())
     }
 }
 
 /// Turns a KiCad schematic at `path` into a recursive Schematic struct
-fn parse_schematic(path: &Path, id: String) -> ParseResult<Schematic> {
+fn parse_schematic(path: &Path, id: String) -> DynamicResult<Schematic> {
     // Read the schematic using kicad_parse_gen
     let kisch = kicad_parse_gen::read_schematic(path)?;
 
@@ -37,7 +33,7 @@ fn parse_schematic(path: &Path, id: String) -> ParseResult<Schematic> {
 }
 
 /// Parses the metadata from the given KiCad schematic
-pub fn parse_meta(kisch: &kicad_schematic::Schematic, path: &Path) -> ParseResult<SchematicMeta> {
+pub fn parse_meta(kisch: &kicad_schematic::Schematic, path: &Path) -> DynamicResult<SchematicMeta> {
     // Only include non-empty comments
     let comments = vec![
         kisch.description.comment1.as_str(),
@@ -64,7 +60,7 @@ pub fn parse_meta(kisch: &kicad_schematic::Schematic, path: &Path) -> ParseResul
 }
 
 /// Parses global definitions from text notes in the KiCad schematic
-pub fn parse_globals(kisch: &kicad_schematic::Schematic) -> ParseResult<Vec<Attribute>> {
+pub fn parse_globals(kisch: &kicad_schematic::Schematic) -> DynamicResult<Vec<Attribute>> {
     let mut globals = Vec::new();
 
     // Loop through the elements of the schematic, which includes text notes as well
@@ -120,7 +116,7 @@ pub fn parse_globals(kisch: &kicad_schematic::Schematic) -> ParseResult<Vec<Attr
 }
 
 /// Parses the component definitions present in the given KiCad schematic
-pub fn parse_components(kisch: &kicad_schematic::Schematic) -> ParseResult<Vec<Component>> {
+pub fn parse_components(kisch: &kicad_schematic::Schematic) -> DynamicResult<Vec<Component>> {
     let mut components = Vec::new();
 
     // Walk through all components in the sheet
@@ -136,13 +132,17 @@ pub fn parse_components(kisch: &kicad_schematic::Schematic) -> ParseResult<Vec<C
         // Fill in the metadata about the component. Reference and package fields are validated to be non-empty
         // later, once we know if the component should be included in the result.
         let mut c = Component {
-            reference: comp.reference.clone(),
-            footprint_library: footprint_str.split_char_n(':', 0).or_empty_str(),
-            footprint_name: footprint_str.split_char_n(':', 1).or_empty_str(),
-            symbol_library: symbol_str.split_char_n(':', 0).or_empty_str(),
-            symbol_name: symbol_str.split_char_n(':', 1).or_empty_str(),
-            model: get_component_attr(&comp, "Model"),
-            datasheet: get_component_attr(&comp, "UserDocLink"),
+            labels: ComponentLabels {
+                reference: comp.reference.clone(),
+                footprint_library: footprint_str.split_char_n(':', 0).or_empty_str(),
+                footprint_name: footprint_str.split_char_n(':', 1).or_empty_str(),
+                symbol_library: symbol_str.split_char_n(':', 0).or_empty_str(),
+                symbol_name: symbol_str.split_char_n(':', 1).or_empty_str(),
+                model: get_component_attr(&comp, "Model"),
+                datasheet: get_component_attr(&comp, "UserDocLink"),
+                extra: HashMap::new(),
+            },
+            classes: vec![],
             attributes: vec![],
         };
 
@@ -206,16 +206,8 @@ pub fn parse_components(kisch: &kicad_schematic::Schematic) -> ParseResult<Vec<C
                 .or_empty_str()
                 .is_true_like()
         {
-            // Collect required fields
-            let mut req_fields = HashMap::new();
-            req_fields.insert("reference", &c.reference);
-            req_fields.insert("footprint_library", &c.footprint_library);
-            req_fields.insert("footprint_name", &c.footprint_name);
-            req_fields.insert("symbol_library", &c.symbol_library);
-            req_fields.insert("symbol_name", &c.symbol_name);
-
             // Validate that required fields are set
-            for (key, val) in &req_fields {
+            for (key, val) in &c.labels.to_map() {
                 if val.is_empty() {
                     return Err(Box::new(errorf(&format!(
                         "{}: Component.{} is a mandatory field",
@@ -236,7 +228,7 @@ pub fn parse_components(kisch: &kicad_schematic::Schematic) -> ParseResult<Vec<C
 pub fn parse_sub_schematics(
     kisch: &kicad_schematic::Schematic,
     path: &Path,
-) -> ParseResult<Vec<Schematic>> {
+) -> DynamicResult<Vec<Schematic>> {
     let mut sub_schematics = Vec::new();
 
     // Recursively traverse and parse the sub-schematics
