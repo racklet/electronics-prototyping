@@ -3,7 +3,7 @@ EELAYER 30 0
 EELAYER END
 $Descr A4 11693 8268
 encoding utf-8
-Sheet 5 5
+Sheet 1 1
 Title "Compute unit HAT attachment"
 Date "2021-06-13"
 Rev "0.1.1"
@@ -14,15 +14,17 @@ Comment3 "https://github.com/racklet/racklet"
 Comment4 "Author: Verneri Hirvonen"
 $EndDescr
 $Comp
-L Device:L L?
+L Device:L L2
 U 1 1 60A118D6
 P 6700 3600
-AR Path="/60A118D6" Ref="L?"  Part="1" 
+AR Path="/60A118D6" Ref="L2"  Part="1" 
 AR Path="/60A0E5A4/60A118D6" Ref="L2"  Part="1" 
 F 0 "L2" V 6890 3600 50  0000 C CNN
 F 1 "8.2u" V 6799 3600 50  0000 C CNN
 F 2 "racklet:DEM8045C" H 6700 3600 50  0001 C CNN
 F 3 "https://media.digikey.com/pdf/Data%20Sheets/Murata%20PDFs/DEMO80(30,40,45)C%20Type.pdf" H 6700 3600 50  0001 C CNN
+F 4 "true" V 6700 3600 50  0001 C CNN "ICCC_Show"
+F 5 "8.2u" V 6700 3600 50  0001 C CNN "Value_Expr"
 	1    6700 3600
 	0    -1   -1   0   
 $EndComp
@@ -36,6 +38,8 @@ F 0 "C6" H 7242 3796 50  0000 L CNN
 F 1 "47u" H 7242 3705 50  0000 L CNN
 F 2 "Capacitor_SMD:C_1206_3216Metric" H 7150 3750 50  0001 C CNN
 F 3 "~" H 7150 3750 50  0001 C CNN
+F 4 "true" H 7150 3750 50  0001 C CNN "ICCC_Show"
+F 5 "47u" H 7150 3750 50  0001 C CNN "Value_Expr"
 	1    7150 3750
 	1    0    0    -1  
 $EndComp
@@ -74,6 +78,8 @@ F 0 "C7" H 8142 4146 50  0000 L CNN
 F 1 "15p" H 8142 4055 50  0000 L CNN
 F 2 "Capacitor_SMD:C_0603_1608Metric" H 8050 4100 50  0001 C CNN
 F 3 "~" H 8050 4100 50  0001 C CNN
+F 4 "true" H 8050 4100 50  0001 C CNN "ICCC_Show"
+F 5 "15p" H 8050 4100 50  0001 C CNN "Value_Expr"
 	1    8050 4100
 	1    0    0    -1  
 $EndComp
@@ -112,6 +118,8 @@ F 0 "C5" H 6392 4096 50  0000 L CNN
 F 1 "5600p" H 6392 4005 50  0000 L CNN
 F 2 "Capacitor_SMD:C_0603_1608Metric" H 6300 4050 50  0001 C CNN
 F 3 "~" H 6300 4050 50  0001 C CNN
+F 4 "true" H 6300 4050 50  0001 C CNN "ICCC_Show"
+F 5 "5600p" H 6300 4050 50  0001 C CNN "Value_Expr"
 	1    6300 4050
 	1    0    0    -1  
 $EndComp
@@ -123,6 +131,10 @@ F 0 "R6" H 6241 4254 50  0000 R CNN
 F 1 "16.2k" H 6241 4345 50  0000 R CNN
 F 2 "Resistor_SMD:R_0603_1608Metric" H 6300 4300 50  0001 C CNN
 F 3 "~" H 6300 4300 50  0001 C CNN
+F 4 "true" H 6300 4300 50  0001 C CNN "ICCC_Show"
+F 5 "16.2k" H 6300 4300 50  0001 C CNN "Value_Expr"
+F 6 "1" H 6300 4300 50  0001 C CNN "Tolerance_Expr"
+F 7 "1" H 6300 4300 50  0001 C CNN "Tolerance"
 	1    6300 4300
 	-1   0    0    1   
 $EndComp
@@ -134,6 +146,8 @@ F 0 "R7" H 7641 4054 50  0000 R CNN
 F 1 "549k" H 7641 4145 50  0000 R CNN
 F 2 "Resistor_SMD:R_0603_1608Metric" H 7700 4100 50  0001 C CNN
 F 3 "~" H 7700 4100 50  0001 C CNN
+F 4 "true" H 7700 4100 50  0001 C CNN "ICCC_Show"
+F 5 "549k" H 7700 4100 50  0001 C CNN "Value_Expr"
 	1    7700 4100
 	-1   0    0    1   
 $EndComp
@@ -145,6 +159,8 @@ F 0 "R8" H 7641 4354 50  0000 R CNN
 F 1 "102k" H 7641 4445 50  0000 R CNN
 F 2 "Resistor_SMD:R_0603_1608Metric" H 7700 4400 50  0001 C CNN
 F 3 "~" H 7700 4400 50  0001 C CNN
+F 4 "true" H 7700 4400 50  0001 C CNN "ICCC_Show"
+F 5 "102k" H 7700 4400 50  0001 C CNN "Value_Expr"
 	1    7700 4400
 	-1   0    0    1   
 $EndComp
@@ -177,6 +193,12 @@ F 0 "C3" H 3992 4046 50  0000 L CNN
 F 1 "0.1u" H 3992 3955 50  0000 L CNN
 F 2 "Capacitor_SMD:C_0603_1608Metric" H 3900 4000 50  0001 C CNN
 F 3 "~" H 3900 4000 50  0001 C CNN
+F 4 "true" H 3900 4000 50  0001 C CNN "ICCC_Show"
+F 5 "0.1u" H 3900 4000 50  0001 C CNN "Value_Expr"
+F 6 "35" H 3900 4000 50  0001 C CNN "VoltageRating_Expr"
+F 7 "V" H 3900 4000 50  0001 C CNN "VoltageRating_Unit"
+F 8 "35" H 3900 4000 50  0001 C CNN "VoltageRating"
+F 9 "Must be at least as large as the input voltage" H 3900 4000 50  0001 C CNN "VoltageRating_Comment"
 	1    3900 4000
 	1    0    0    -1  
 $EndComp
@@ -229,6 +251,8 @@ F 0 "C4" V 5121 3050 50  0000 C CNN
 F 1 "0.1u" V 5212 3050 50  0000 C CNN
 F 2 "Capacitor_SMD:C_0603_1608Metric" H 5350 3050 50  0001 C CNN
 F 3 "~" H 5350 3050 50  0001 C CNN
+F 4 "true" V 5350 3050 50  0001 C CNN "ICCC_Show"
+F 5 "0.1u" V 5350 3050 50  0001 C CNN "Value_Expr"
 	1    5350 3050
 	0    1    1    0   
 $EndComp
@@ -270,6 +294,8 @@ F 0 "C2" H 3592 4046 50  0000 L CNN
 F 1 "10u" H 3592 3955 50  0000 L CNN
 F 2 "Capacitor_SMD:C_1206_3216Metric" H 3500 4000 50  0001 C CNN
 F 3 "~" H 3500 4000 50  0001 C CNN
+F 4 "true" H 3500 4000 50  0001 C CNN "ICCC_Show"
+F 5 "10u" H 3500 4000 50  0001 C CNN "Value_Expr"
 	1    3500 4000
 	1    0    0    -1  
 $EndComp
@@ -301,6 +327,12 @@ F 0 "U2" H 5275 4265 50  0000 C CNN
 F 1 "BD9E302EFJ-E2" H 5275 4174 50  0000 C CNN
 F 2 "Package_SO:HTSOP-8-1EP_3.9x4.9mm_P1.27mm_EP2.4x3.2mm_ThermalVias" H 5200 4250 50  0001 C CNN
 F 3 "https://fscdn.rohm.com/en/products/databook/datasheet/ic/power/switching_regulator/bd9e302efj-e.pdf" H 5200 3750 50  0001 C CNN
+F 4 "true" H 5300 3750 50  0001 C CNN "ICCC_Show"
+F 5 "BD9E302EFJ-E2" H 5300 3750 50  0001 C CNN "Model"
+F 6 "3" H 5300 3750 50  0001 C CNN "CurrentOutput_Min_Expr"
+F 7 "3" H 5300 3750 50  0001 C CNN "CurrentOutput_Min"
+F 8 "12" H 5300 3750 50  0001 C CNN "Min_Vin_Max_Expr"
+F 9 "24" H 5300 3750 50  0001 C CNN "Max_Vin_Min_Expr"
 	1    5300 3750
 	1    0    0    -1  
 $EndComp

@@ -1,3 +1,5 @@
+#![feature(slice_group_by)]
+
 // Import types.rs
 mod types;
 use types::*;
@@ -12,7 +14,46 @@ use std::{env, fmt};
 fn main() -> Result<(), Box<dyn Error>> {
     let args: Vec<String> = env::args().collect();
     let p = std::path::Path::new(args.get(1).ok_or("expected file as first argument")?);
-    let sch = parse_schematic(&p, String::new())?;
+    let classifiers = vec![
+        ComponentClassifier {
+            class: String::from("capacitor"),
+            footprint_name: None,
+            footprint_library: None,
+            symbol_name: Some(String::from("C_Small")), // TODO: Make a list for or
+            symbol_library: None,
+            attributes: vec![],
+        },
+        ComponentClassifier {
+            class: String::from("capacitor"),
+            footprint_name: None,
+            footprint_library: Some(String::from("Capacitor_SMD")),
+            symbol_name: None,
+            symbol_library: None,
+            attributes: vec![],
+        },
+        ComponentClassifier {
+            class: String::from("resistor"),
+            footprint_name: None,
+            footprint_library: None,
+            symbol_name: Some(String::from("R_Small")),
+            symbol_library: None,
+            attributes: vec![],
+        },
+        ComponentClassifier {
+            class: String::from("shunt_resistor"),
+            footprint_name: None,
+            footprint_library: None,
+            symbol_name: Some(String::from("R_Small")),
+            symbol_library: None,
+            attributes: vec![AttributeMatch {
+                name: String::from("Tolerance"),
+                value: Some(String::from("1")),
+            }],
+        },
+    ];
+    let mut sch = parse_schematic(&p, String::new())?;
+
+    classify_components(&mut sch, &classifiers);
 
     // Marshal as YAML
     // First use the JSON parser to convert the struct into an "intermediate representation": a Serde::Value
@@ -37,18 +78,18 @@ fn parse_schematic(p: &Path, id: String) -> Result<Schematic, Box<dyn Error>> {
         &kisch.description.comment4,
     ]
     .iter()
-    .flat_map(|c| str_if_nonempty(c))
+    .flat_map(|c| c.as_str().filter_empty())
     .collect();
 
     // Build the metadata for this schematic, and instantiate empty vectors to be filled in
     let mut sch = Schematic {
         id: id,
         meta: SchematicMeta {
-            file_name: str_borrow_unwrap(p.file_name().map(|s| s.to_str()).flatten()),
-            title: str_if_nonempty(&kisch.description.title),
-            date: str_if_nonempty(&kisch.description.date),
-            revision: str_if_nonempty(&kisch.description.rev),
-            company: str_if_nonempty(&kisch.description.comp),
+            file_name: p.file_name().map(|s| s.to_str()).flatten().or_empty_str(),
+            title: kisch.description.title.as_str().filter_empty(),
+            date: kisch.description.date.as_str().filter_empty(),
+            revision: kisch.description.rev.as_str().filter_empty(),
+            company: kisch.description.comp.as_str().filter_empty(),
             comments,
         },
         globals: vec![],
@@ -63,20 +104,24 @@ fn parse_schematic(p: &Path, id: String) -> Result<Schematic, Box<dyn Error>> {
             return Err(Box::new(errorf("Every component must have a name")));
         }
 
+        let footprint_str = get_component_attr(&comp, "Footprint");
+        let symbol_str = comp.name.as_str();
+
         // Fill in the metadata about the component. Reference and package fields are validated to be non-empty
         // later, once we know if the component should be included in the result.
         let mut c = Component {
             reference: comp.reference.clone(),
-            package: str_unwrap(
-                get_component_attr(&comp, "Footprint")
-                    .map(|s| s.split_once(":").map(|strs| strs.0.to_owned()))
-                    .flatten(),
-            ),
-            category: comp.name.to_owned(),
+            footprint_library: footprint_str.split_n(':', 0).or_empty_str(),
+            footprint_name: footprint_str.split_n(':', 1).or_empty_str(),
+            symbol_library: symbol_str.split_n(':', 0).or_empty_str(),
+            symbol_name: symbol_str.split_n(':', 1).or_empty_str(),
             model: get_component_attr(&comp, "Model"),
             datasheet: get_component_attr(&comp, "UserDocLink"),
+            classes: vec![], // Will be done by the classifier
             attributes: vec![],
         };
+
+        //c.class = classify_component(&c, classifier);
 
         // m maps the lower-case representation to the whatever-cased representation
         let mut m = HashMap::new();
@@ -107,8 +152,9 @@ fn parse_schematic(p: &Path, id: String) -> Result<Schematic, Box<dyn Error>> {
                 continue;
             };
 
-            // The unit value can be found from the main key + the "_unit" suffix
+            // The unit & comment values can be found from the main key + the "_unit"/"_comment" suffixes
             let unit_key = main_key.to_owned() + "_unit";
+            let comment_key = main_key.to_owned() + "_comment";
 
             // Create a new attribute with the given parameters
             c.attributes.push(Attribute {
@@ -116,38 +162,43 @@ fn parse_schematic(p: &Path, id: String) -> Result<Schematic, Box<dyn Error>> {
                 name: if main_key == "value" {
                     String::new()
                 } else {
-                    main_key.to_owned()
+                    m.get(main_key)
+                        .map(|s| s.as_str()).unwrap_or(main_key)
+                        .to_owned()
                 },
                 // Get the main key value. It is ok if it's empty, too.
-                value: str_unwrap(get_component_attr_mapped(&comp, main_key, &m)),
+                value: get_component_attr_mapped(&comp, main_key, &m).or_empty_str(),
                 // As this field corresponds to the main key expression attribute, we can get the expression directly
                 expression: f.value.clone(),
-                // Optionally, get the unit
+                // Optionally, get the unit and a comment
                 unit: get_component_attr_mapped(&comp, &unit_key, &m),
+                comment: get_component_attr_mapped(&comp, &comment_key, &m),
             });
         }
 
         // Only register to the list if it has any expressions, or if it has iccc_show = true set
         if c.attributes.len() > 0
-            || is_true_str(&str_unwrap(get_component_attr_mapped(
-                &comp,
-                "iccc_show",
-                &m,
-            )))
+            || get_component_attr_mapped(&comp, "iccc_show", &m)
+                .or_empty_str()
+                .is_true_like()
         {
-            // Validate that reference and package aren't empty
-            if c.reference.is_empty() {
-                return Err(Box::new(errorf(&format!(
-                    "{}: Component.reference is a mandatory field",
-                    &comp.name
-                ))));
+            let mut req_fields = HashMap::new();
+            req_fields.insert("reference", c.reference.to_owned());
+            req_fields.insert("footprint_library", c.footprint_library.to_owned());
+            req_fields.insert("footprint_name", c.footprint_name.to_owned());
+            req_fields.insert("symbol_library", c.symbol_library.to_owned());
+            req_fields.insert("symbol_name", c.symbol_name.to_owned());
+
+            // Validate that required fields are set
+            for (key, val) in &req_fields {
+                if val.is_empty() {
+                    return Err(Box::new(errorf(&format!(
+                        "{}: Component.{} is a mandatory field",
+                        &comp.name, &key
+                    ))));
+                }
             }
-            if c.package.is_empty() {
-                return Err(Box::new(errorf(&format!(
-                    "{}: Component.package is a mandatory field",
-                    &comp.name
-                ))));
-            }
+
             // Grow the components vector
             sch.components.push(c);
         }
@@ -213,30 +264,101 @@ fn parse_globals_into(kisch: &kicad_schematic::Schematic, globals: &mut Vec<Attr
                 value: String::new(),
                 expression: expr.to_owned(),
                 unit,
+                comment: None, // TODO
             })
         }
     }
 }
 
-// is_true_str returns true is s is a "true-like" string like "true" or "1", otherwise false
-fn is_true_str(s: &str) -> bool {
-    s == "true" || s == "1"
+fn classify_components(sch: &mut Schematic, classifiers: &Vec<ComponentClassifier>) {
+    for comp in sch.components.iter_mut() {
+        comp.classes = classify_component(comp, classifiers);
+    }
+    for sch in sch.sub_schematics.iter_mut() {
+        classify_components(sch, classifiers);
+    }
 }
 
-// str_unwrap unwraps the String option such that if opt is None, a new, empty String is returned
-fn str_unwrap(opt: Option<String>) -> String {
-    opt.unwrap_or_else(|| String::new())
+fn classify_component(comp: &Component, classifiers: &Vec<ComponentClassifier>) -> Vec<String> {
+    let mut matched_classes: Vec<String> = classifiers
+        .iter()
+        .filter_map(|classifier| {
+            let matches = vec![
+                (&classifier.footprint_library, &comp.footprint_library),
+                (&classifier.footprint_name, &comp.footprint_name),
+                (&classifier.symbol_library, &comp.symbol_library),
+                (&classifier.symbol_name, &comp.symbol_name),
+            ];
+            // For all matches; check if the first element is either None (no preference)
+            // or is an exact match with the second element.
+            if !matches.iter().all(|m| req_matches_actual(m.0, m.1)) {
+                // m.0.is_none() && m.0.unwrap().eq(m.1)
+                return None;
+            }
+
+            if !classifier.attributes.iter().all(|a| {
+                match comp.attribute_by_name(&a.name) {
+                    Some(actual_val) => req_matches_actual(&a.value, &actual_val.value),
+                    None => false, // Didn't find the required attribute
+                }
+            }) {
+                return None;
+            }
+
+            // If we get all the way here, we have "matched" with this class.
+            return Some(classifier.class.to_owned());
+        })
+        .collect();
+
+    matched_classes.sort();
+    println!("# matched_classes as sorted slice: {:?}", matched_classes);
+    let matched_classes = matched_classes.as_slice();
+    let matched_classes: Vec<_> = matched_classes
+        .group_by(|a, b| a == b)
+        .filter_map(|l| l.first())
+        .map(|s| s.to_owned())
+        .collect();
+    println!("# matched_classes after group by: {:?}", matched_classes);
+
+    return matched_classes;
 }
 
-// str_borrow_unwrap is like str_unwrap, but for an Option containing a string reference
-fn str_borrow_unwrap(opt: Option<&str>) -> String {
-    opt.unwrap_or("").to_owned()
+fn req_matches_actual(req: &Option<String>, actual: &String) -> bool {
+    req.iter().all(|b| b.as_str() == actual)
+}
+
+trait IsTrueLike {
+    fn is_true_like(&self) -> bool;
+}
+
+impl<T: AsRef<str>> IsTrueLike for T {
+    // is_true_str returns true is s is a "true-like" string like "true" or "1", otherwise false
+    fn is_true_like(&self) -> bool {
+        self.as_ref() == "true" || self.as_ref() == "1"
+    }
+}
+
+trait OrEmptyStr {
+    // or_empty_str unwraps the string-like option such that if opt is None, a new, empty String is returned
+    fn or_empty_str(&self) -> String;
+}
+
+impl OrEmptyStr for Option<String> {
+    fn or_empty_str(&self) -> String {
+        self.clone().unwrap_or_else(|| String::new())
+    }
+}
+
+impl OrEmptyStr for Option<&str> {
+    fn or_empty_str(&self) -> String {
+        self.unwrap_or("").to_owned()
+    }
 }
 
 // get_component_attr gets the component attribute value for a case-sensitive key, but returns
 // None if the value is "" or "~"
 fn get_component_attr(comp: &kicad_schematic::Component, key: &str) -> Option<String> {
-    str_if_nonempty_opt(comp.get_field_value(key))
+    comp.get_field_value(key).filter_empty()
 }
 
 // get_component_attr_mapped works like get_component_attr, but allows "key" to be case-insensitive, as long as
@@ -252,21 +374,51 @@ fn get_component_attr_mapped(
         .flatten()
 }
 
-// str_if_nonempty trims the string reference s, and returns it as owned in an Option if non-empty.
-// As a special case, "~" also counts as "empty".
-fn str_if_nonempty(s: &str) -> Option<String> {
-    let s = s.trim();
-    if s.is_empty() || s == "~" {
-        None
-    } else {
-        Some(String::from(s))
+trait EmptyFilter {
+    fn filter_empty(&self) -> Option<String>;
+}
+
+impl EmptyFilter for &str {
+    // str_if_nonempty trims the string reference s, and returns it as owned in an Option if non-empty.
+    // As a special case, "~" also counts as "empty".
+    fn filter_empty(&self) -> Option<String> {
+        let s = self.trim();
+        if s.is_empty() || s == "~" {
+            None
+        } else {
+            Some(String::from(s))
+        }
     }
 }
 
-// str_if_nonempty_opt passes the string through str_if_nonempty if the option is Some. In other words,
-// this function maps Some("") and Some("~") -> None, and lets all other values be.
-fn str_if_nonempty_opt(s_opt: Option<String>) -> Option<String> {
-    s_opt.map(|s| str_if_nonempty(&s)).flatten()
+impl<T: AsRef<str>> EmptyFilter for Option<T> {
+    // str_if_nonempty_opt passes the string through str_if_nonempty if the option is Some. In other words,
+    // this function maps Some("") and Some("~") -> None, and lets all other values be.
+    fn filter_empty(&self) -> Option<String> {
+        match self {
+            Some(s) => s.as_ref().filter_empty(),
+            None => None,
+        }
+    }
+}
+
+trait SplitN {
+    fn split_n(&self, split_char: char, idx: usize) -> Option<String>;
+}
+
+impl SplitN for &str {
+    fn split_n(&self, split_char: char, idx: usize) -> Option<String> {
+        self.split(split_char).nth(idx).map(|s| s.to_owned())
+    }
+}
+
+impl<T: AsRef<str>> SplitN for Option<T> {
+    fn split_n(&self, split_char: char, idx: usize) -> Option<String> {
+        match self {
+            Some(s) => s.as_ref().split_n(split_char, idx),
+            None => None,
+        }
+    }
 }
 
 // A struct implementing the Error trait, carrying just a simple message

@@ -36,14 +36,24 @@ pub struct SchematicMeta {
 #[serde(rename_all = "camelCase")]
 pub struct Component {
     pub reference: String,
-    pub package: String,
-    pub category: String,
+    pub footprint_name: String,
+    pub footprint_library: String,
+    pub symbol_name: String,
+    pub symbol_library: String,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub model: Option<String>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub datasheet: Option<String>,
     #[serde(skip_serializing_if = "Vec::is_empty")]
+    pub classes: Vec<String>,
+    #[serde(skip_serializing_if = "Vec::is_empty")]
     pub attributes: Vec<Attribute>,
+}
+
+impl Component {
+    pub fn attribute_by_name(&self, name: &str) -> Option<&Attribute> {
+        self.attributes.iter().find(|&a| a.name == name)
+    }
 }
 
 #[derive(Serialize, Deserialize, Debug)]
@@ -54,4 +64,27 @@ pub struct Attribute {
     pub expression: String,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub unit: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub comment: Option<String>,
+}
+
+#[derive(Serialize, Deserialize, Debug)]
+#[serde(rename_all = "camelCase")]
+pub struct ComponentClassifier {
+    pub class: String,
+    // Match constraints
+    pub footprint_name: Option<String>,
+    pub footprint_library: Option<String>,
+    pub symbol_name: Option<String>,
+    pub symbol_library: Option<String>,
+    // Attribute matching
+    pub attributes: Vec<AttributeMatch>,
+}
+
+#[derive(Serialize, Deserialize, Debug)]
+#[serde(rename_all = "camelCase")]
+pub struct AttributeMatch {
+    pub name: String,
+    pub value: Option<String>,
+    // TODO: Maybe in the future add a negation here
 }

@@ -1,0 +1,176 @@
+# matched_classes as sorted slice: []
+# matched_classes after group by: []
+# matched_classes as sorted slice: ["capacitor", "capacitor"]
+# matched_classes after group by: ["capacitor"]
+# matched_classes as sorted slice: ["capacitor", "capacitor"]
+# matched_classes after group by: ["capacitor"]
+# matched_classes as sorted slice: ["capacitor", "capacitor"]
+# matched_classes after group by: ["capacitor"]
+# matched_classes as sorted slice: ["resistor", "shunt_resistor"]
+# matched_classes after group by: ["resistor", "shunt_resistor"]
+# matched_classes as sorted slice: ["resistor"]
+# matched_classes after group by: ["resistor"]
+# matched_classes as sorted slice: ["resistor"]
+# matched_classes after group by: ["resistor"]
+# matched_classes as sorted slice: ["capacitor", "capacitor"]
+# matched_classes after group by: ["capacitor"]
+# matched_classes as sorted slice: ["capacitor", "capacitor"]
+# matched_classes after group by: ["capacitor"]
+# matched_classes as sorted slice: ["capacitor", "capacitor"]
+# matched_classes after group by: ["capacitor"]
+# matched_classes as sorted slice: []
+# matched_classes after group by: []
+---
+components:
+  - attributes:
+      - expression: 8.2u
+        name: ""
+        value: 8.2u
+    datasheet: "https://media.digikey.com/pdf/Data%20Sheets/Murata%20PDFs/DEMO80(30,40,45)C%20Type.pdf"
+    footprintLibrary: racklet
+    footprintName: DEM8045C
+    reference: L2
+    symbolLibrary: Device
+    symbolName: L
+  - attributes:
+      - expression: 47u
+        name: ""
+        value: 47u
+    classes:
+      - capacitor
+    footprintLibrary: Capacitor_SMD
+    footprintName: C_1206_3216Metric
+    reference: C6
+    symbolLibrary: Device
+    symbolName: C_Small
+  - attributes:
+      - expression: 15p
+        name: ""
+        value: 15p
+    classes:
+      - capacitor
+    footprintLibrary: Capacitor_SMD
+    footprintName: C_0603_1608Metric
+    reference: C7
+    symbolLibrary: Device
+    symbolName: C_Small
+  - attributes:
+      - expression: 5600p
+        name: ""
+        value: 5600p
+    classes:
+      - capacitor
+    footprintLibrary: Capacitor_SMD
+    footprintName: C_0603_1608Metric
+    reference: C5
+    symbolLibrary: Device
+    symbolName: C_Small
+  - attributes:
+      - expression: 16.2k
+        name: ""
+        value: 16.2k
+      - expression: "1"
+        name: Tolerance
+        value: "1"
+    classes:
+      - resistor
+      - shunt_resistor
+    footprintLibrary: Resistor_SMD
+    footprintName: R_0603_1608Metric
+    reference: R6
+    symbolLibrary: Device
+    symbolName: R_Small
+  - attributes:
+      - expression: 549k
+        name: ""
+        value: 549k
+    classes:
+      - resistor
+    footprintLibrary: Resistor_SMD
+    footprintName: R_0603_1608Metric
+    reference: R7
+    symbolLibrary: Device
+    symbolName: R_Small
+  - attributes:
+      - expression: 102k
+        name: ""
+        value: 102k
+    classes:
+      - resistor
+    footprintLibrary: Resistor_SMD
+    footprintName: R_0603_1608Metric
+    reference: R8
+    symbolLibrary: Device
+    symbolName: R_Small
+  - attributes:
+      - expression: 0.1u
+        name: ""
+        value: 0.1u
+      - comment: Must be at least as large as the input voltage
+        expression: "35"
+        name: VoltageRating
+        unit: V
+        value: "35"
+    classes:
+      - capacitor
+    footprintLibrary: Capacitor_SMD
+    footprintName: C_0603_1608Metric
+    reference: C3
+    symbolLibrary: Device
+    symbolName: C_Small
+  - attributes:
+      - expression: 0.1u
+        name: ""
+        value: 0.1u
+    classes:
+      - capacitor
+    footprintLibrary: Capacitor_SMD
+    footprintName: C_0603_1608Metric
+    reference: C4
+    symbolLibrary: Device
+    symbolName: C_Small
+  - attributes:
+      - expression: 10u
+        name: ""
+        value: 10u
+    classes:
+      - capacitor
+    footprintLibrary: Capacitor_SMD
+    footprintName: C_1206_3216Metric
+    reference: C2
+    symbolLibrary: Device
+    symbolName: C_Small
+  - attributes:
+      - expression: "3"
+        name: CurrentOutput_Min
+        value: "3"
+      - expression: "[12, 24]"
+        name: VoltageInput_Min
+        value: ""
+        # Python: VoltageInput -> "Voltage - Input"
+        # Python: Notice that this is a "range" of form: "[XX,YY]" or "[XX,Inf)"
+        # Python: Because of the range "[12, 24]", build a "Voltage - Input" + " (Min)"
+        # <= 12 AND "Voltage - Input" + " (Max)" >= 24
+      - expression: "24"
+        name: VoltageInput_Max
+        value: ""
+    datasheet: "https://fscdn.rohm.com/en/products/databook/datasheet/ic/power/switching_regulator/bd9e302efj-e.pdf"
+    footprintLibrary: Package_SO
+    footprintName: HTSOP-8-1EP_3.9x4.9mm_P1.27mm_EP2.4x3.2mm_ThermalVias
+    model: BD9E302EFJ-E2
+    reference: U2
+    symbolLibrary: racklet
+    symbolName: BD9E302EFJ-E2
+id: ""
+meta:
+  comments:
+    - "https://racklet.io"
+    - "https://github.com/racklet/racklet"
+    - "https://github.com/racklet/racklet"
+    - "Author: Verneri Hirvonen"
+  company: Racklet
+  date: 2021-06-13
+  fileName: BD9E302EFJ-5V1.sch
+  revision: 0.1.1
+  title: Compute unit HAT attachment
+
