@@ -6,21 +6,38 @@ use crate::error::{errorf, DynamicResult};
 use crate::types::*;
 
 impl Schematic {
-    pub fn parse(p: &Path) -> DynamicResult<Schematic> {
-        parse_schematic(p, String::new())
+    pub fn parse_id(path: &Path, id: String) -> DynamicResult<Schematic> {
+        let file = SchematicFile::load(path)?;
+        parse_schematic(&file, id)
+    }
+
+    pub fn parse(path: &Path) -> DynamicResult<Schematic> {
+        Self::parse_id(path, String::new())
     }
 }
 
-/// Turns a KiCad schematic at `path` into a recursive Schematic struct
-fn parse_schematic(path: &Path, id: String) -> DynamicResult<Schematic> {
-    // Read the schematic using kicad_parse_gen
-    let kisch = kicad_parse_gen::read_schematic(path)?;
+pub struct SchematicFile<'a> {
+    path: &'a Path,
+    content: kicad_schematic::Schematic,
+}
 
+impl<'a> SchematicFile<'a> {
+    pub fn load(path: &'a Path) -> DynamicResult<Self> {
+        Ok(Self {
+            path,
+            // Read the schematic contents using kicad_parse_gen
+            content: kicad_parse_gen::read_schematic(path)?,
+        })
+    }
+}
+
+/// Turns the given KiCad schematic into a recursive Schematic struct
+pub fn parse_schematic(file: &SchematicFile, id: String) -> DynamicResult<Schematic> {
     // Parse the fields for the schematic
-    let meta = parse_meta(&kisch, path)?;
-    let globals = parse_globals(&kisch)?;
-    let components = parse_components(&kisch)?;
-    let sub_schematics = parse_sub_schematics(&kisch, path)?;
+    let meta = parse_meta(&file)?;
+    let globals = parse_globals(&file)?;
+    let components = parse_components(&file)?;
+    let sub_schematics = parse_sub_schematics(&file)?;
 
     // Construct and return the parsed schematic
     Ok(Schematic {
@@ -33,38 +50,39 @@ fn parse_schematic(path: &Path, id: String) -> DynamicResult<Schematic> {
 }
 
 /// Parses the metadata from the given KiCad schematic
-pub fn parse_meta(kisch: &kicad_schematic::Schematic, path: &Path) -> DynamicResult<SchematicMeta> {
+pub fn parse_meta(kicad_sch: &SchematicFile) -> DynamicResult<SchematicMeta> {
     // Only include non-empty comments
     let comments = vec![
-        kisch.description.comment1.as_str(),
-        kisch.description.comment2.as_str(),
-        kisch.description.comment3.as_str(),
-        kisch.description.comment4.as_str(),
+        kicad_sch.content.description.comment1.as_str(),
+        kicad_sch.content.description.comment2.as_str(),
+        kicad_sch.content.description.comment3.as_str(),
+        kicad_sch.content.description.comment4.as_str(),
     ]
     .iter()
     .flat_map(|c| c.filter_empty())
     .collect();
 
     Ok(SchematicMeta {
-        file_name: path
+        file_name: kicad_sch
+            .path
             .file_name()
             .map(|s| s.to_str())
             .flatten()
             .or_empty_str(),
-        title: kisch.description.title.as_str().filter_empty(),
-        date: kisch.description.date.as_str().filter_empty(),
-        revision: kisch.description.rev.as_str().filter_empty(),
-        company: kisch.description.comp.as_str().filter_empty(),
+        title: kicad_sch.content.description.title.as_str().filter_empty(),
+        date: kicad_sch.content.description.date.as_str().filter_empty(),
+        revision: kicad_sch.content.description.rev.as_str().filter_empty(),
+        company: kicad_sch.content.description.comp.as_str().filter_empty(),
         comments,
     })
 }
 
 /// Parses global definitions from text notes in the KiCad schematic
-pub fn parse_globals(kisch: &kicad_schematic::Schematic) -> DynamicResult<Vec<Attribute>> {
+pub fn parse_globals(kicad_sch: &SchematicFile) -> DynamicResult<Vec<Attribute>> {
     let mut globals = Vec::new();
 
     // Loop through the elements of the schematic, which includes text notes as well
-    for el in &kisch.elements {
+    for el in &kicad_sch.content.elements {
         // Only match Text elements that have type Note
         let text_element = match el {
             kicad_schematic::Element::Text(t) => match t.t {
@@ -116,14 +134,14 @@ pub fn parse_globals(kisch: &kicad_schematic::Schematic) -> DynamicResult<Vec<At
 }
 
 /// Parses the component definitions present in the given KiCad schematic
-pub fn parse_components(kisch: &kicad_schematic::Schematic) -> DynamicResult<Vec<Component>> {
+pub fn parse_components(kicad_sch: &SchematicFile) -> DynamicResult<Vec<Component>> {
     let mut components = Vec::new();
 
     // Walk through all components in the sheet
-    for comp in kisch.components() {
+    for comp in kicad_sch.content.components() {
         // Require comp.name to be non-empty
         if comp.name.is_empty() {
-            return Err(Box::new(errorf("Every component must have a name")));
+            return Err(errorf("Every component must have a name"));
         }
 
         let footprint_str = get_component_attr(&comp, "Footprint");
@@ -155,10 +173,10 @@ pub fn parse_components(kisch: &kicad_schematic::Schematic) -> DynamicResult<Vec
             match m.insert(key_lower, f.name.clone()) {
                 None => (), // Key didn't exist before, all ok
                 Some(oldval) => {
-                    return Err(Box::new(errorf(&format!(
+                    return Err(errorf(&format!(
                         "duplicate keys: {} and {}",
                         oldval, f.name
-                    ))))
+                    )));
                 }
             }
         }
@@ -209,10 +227,10 @@ pub fn parse_components(kisch: &kicad_schematic::Schematic) -> DynamicResult<Vec
             // Validate that required fields are set
             for (key, val) in &c.labels.to_map() {
                 if val.is_empty() {
-                    return Err(Box::new(errorf(&format!(
+                    return Err(errorf(&format!(
                         "{}: Component.{} is a mandatory field",
                         &comp.name, key
-                    ))));
+                    )));
                 }
             }
 
@@ -225,19 +243,17 @@ pub fn parse_components(kisch: &kicad_schematic::Schematic) -> DynamicResult<Vec
 }
 
 /// Parses nested hierarchical schematic definitions present in the given KiCad schematic
-pub fn parse_sub_schematics(
-    kisch: &kicad_schematic::Schematic,
-    path: &Path,
-) -> DynamicResult<Vec<Schematic>> {
+pub fn parse_sub_schematics(kicad_sch: &SchematicFile) -> DynamicResult<Vec<Schematic>> {
     let mut sub_schematics = Vec::new();
 
     // Recursively traverse and parse the sub-schematics
-    for sub_sheet in &kisch.sheets {
-        let p = path
+    for sub_sheet in &kicad_sch.content.sheets {
+        let p = kicad_sch
+            .path
             .parent()
             .unwrap_or(Path::new(""))
             .join(Path::new(&sub_sheet.filename));
-        sub_schematics.push(parse_schematic(&p, sub_sheet.name.clone())?);
+        sub_schematics.push(Schematic::parse_id(&p, sub_sheet.name.clone())?);
     }
 
     Ok(sub_schematics)
