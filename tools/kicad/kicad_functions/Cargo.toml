@@ -1,0 +1,11 @@
+[package]
+name = "kicad_functions"
+version = "0.1.0"
+authors = ["Dennis Marttinen <twelho@welho.tech>"]
+edition = "2018"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+evalexpr = "6.1"
+resistor-calc = { git = "https://github.com/racklet/resistor-calc.git", branch = "fix-no-expr_builder-compile", default-features = false }
