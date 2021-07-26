@@ -16,7 +16,7 @@ Command line arguments:
 
 ```bash
 # This command will update the file in place
-cargo run --bin=evaluator ../../../hat-psu/hat-psu/BD9E302EFJ-5V1.sch
+cargo run --bin=evaluator ../../../hat-psu/hat-psu/BD9E302EFJ_5V1.sch
 ```
 
 ### Parser
@@ -30,7 +30,7 @@ Command line arguments:
 ```bash
 # Or any other .sch file. This command writes to stdout, you can save it in a
 # file like this or pipe it to the classifier.
-cargo run --bin=parser ../../../hat-psu/hat-psu/BD9E302EFJ-5V1.sch > parsed.yaml
+cargo run --bin=parser ../../../hat-psu/hat-psu/BD9E302EFJ_5V1.sch > parsed.yaml
 ```
 
 ### Classifier
@@ -46,7 +46,7 @@ Command line arguments:
 cat parsed.yaml | cargo run --bin=classifier sample_policy.cue > classified.yaml
 
 # ... pipe the output from the parser like this (writes to stdout)
-cargo run --bin=parser ../../../hat-psu/hat-psu/BD9E302EFJ-5V1.sch | cargo run --bin=classifier sample_policy.cue
+cargo run --bin=parser ../../../hat-psu/hat-psu/BD9E302EFJ_5V1.sch | cargo run --bin=classifier sample_policy.cue
 ```
 
 ## Contributing

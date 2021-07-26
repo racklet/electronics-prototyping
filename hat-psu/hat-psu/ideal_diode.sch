@@ -3,7 +3,7 @@ EELAYER 30 0
 EELAYER END
 $Descr A4 11693 8268
 encoding utf-8
-Sheet 3 5
+Sheet 3 9
 Title "Compute unit HAT attachment"
 Date "2021-06-13"
 Rev "0.1.1"
@@ -49,7 +49,7 @@ F 0 "Q1" H 5840 4104 50  0000 L CNN
 F 1 "BCM857BS" H 5840 4195 50  0000 L CNN
 F 2 "Package_TO_SOT_SMD:SOT-363_SC-70-6" H 5850 4250 50  0001 C CNN
 F 3 "https://www.diodes.com/assets/Datasheets/BCM857BS.pdf" H 5650 4150 50  0001 C CNN
-	2    5650 4150
+	1    5650 4150
 	1    0    0    1   
 $EndComp
 $Comp

@@ -3,7 +3,7 @@ EELAYER 30 0
 EELAYER END
 $Descr A4 11693 8268
 encoding utf-8
-Sheet 2 5
+Sheet 2 9
 Title "Compute unit HAT attachment"
 Date "2021-06-13"
 Rev "0.1.1"
