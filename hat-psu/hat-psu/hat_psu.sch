@@ -3,7 +3,7 @@ EELAYER 30 0
 EELAYER END
 $Descr A4 11693 8268
 encoding utf-8
-Sheet 1 5
+Sheet 1 9
 Title "Compute unit HAT attachment"
 Date "2021-06-13"
 Rev "0.1.1"
@@ -125,14 +125,6 @@ Wire Wire Line
 	3800 3000 3850 3000
 Text Notes 4950 2700 0    50   ~ 0
 current sense shunt\nTODO: Does this\nhave to be 10mohm?
-$Sheet
-S 9200 2700 950  600 
-U 60AD3F6A
-F0 "compute-sbc" 50
-F1 "compute-sbc.sch" 50
-F2 "5.1V" I L 9200 2850 50 
-F3 "GND" U L 9200 3200 50 
-$EndSheet
 Wire Wire Line
 	9200 3200 9050 3200
 Wire Wire Line
@@ -177,14 +169,6 @@ Text Label 3800 3000 2    50   ~ 0
 DCDC_EN
 Text GLabel 4850 2800 1    50   Input ~ 0
 5V1
-$Sheet
-S 7900 2750 800  200 
-U 60A9D2A2
-F0 "ideal-diode" 50
-F1 "ideal-diode.sch" 50
-F2 "CATHODE" O R 8700 2850 50 
-F3 "ANODE" I L 7900 2850 50 
-$EndSheet
 Wire Wire Line
 	8700 2850 9200 2850
 Text Notes 7900 2600 0    50   ~ 0
@@ -424,21 +408,6 @@ F 3 "~" H 7100 3650 50  0001 C CNN
 $EndComp
 Wire Wire Line
 	6300 3850 6900 3850
-$Sheet
-S 7250 3350 800  2050
-U 60AC90CC
-F0 "BMC" 50
-F1 "BMC.sch" 50
-F2 "PAC_CLK" O L 7250 3750 50 
-F3 "PAC_DATA" B L 7250 3850 50 
-F4 "PAC_INT" O L 7250 3950 50 
-F5 "DCDC_EN" O L 7250 4300 50 
-F6 "PAC_DAC" I L 7250 4050 50 
-F7 "USB_D-" I L 7250 4700 50 
-F8 "USB_D+" I L 7250 4600 50 
-F9 "USB_5V" I L 7250 4500 50 
-F10 "3V3" I L 7250 3450 50 
-$EndSheet
 Text Notes 7250 3250 0    50   ~ 0
 TODO: Design BMC
 Text Notes 7350 5100 0    50   ~ 0
@@ -508,15 +477,6 @@ Wire Wire Line
 	5800 3950 7250 3950
 Wire Wire Line
 	7250 4050 5800 4050
-$Sheet
-S 3850 2700 550  400 
-U 60A0E5A4
-F0 "BD9E302EFJ-5V1" 50
-F1 "BD9E302EFJ-5V1.sch" 50
-F2 "VOUT" O R 4400 2850 50 
-F3 "VIN" I L 3850 2850 50 
-F4 "EN" I L 3850 3000 50 
-$EndSheet
 $Comp
 L power:VBUS #PWR0104
 U 1 1 60BFD071
@@ -679,7 +639,7 @@ Wire Wire Line
 	1350 4250 1350 4200
 Connection ~ 1350 4200
 Wire Wire Line
-	1350 4200 950  4200
+	1350 4200 950 4200
 $Comp
 L power:VBUS #PWR014
 U 1 1 60C85D7C
@@ -817,4 +777,62 @@ F 3 "" H 8650 1400 50  0001 C CNN
 $EndComp
 Text Label 6150 3350 2    50   ~ 0
 BMC_3V3
+$Comp
+L Device:R R99
+U 1 1 60FFD411
+P 5050 1700
+F 0 "R99" H 5120 1746 50  0000 L CNN
+F 1 "5.1" H 5120 1655 50  0000 L CNN
+F 2 "Resistor_SMD:R_0603_1608Metric" V 4980 1700 50  0001 C CNN
+F 3 "~" H 5050 1700 50  0001 C CNN
+F 4 "Properties.Globals.TargetVoltage" H 5050 1700 50  0001 C CNN "Value_expr"
+	1    5050 1700
+	1    0    0    -1  
+$EndComp
+$Sheet
+S 9200 2700 950 600
+U 60AD3F6A
+F0 "compute_sbc" 50
+F1 "compute_sbc.sch" 50
+F2 "5.1V" I L 9200 2850 50
+F3 "GND" U L 9200 3200 50
+$EndSheet
+$Sheet
+S 7900 2750 800 200
+U 60A9D2A2
+F0 "ideal_diode" 50
+F1 "ideal_diode.sch" 50
+F2 "CATHODE" O R 8700 2850 50
+F3 "ANODE" I L 7900 2850 50
+$EndSheet
+$Sheet
+S 7250 3350 800 2050
+U 60AC90CC
+F0 "BMC" 50
+F1 "BMC.sch" 50
+F2 "PAC_CLK" O L 7250 3750 50
+F3 "PAC_DATA" B L 7250 3850 50
+F4 "PAC_INT" O L 7250 3950 50
+F5 "DCDC_EN" O L 7250 4300 50
+F6 "PAC_DAC" I L 7250 4050 50
+F7 "USB_D-" I L 7250 4700 50
+F8 "USB_D+" I L 7250 4600 50
+F9 "USB_5V" I L 7250 4500 50
+F10 "3V3" I L 7250 3450 50
+$EndSheet
+$Sheet
+S 3850 2700 550 400
+U 60A0E5A4
+F0 "BD9E302EFJ_5V1" 50
+F1 "BD9E302EFJ_5V1.sch" 50
+F2 "VOUT" O R 4400 2850 50
+F3 "VIN" I L 3850 2850 50
+F4 "EN" I L 3850 3000 50
+$EndSheet
+$Sheet
+S 3850 1600 500 150
+U 60FF8D0D
+F0 "Properties_hat_psu" 50
+F1 "Properties.sch" 50
+$EndSheet
 $EndSCHEMATC

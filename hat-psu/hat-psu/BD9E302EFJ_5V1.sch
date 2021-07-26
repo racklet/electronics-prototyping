@@ -3,7 +3,7 @@ EELAYER 30 0
 EELAYER END
 $Descr A4 11693 8268
 encoding utf-8
-Sheet 2 2
+Sheet 7 9
 Title "Compute unit HAT attachment"
 Date "2021-06-13"
 Rev "0.1.1"
@@ -20,7 +20,7 @@ P 6700 3600
 AR Path="/60A118D6" Ref="L2"  Part="1" 
 AR Path="/60A0E5A4/60A118D6" Ref="L2"  Part="1" 
 AR Path="/60F06CF1/60A118D6" Ref="L?"  Part="1" 
-F 0 "L?" V 6890 3600 50  0000 C CNN
+F 0 "L2" V 6890 3600 50  0000 C CNN
 F 1 "8.2" V 6799 3600 50  0000 C CNN
 F 2 "racklet:DEM8045C" H 6700 3600 50  0001 C CNN
 F 3 "https://media.digikey.com/pdf/Data%20Sheets/Murata%20PDFs/DEMO80(30,40,45)C%20Type.pdf" H 6700 3600 50  0001 C CNN
@@ -36,7 +36,7 @@ L Device:C_Small C?
 U 1 1 60A1617F
 P 7150 3750
 F 0 "C?" H 7242 3796 50  0000 L CNN
-F 1 "47" H 7242 3705 50  0000 L CNN
+F 1 "0.1" H 7242 3705 50  0000 L CNN
 F 2 "Capacitor_SMD:C_1206_3216Metric" H 7150 3750 50  0001 C CNN
 F 3 "~" H 7150 3750 50  0001 C CNN
 F 4 "true" H 7150 3750 50  0001 C CNN "ICCC_Show"
@@ -187,15 +187,15 @@ $EndComp
 Wire Wire Line
 	7700 4250 7550 4250
 $Comp
-L Device:C_Small C?
+L Device:C_Small C3
 U 1 1 60A2522A
 P 3900 4000
-F 0 "C?" H 3992 4046 50  0000 L CNN
-F 1 "0.1" H 3992 3955 50  0000 L CNN
+F 0 "C3" H 3992 4046 50  0000 L CNN
+F 1 "51" H 3992 3955 50  0000 L CNN
 F 2 "Capacitor_SMD:C_0603_1608Metric" H 3900 4000 50  0001 C CNN
 F 3 "~" H 3900 4000 50  0001 C CNN
 F 4 "true" H 3900 4000 50  0001 C CNN "ICCC_Show"
-F 5 "0.1" H 3900 4000 50  0001 C CNN "value_expr"
+F 5 "Properties.Globals.TargetVoltage * 10" H 3900 4000 50  0001 C CNN "value_expr"
 F 6 "35" H 3900 4000 50  0001 C CNN "voltagerating_expr"
 F 7 "V" H 3900 4000 50  0001 C CNN "voltagerating_unit"
 F 8 "35 V" H 3900 4000 50  0001 C CNN "voltagerating"
@@ -288,15 +288,15 @@ Wire Wire Line
 Wire Wire Line
 	3500 3900 3500 3700
 $Comp
-L Device:C_Small C?
+L Device:C_Small C2
 U 1 1 60A24C15
 P 3500 4000
-F 0 "C?" H 3592 4046 50  0000 L CNN
-F 1 "10 F" H 3592 3955 50  0000 L CNN
+F 0 "C2" H 3592 4046 50  0000 L CNN
+F 1 "5100 F" H 3592 3955 50  0000 L CNN
 F 2 "Capacitor_SMD:C_1206_3216Metric" H 3500 4000 50  0001 C CNN
 F 3 "~" H 3500 4000 50  0001 C CNN
 F 4 "true" H 3500 4000 50  0001 C CNN "ICCC_Show"
-F 5 "C3.Value*100" H 3500 4000 50  0001 C CNN "value_expr"
+F 5 "C3*100" H 3500 4000 50  0001 C CNN "value_expr"
 F 6 "F" H 3500 4000 50  0001 C CNN "value_unit"
 	1    3500 4000
 	1    0    0    -1  
@@ -349,4 +349,10 @@ Wire Wire Line
 Connection ~ 6250 3600
 Wire Wire Line
 	6250 3600 6550 3600
+$Sheet
+S 2950 2600 500 150
+U 60FFED3D
+F0 "Properties_BD9E302EFJ_5V1" 50
+F1 "Properties.sch" 50
+$EndSheet
 $EndSCHEMATC
