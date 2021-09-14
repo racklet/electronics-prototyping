@@ -14,5 +14,4 @@
 
 # Electronics Design (KiCad)
 *.kicad_pcb filter=lfs diff=lfs merge=lfs -text
-*.sch filter=lfs diff=lfs merge=lfs -text
 *.kicad_mod filter=lfs diff=lfs merge=lfs -text
