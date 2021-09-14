@@ -1,3 +1,6 @@
 [submodule "kicad-projects/hat-psu/libs/racklet-kicad-lib"]
 	path = kicad-projects/hat-psu/libs/racklet-kicad-lib
 	url = git@github.com:racklet/racklet-kicad-lib.git
+[submodule "usb-hub/libs/racklet-kicad-lib"]
+	path = usb-hub/libs/racklet-kicad-lib
+	url = git@github.com:racklet/racklet-kicad-lib.git
