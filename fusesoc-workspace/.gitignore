@@ -1,0 +1,4 @@
+# fusesoc generated files
+fusesoc.conf
+fusesoc_libraries/
+build/

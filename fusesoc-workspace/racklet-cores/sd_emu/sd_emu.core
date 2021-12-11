@@ -1,5 +1,5 @@
 CAPI=2:
-name: racklet:playground:sd_emu:0.0.1
+name: racklet:cores:sd_emu:0.0.1
 description: SD Card Emulator
 filesets:
   pll:
