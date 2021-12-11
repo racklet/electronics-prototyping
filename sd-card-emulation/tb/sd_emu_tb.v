@@ -1,11 +1,11 @@
-`timescale 1ps/1ps
+`timescale 1ns/10ps
 
 module sd_emu_tb;
 
 vlog_tb_utils vtu();
 
 reg clk = 0;
-always #1 clk=~clk;
+always #2500 clk=~clk;
 
 sd_emu_top dut(
     .CLK(clk)
@@ -15,7 +15,7 @@ sd_emu_top dut(
 
 initial begin
     $display("Hello, world!");
-    # 10000;
+    #1000000;
     $finish;
 end
 
