@@ -1,0 +1,74 @@
+CAPI=2:
+name: racklet:cores:spi_flash_ctrl:0.0.1
+description: SPI flash controller
+filesets:
+  pll:
+    files:
+      - rtl/ice40_pll.v
+    file_type: verilogSource
+    depend:
+      - "fusesoc:utils:generators"
+
+  tinyfpga_bx:
+    files:
+      - constr/pinout.pcf
+    file_type: PCF
+
+  rtl:
+    #depend:
+    #  - sd_device
+    files:
+      - rtl/spi_flash_ctrl_top.v
+      - rtl/debouncer.v
+    file_type: verilogSource
+
+  tb:
+    depend:
+      - ">=vlog_tb_utils-1.0"
+    files:
+      - tb/spi_flash_ctrl_tb.v
+    file_type: verilogSource
+
+targets:
+  default: &default
+    filesets:
+      - rtl
+    toplevel: spi_flash_ctrl_top
+
+  sim:
+    description: Simulate the design
+    default_tool: icarus
+    filesets:
+      - rtl
+      - tb
+    toplevel: spi_flash_ctrl_tb
+
+  synth:
+    description: Synthesize design for TinyFPGA BX
+    default_tool: icestorm
+    filesets:
+      - pll
+      - rtl
+      - tinyfpga_bx
+    generate:
+      - tinyfpga_bx_pll
+    #parameters:
+    #  - PLL=ICE40_CORE
+    tools:
+      icestorm:
+        nextpnr_options: [--lp8k, --package, cm81, --freq, 16]
+        pnr: next
+    toplevel: spi_flash_ctrl_top
+
+parameters:
+  PLL:
+    datatype : str
+    description : PLL type to use for main clock generation
+    paramtype : vlogparam
+
+generate:
+  tinyfpga_bx_pll:
+    generator: icepll
+    parameters:
+      freq_in  : 16
+      freq_out : 200
