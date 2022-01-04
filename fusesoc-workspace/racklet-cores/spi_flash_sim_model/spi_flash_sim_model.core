@@ -1,0 +1,20 @@
+CAPI=2:
+name: racklet:cores:spi_flash_sim_model:0.0.1
+description: SPI flash simulation model
+filesets:
+  rtl:
+    files:
+      - rtl/spiflash.v
+    file_type: verilogSource
+
+targets:
+  default: &default
+    filesets:
+      - rtl
+    toplevel: spiflash
+
+parameters:
+  firmware:
+    datatype    : str
+    description : SPI flash contents
+    paramtype   : plusarg

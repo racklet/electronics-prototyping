@@ -1,0 +1,10 @@
+version: 3
+
+tasks:
+  sim:
+    cmds:
+      - fusesoc run --target=sim racklet:cores:spi_flash_ctrl --vcd --firmware $PWD/bootblob.hex
+
+  synth:
+    cmds:
+      - fusesoc run --target=synth racklet:cores:spi_flash_ctrl
