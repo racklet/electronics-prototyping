@@ -55,12 +55,12 @@ set_io --warn-no-port PIN_13 H2
 # Right side of board
 set_io --warn-no-port PIN_14 H9
 set_io --warn-no-port PIN_15 D9
-set_io --warn-no-port PIN_16 D8
-set_io --warn-no-port PIN_17 C9
-set_io --warn-no-port PIN_18 A9
-set_io --warn-no-port PIN_19 B8
-set_io --warn-no-port PIN_20 A8
-set_io --warn-no-port PIN_21 B7
+set_io --warn-no-port i_sd_clk D8       # PIN 16
+set_io --warn-no-port io_sd_cmd C9      # PIN_17
+set_io --warn-no-port io_sd_dat[0] A9   # PIN_18
+set_io --warn-no-port io_sd_dat[1] B8   # PIN_19
+set_io --warn-no-port io_sd_dat[2] A8   # PIN_20
+set_io --warn-no-port io_sd_dat[3] B7   # PIN_21
 set_io --warn-no-port PIN_22 A7
 set_io --warn-no-port PIN_23 B6
 set_io --warn-no-port PIN_24 A6

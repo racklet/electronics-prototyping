@@ -1,3 +1,6 @@
 [submodule "hat-psu/hat-psu/libs/racklet-kicad-lib"]
 	path = hat-psu/hat-psu/libs/racklet-kicad-lib
 	url = git@github.com:racklet/racklet-kicad-lib.git
+[submodule "fusesoc-workspace/sd_device"]
+	path = fusesoc-workspace/sd_device
+	url = git@github.com:chiplet/sd_device.git

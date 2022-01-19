@@ -15,10 +15,12 @@ filesets:
     file_type: PCF
 
   rtl:
-    #depend:
-    #  - sd_device
+    depend:
+      - sd_device
     files:
       - rtl/sd_emu_top.v
+      - rtl/clk_div_2.v
+      - rtl/wb_a.v
     file_type: verilogSource
 
   tb:
@@ -36,13 +38,19 @@ targets:
 
   sim:
     description: Simulate the design
+    tools:
+      icarus:
+        iverilog_options:
+          - -g2012 # Use SystemVerilog-2012
+    parameters:
+      - TARGET=SIM
     default_tool: icarus
     filesets:
       - rtl
       - tb
     toplevel: sd_emu_tb
 
-  synth:
+  synth_ice40:
     description: Synthesize design for TinyFPGA BX
     default_tool: icestorm
     filesets:
@@ -52,10 +60,11 @@ targets:
     generate:
       - tinyfpga_bx_pll
     parameters:
+      - TARGET=SYNTH_ICE40
       - PLL=ICE40_CORE
     tools:
       icestorm:
-        nextpnr_options: [--lp8k, --package, cm81, --freq, 200]
+        nextpnr_options: [--lp8k, --package, cm81, --freq, 25]
         pnr: next
     toplevel: sd_emu_top
 
@@ -65,9 +74,14 @@ parameters:
     description : PLL type to use for main clock generation
     paramtype : vlogparam
 
+  TARGET:
+    datatype: str
+    description: Toolchain target
+    paramtype: vlogparam
+
 generate:
   tinyfpga_bx_pll:
     generator: icepll
     parameters:
       freq_in  : 16
-      freq_out : 200
+      freq_out : 50
