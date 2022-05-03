@@ -16,6 +16,12 @@ module sd_emu_top #(
     input   wire        i_sd_clk,       // PIN 16 (Global Buffer GBIN2)
     inout   wire        io_sd_cmd,      // PIN 17
     inout   wire [3:0]  io_sd_dat,      // PINs 18, 19, 20, 21 -- 0, 1, 2, 3
+
+    // SPI flash
+    output wire o_spi_cs_n,             // SPI flash chip select (active low)   pin 15
+    output wire o_spi_clk,              // SPI flash serial clock               pin 14
+    output wire o_spi_mosi,             // SPI flash master to slave data       pin 13
+    input  wire i_spi_miso,             // SPI flash slave to master data       pin 12
   
     output  wire PIN_7,                 // PIN 7       
     output  wire PIN_8,                 // PIN 8       
@@ -162,6 +168,31 @@ wb_a wb_slave(
     // .wb_err_o(wb_s2m_sdhc_err),
     // .wb_rty_o(wb_s2m_sdhc_rty)
 );
+
+// wb_spi_flash_ctrl wb_spi_flash (
+//     // Wishbone Interface
+//     .wb_clk_i(wb_clk),
+//     .wb_rst_i(pll_rst),
+// 
+//     .wb_adr_i(wb_m2s_sdhc_adr),
+//     .wb_dat_i(wb_m2s_sdhc_dat),
+//     .wb_sel_i(wb_m2s_sdhc_sel),
+//     .wb_cyc_i(wb_m2s_sdhc_cyc),
+//     .wb_stb_i(wb_m2s_sdhc_stb),
+//     .wb_we_i(wb_m2s_sdhc_we),
+//     // .wb_cti_i(wb_m2s_shdc_cti),
+//     // .wb_bte_i(wb_m2s_sdhc_bti),
+//     .wb_dat_o(wb_s2m_sdhc_dat),
+//     .wb_ack_o(wb_s2m_sdhc_ack),
+//     // .wb_err_o(wb_s2m_sdhc_err),
+//     // .wb_rty_o(wb_s2m_sdhc_rty)
+// 
+//     // Connections to SPI flash
+//     .o_spi_cs_n ( o_spi_cs_n ),
+//     .o_spi_clk  ( o_spi_clk  ),
+//     .o_spi_mosi ( o_spi_mosi ),
+//     .i_spi_miso ( i_spi_miso )
+// );
 
 // output wire        wbm_clk_o,
 // output wire [31:0] wbm_adr_o,

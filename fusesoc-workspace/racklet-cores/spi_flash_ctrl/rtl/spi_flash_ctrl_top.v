@@ -1,146 +1,5 @@
 `default_nettype none
 
-// divide clock signal by a factor of two
-module clk_div_2(
-    input i_clk,
-    output o_clk
-);
-
-    reg counter = 0;
-    always @(posedge i_clk)
-        counter <= counter + 1;
-    assign o_clk = counter;
-
-endmodule
-
-
-module controller(
-    // connections to system logic
-    input  wire i_clk,      // System clock input
-    input  wire i_re,       // Start read transaction
-    output reg  o_read_stb, // Read byte available strobe
-
-    // connections to SPI flash
-    output reg  o_spi_cs_n, // SPI flash chip select (active low)
-    output reg  o_spi_clk,  // SPI flash serial clock
-    output reg  o_spi_mosi, // SPI flash master to slave data
-    input  wire i_spi_miso  // SPI flash slave to master data
-);
-
-    initial begin
-        o_spi_cs_n = 1;
-        o_spi_clk = 1;
-        o_spi_mosi = 1;
-    end
-
-    // flash read FSM
-    localparam [3:0] S_IDLE = 3'h0;
-    localparam [3:0] S_START = 3'h1;
-    localparam [3:0] S_SHIFT_CMD = 3'h2;
-    localparam [3:0] S_SHIFT_ADDR = 3'h3;
-    localparam [3:0] S_SHIFT_DATA = 3'h4;
-
-    reg [3:0] state = S_IDLE;
-    localparam [7:0] READ_CMD = 8'h03;
-    localparam [23:0] READ_ADDR = 24'h0;
-
-    reg [3:0]  cmd_counter;
-    reg [7:0]  cmd_pipe;
-    reg [4:0]  addr_counter;
-    reg [23:0] addr_pipe;
-
-    localparam [9:0] READ_SIZE = 512;
-    reg [7:0] read_byte = 0;
-    reg [3:0] read_bits = 0;
-    reg [9:0] read_bytes = 0; // number of read bytes
-
-    // fsm logic
-    always @(posedge i_clk) begin
-        if (state == S_IDLE)
-        begin
-            // start read transaction
-            if (i_re)
-            begin
-                state <= S_START;
-
-                o_spi_cs_n <= 0;
-                cmd_pipe <= READ_CMD;
-                addr_pipe <= READ_ADDR;
-            end else
-            begin
-                o_spi_cs_n <= 1;
-                o_read_stb <= 0;
-            end
-        end else if (state == S_START)
-        begin
-            state <= S_SHIFT_CMD;
-            // set index and write most significant bit
-            cmd_counter <= 7;
-            o_spi_mosi <= cmd_pipe[7];
-            cmd_pipe <= cmd_pipe << 1;
-            o_spi_clk <= 0;
-        end else if (state == S_SHIFT_CMD)
-        begin
-            if (cmd_counter == 0 && o_spi_clk == 1)
-            begin
-                state <= S_SHIFT_ADDR;
-
-                addr_counter <= 23;
-                o_spi_mosi <= addr_pipe[23];
-                addr_pipe <= addr_pipe << 1;
-            end
-
-            if (o_spi_clk == 1)
-            begin
-                o_spi_mosi <= cmd_pipe[7];
-                cmd_counter <= cmd_counter-1;
-                cmd_pipe <= cmd_pipe << 1;
-            end
-            o_spi_clk <= ~o_spi_clk;
-        end else if (state == S_SHIFT_ADDR)
-        begin
-            if (addr_counter == 0 && o_spi_clk == 1)
-            begin
-                state <= S_SHIFT_DATA;
-            end
-            if (o_spi_clk == 1)
-            begin
-                o_spi_mosi <= addr_pipe[23];
-                addr_counter <= addr_counter-1;
-                addr_pipe <= addr_pipe << 1;
-            end
-            o_spi_clk <= ~o_spi_clk;
-        end else if (state == S_SHIFT_DATA) begin
-            if (o_spi_clk == 0)
-            begin
-                read_byte <= {read_byte[6:0], i_spi_miso};
-                read_bits <= read_bits+1;
-            end
-            o_spi_clk <= ~o_spi_clk;
-            // generate ready byte strobe
-            if (read_bits == 8 && o_spi_clk == 1) begin
-                o_read_stb <= 1;
-                read_bits <= 0;
-                read_bytes <= read_bytes+1;
-                
-                // TODO: remove, this moves to idle state after reading one byte
-                if (read_bytes+1 == READ_SIZE) begin
-                    state <= S_IDLE;
-                    read_bytes <= 0;
-                end
-            end else begin
-                o_read_stb <= 0;
-            end
-        end else
-        begin
-            // go to a known state
-            state <= S_IDLE;
-        end
-    end
-
-endmodule
-
-
 module spi_flash_ctrl_top(
     input  wire i_clk,      // 16MHz clock
     output wire o_led,      // User/boot LED next to power LED
@@ -152,10 +11,8 @@ module spi_flash_ctrl_top(
     input  wire i_spi_miso, // SPI flash slave to master data       pin 12
 
     // Push Button
-    input wire i_btn,       //                                      pin 16
-
-    // Probe outputs
-    output wire o_probe,    //                                      pin 11
+    input  wire i_btn,      //                                      pin 16
+    output wire PIN_10,     // probe
 
     output wire USBPU       // USB pull-up resistor
 );
@@ -169,15 +26,54 @@ module spi_flash_ctrl_top(
         .PB(i_btn),
         .PB_down(btn_down)
     );
-    // assign o_probe = btn_down; // probe button down pulse
 
-    controller ctrl(
-    .i_clk(i_clk),
-    .o_spi_cs_n(o_spi_cs_n),
-    .o_spi_clk(o_spi_clk),
-    .o_spi_mosi(o_spi_mosi),
-    .i_spi_miso(i_spi_miso),
-    .i_re(btn_down) // read enable (start read transaction)
-);
+    // BRAM connections
+    wire       a_wr;
+    wire [8:0] a_addr;
+    wire [7:0] a_din;
+
+    wire [8:0] b_addr = 511;
+    wire [7:0] b_dout;
+    // assign PIN_10 = b_dout[1];
+
+    spi_flash_ctrl #(
+        .BLOCK_SIZE     ( 512 )
+    ) ctrl (
+        // Connections to system logic
+        .i_clk              ( i_clk      ),
+        .i_read_addr        ( 24'd0      ),
+        .i_read_stb         ( btn_down   ), // read enable (start read transaction)
+        .o_read_done_stb    ( PIN_10     ),
+
+        // Connections to BRAM
+        .o_write_bram_stb   ( a_wr       ),
+        .o_read_bram_addr   ( a_addr     ),
+        .o_read_bram_data   ( a_din      ),
+
+        // Connections to SPI flash
+        .o_spi_cs_n         ( o_spi_cs_n ),
+        .o_spi_clk          ( o_spi_clk  ),
+        .o_spi_mosi         ( o_spi_mosi ),
+        .i_spi_miso         ( i_spi_miso )
+    );
+
+    sd_bram_block_dp  #(
+        .DATA ( 8 ),    // byte addressable
+        .ADDR ( 9 )     // 512 locations
+    ) bram (
+        // Write port for data read from SPI flash
+        .a_clk      ( i_clk  ),
+        .a_wr       ( a_wr   ),
+        .a_addr     ( a_addr ),
+        .a_din      ( a_din  ),
+        // leave a_dout unconnected
+
+        // Read-only port for WB interface
+        .b_clk      ( i_clk  ),
+        .b_wr       ( 1'b0   ),  // read-only port 
+        .b_addr     ( b_addr ),
+        .b_dout     ( b_dout )
+        // leave b_din unconnected
+    );
 
 endmodule

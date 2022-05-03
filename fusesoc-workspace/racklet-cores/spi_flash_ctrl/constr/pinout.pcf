@@ -48,7 +48,7 @@ set_io --warn-no-port PIN_7 D1
 set_io --warn-no-port PIN_8 E2
 set_io --warn-no-port PIN_9 E1
 set_io --warn-no-port PIN_10 G2
-set_io --warn-no-port i_btn H1    # PIN_11
+set_io --warn-no-port i_btn H1      # PIN_11
 set_io --warn-no-port i_spi_miso J1 # PIN_12
 set_io --warn-no-port o_spi_mosi H2 # PIN_13
 

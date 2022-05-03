@@ -17,6 +17,7 @@ filesets:
   rtl:
     depend:
       - sd_device
+      - "racklet:cores:spi_flash_ctrl"
     files:
       - rtl/sd_emu_top.v
       - rtl/clk_div_2.v
@@ -26,6 +27,7 @@ filesets:
   tb:
     depend:
       - ">=vlog_tb_utils-1.0"
+      - "racklet:cores:spi_flash_sim_model"
     files:
       - tb/sd_emu_tb.v
     file_type: verilogSource
@@ -36,6 +38,15 @@ targets:
       - rtl
     toplevel: sd_emu_top
 
+  lint:
+    default_tool: verilator
+    filesets:
+      - rtl
+    tools:
+      verilator:
+        mode: lint-only
+    toplevel: sd_emu_top
+
   sim:
     description: Simulate the design
     tools:
@@ -44,6 +55,7 @@ targets:
           - -g2012 # Use SystemVerilog-2012
     parameters:
       - TARGET=SIM
+      - firmware
     default_tool: icarus
     filesets:
       - rtl
@@ -78,6 +90,11 @@ parameters:
     datatype: str
     description: Toolchain target
     paramtype: vlogparam
+  
+  firmware:
+    datatype    : str
+    description : SPI flash contents
+    paramtype   : plusarg
 
 generate:
   tinyfpga_bx_pll:

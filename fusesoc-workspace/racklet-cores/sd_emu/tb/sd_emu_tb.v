@@ -23,13 +23,31 @@ wire [3:0] sd_data_i;
 assign sd_data_io = sd_data_oe ? sd_data_o : 4'bZZZZ;
 assign sd_data_i = sd_data_io;
 
+wire spi_cs, spi_clk, spi_mosi, spi_miso;
+
+spiflash flash_sim_model (
+    .clk    (spi_clk),
+	.csb    (spi_cs),
+	.io0    (spi_mosi), // MOSI
+	.io1    (spi_miso) // MISO
+);
+
 sd_emu_top #(
     .TARGET("SIM")
 ) dut (
+    // main clock input
     .CLK(clk),
+
+    // SD card interface
     .io_sd_cmd  ( sd_cmd_io  ),
     .i_sd_clk   ( sd_clk     ),
-    .io_sd_dat  ( sd_data_io )
+    .io_sd_dat  ( sd_data_io ),
+
+    // SPI flash interface
+    .o_spi_cs_n ( spi_cs     ),     // SPI flash chip select (active low)
+    .o_spi_clk  ( spi_clk    ),     // SPI flash serial clock
+    .o_spi_mosi ( spi_mosi   ),     // SPI flash master to slave data
+    .i_spi_miso ( spi_miso   )      // SPI flash slave to master data
 );
 
 localparam [31:0] SD_DELAY_1 = 1335;    // 375 kHz init clock delay
@@ -100,6 +118,14 @@ initial begin
     cycle_sd_clk(64, SD_DELAY_2);
 
     sd_command( 6'd17, 32'h00000000, 7'h2a, SD_DELAY_2 );    // CMD17  READ_SINGLE_BLOCK
+    cycle_sd_clk(10000, SD_DELAY_2);
+
+    sd_command( 6'd17, 32'h00000000, 7'h2a, SD_DELAY_2 );    // CMD17  READ_SINGLE_BLOCK
+    cycle_sd_clk(10000, SD_DELAY_2);
+
+    // another one!
+    // TODO: calculate proper CRC value
+    sd_command( 6'd17, 32'h00000200, 7'h2a, SD_DELAY_2 );    // CMD17  READ_SINGLE_BLOCK
     cycle_sd_clk(10000, SD_DELAY_2);
 
     $finish;

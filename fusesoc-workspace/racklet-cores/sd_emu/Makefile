@@ -1,13 +1,19 @@
-CORE=racklet:playground:sd_emu
-
+FUSESOC_WORKSPACE=../..
+CORE=racklet:cores:sd_emu
 
 .PHONY: synth wave sim show
 
 sim:
-	fusesoc run --target=sim $(CORE) --vcd
+	cd $(FUSESOC_WORKSPACE) && fusesoc run --target=sim $(CORE) --vcd
 
-synth:
-	fusesoc run --target=synth $(CORE)
+lint:
+	cd $(FUSESOC_WORKSPACE) && fusesoc run --target=lint $(CORE)
+
+synth_ice40:
+	cd $(FUSESOC_WORKSPACE) && fusesoc run --target=synth_ice40 $(CORE)
+
+synth_ecp5:
+	@echo TODO: Configure ulx3s implementation
 
 show:
-	fusesoc core show $(CORE)
+	cd $(FUSESOC_WORKSPACE) && fusesoc core show $(CORE)
