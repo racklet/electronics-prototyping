@@ -41,6 +41,10 @@ generate
             .GLOBAL_BUFFER_OUTPUT (i_sd_clk_buf)
         );
     end
+    else if (TARGET == "SYNTH_ECP5")
+    begin
+        assign i_sd_clk_buf = i_sd_clk; // TODO: generate 50 MHz from 25 MHz
+    end
     else if (TARGET=="SIM")
     begin
         assign i_sd_clk_buf = i_sd_clk;

@@ -13,6 +13,11 @@ filesets:
     files:
       - constr/pinout.pcf
     file_type: PCF
+  
+  ulx3s:
+    files:
+      - constr/ulx3s.lpf
+    file_type: LPF
 
   rtl:
     depend:
@@ -78,6 +83,19 @@ targets:
       icestorm:
         nextpnr_options: [--lp8k, --package, cm81, --freq, 25]
         pnr: next
+    toplevel: sd_emu_top
+
+  synth_ecp5:
+    description: Synthesize design for ULX3S
+    default_tool: trellis
+    filesets:
+      - rtl
+      - ulx3s
+    parameters:
+      - TARGET=SYNTH_ECP5
+    tools:
+      trellis:
+        nextpnr_options: [--package, CABGA381, --85k, --freq, 50, --lpf-allow-unconstrained]
     toplevel: sd_emu_top
 
 parameters:
