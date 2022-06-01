@@ -6,12 +6,12 @@ filesets:
   rtl:
     depend:
       - "racklet:cores:spi_flash_sim_model"
-      - sd_device
     files:
       - rtl/spi_flash_ctrl_top.v
       - rtl/spi_flash_ctrl.v
       - rtl/wb_spi_flash_ctrl.v
       - rtl/debouncer.v
+      - rtl/bram.v
     file_type: verilogSource
 
   tb:
@@ -35,6 +35,8 @@ targets:
 
   sim:
     description: Simulate the design
+    parameters:
+      - firmware
     default_tool: icarus
     filesets:
       - rtl
@@ -54,3 +56,9 @@ targets:
         nextpnr_options: [--lp8k, --package, cm81, --freq, 16]
         pnr: next
     toplevel: spi_flash_ctrl_top
+
+parameters:
+  firmware:
+    datatype    : str
+    description : SPI flash contents
+    paramtype   : plusarg
