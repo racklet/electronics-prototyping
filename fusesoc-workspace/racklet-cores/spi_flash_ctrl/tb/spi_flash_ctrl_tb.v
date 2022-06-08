@@ -1,132 +1,139 @@
 `timescale 1ns/1ns
+`default_nettype none
 
-module wb_wrapper (
+module simple_wb_master (
+    input  wire         i_test_stb,
+
     input  wire         wb_clk_i,
-	input  wire         wb_rst_i,
+    input  wire         wb_rst_i,
 
-	input  wire [31:0]  wb_adr_i,
-    output wire [31:0]  wb_dat_o,
-    input  wire [3:0]   wb_sel_i,
-	input  wire         wb_cyc_i,
-	input  wire         wb_stb_i,
-    input  wire         wb_we_i,
-    output reg          wb_ack_o
+    output reg          wb_cyc_o,
+    output reg          wb_stb_o,
+    output wire [31:0]  wb_adr_o,
+    input  wire [31:0]  wb_dat_i,
+    input  wire         wb_ack_i
 );
 
-    // BRAM connections
-    wire       a_wr;
-    wire [9:0] a_addr;
-    wire [7:0] a_din;
+    reg [9:0] cnt = 0;
+    reg blasting_mode = 0;
 
-    wire [9:0] b_addr = 511;
-    wire [7:0] b_dout;
-    // assign PIN_10 = b_dout[1];
+    assign wb_adr_o = {22'b0, cnt};
 
-    spi_flash_ctrl #(
-        .BLOCK_SIZE     ( 512 )
-    ) ctrl (
-        // Connections to system logic
-        .i_clk              ( i_clk      ),
-        .i_read_addr        ( 24'd0      ),
-        .i_read_stb         ( btn_down   ), // read enable (start read transaction)
-        .o_read_done_stb    ( PIN_10     ),
+    always @(posedge wb_clk_i) begin
+        if (wb_rst_i) begin
+            cnt <= 0;
+            wb_cyc_o <= 0;
+            wb_stb_o <= 0;
+        end else if (i_test_stb) begin
+            blasting_mode <= 1;
+        end
+    end
 
-        // Connections to BRAM
-        .o_write_bram_stb   ( a_wr       ),
-        .o_read_bram_addr   ( a_addr     ),
-        .o_read_bram_data   ( a_din      ),
+    always @(*) begin
+        if (blasting_mode) begin
+            wb_cyc_o = 1;
+            wb_stb_o = 1;
+        end
+    end
 
-        // Connections to SPI flash
-        .o_spi_cs_n         ( o_spi_cs_n ),
-        .o_spi_clk          ( o_spi_clk  ),
-        .o_spi_mosi         ( o_spi_mosi ),
-        .i_spi_miso         ( i_spi_miso )
-    );
-
-    sd_bram_block_dp  #(
-        .DATA ( 8 ),    // byte addressable
-        .ADDR ( 9 )     // 512 locations
-    ) bram (
-        // Write port for data read from SPI flash
-        .a_clk      ( i_clk  ),
-        .a_wr       ( a_wr   ),
-        .a_addr     ( a_addr ),
-        .a_din      ( a_din  ),
-        // leave a_dout unconnected
-
-        // Read-only port for WB interface
-        .b_clk      ( i_clk  ),
-        .b_wr       ( 1'b0   ),  // read-only port 
-        .b_addr     ( wb_adr_i[9:0] ),
-        .b_dout     ( b_dout )
-        // leave b_din unconnected
-    );
-
-    assign wb_dat_o = {24'd0, b_dout};
+    always @(posedge wb_clk_i) begin
+        if (blasting_mode) begin
+            if (wb_stb_o && wb_ack_i)
+                cnt <= cnt + 1;
+        end
+    end
 
 endmodule
 
 
-
 module spi_flash_ctrl_tb;
 
-vlog_tb_utils vtu();
+    vlog_tb_utils vtu();
 
-reg clk = 0;
-always #62 clk=~clk;
+    reg clk = 1;
+    always #1 clk=~clk;
 
-reg btn = 1;
+    reg rst = 0;
 
-reg zero = 0;
+    reg test_stb = 0;
+    wire        wb_cyc_m2s;
+    wire        wb_stb_m2s;
+    wire        wb_we_m2s;
+    wire [31:0] wb_adr_m2s;
+    wire [31:0] wb_dat_m2s;
+    wire        wb_ack_s2m;
 
-wire flash_cs;
-wire flash_clk;
-wire flash_mosi;
-wire flash_miso;
-wire flash_wp_n;
-wire flash_reset_n;
-assign flash_wp_n = 1;
-assign flash_reset_n = 1;
+    wire flash_cs;
+    wire flash_clk;
+    wire flash_mosi;
+    wire flash_miso;
+    wire flash_wp_n;
+    wire flash_reset_n;
 
-spiflash spiflash_model (
-	.csb(flash_cs),
-	.clk(flash_clk),
-	.io0(flash_mosi),
-	.io1(flash_miso),
-	.io2(flash_wp_n),
-	.io3(flash_reset_n)
-);
+    reg flash_reset_reg = 1;
+    assign flash_wp_n = 1;
 
-spi_flash_ctrl_top dut(
-    .i_clk(clk),
-    .i_btn(btn),
-    .o_spi_cs_n(flash_cs),
-    .o_spi_clk(flash_clk),
-    .o_spi_mosi(flash_mosi),
-    .i_spi_miso(flash_miso)
-);
+    assign flash_reset_n = flash_reset_reg;
+
+    spiflash spiflash_model (
+        .csb            ( flash_cs      ),
+        .clk            ( flash_clk     ),
+        .io0            ( flash_mosi    ),
+        .io1            ( flash_miso    ),
+        .io2            ( flash_wp_n    ),
+        .io3            ( flash_reset_n )
+    );
+
+    simple_wb_master wb_blaster (
+        .i_test_stb     ( test_stb      ),
+        .wb_clk_i       ( clk           ),
+        .wb_rst_i       ( rst           ),
+        .wb_cyc_o       ( wb_cyc_m2s    ),
+        .wb_stb_o       ( wb_stb_m2s    ),
+        .wb_adr_o       ( wb_adr_m2s    ),
+        .wb_dat_i       ( wb_dat_m2s    ),
+        .wb_ack_i       ( wb_ack_s2m    )
+    );
+
+    wb_spi_flash_ctrl dut(
+        .wb_clk_i       ( clk           ),
+        .wb_rst_i       ( rst           ),
+
+        .wb_cyc_i       ( wb_cyc_m2s    ),
+        .wb_stb_i       ( wb_stb_m2s    ),
+        .wb_we_i        ( 1'b0          ),
+        .wb_adr_i       ( wb_adr_m2s    ),
+        .wb_dat_i       ( wb_dat_m2s    ),
+        .wb_ack_o       ( wb_ack_s2m    ), 
+
+        .o_spi_cs_n     ( flash_cs      ),
+        .o_spi_clk      ( flash_clk     ),
+        .o_spi_mosi     ( flash_mosi    ),
+        .i_spi_miso     ( flash_miso    )
+    );
 
 
 
-initial begin
-    $display("Hello, world!");
-    #10000000;
-    $finish;
-end
+    initial begin
+        $display("Running testbench: spi_flash_ctrl_tb");
+        #100000;
+        $finish;
+    end
 
-// push button press
-initial begin
-    #262;
-    // push button + simulate bounce
-    btn = 0;
-    #10000
-    btn = 1;
+    integer i;
+    initial begin
 
-    // #30000;
-    // // push button + simulate bounce
-    // btn = 0;
-    // #10000
-    // btn = 1;
-end
+        // reset
+        #2 rst <= 1;
+        #4 rst <= 0;
+
+        #2 flash_reset_reg <= 0;
+        #4 flash_reset_reg <= 1;
+
+        // wishbone reads
+        #2 test_stb <= 1;
+        #2 test_stb <= 0;
+
+    end
 
 endmodule

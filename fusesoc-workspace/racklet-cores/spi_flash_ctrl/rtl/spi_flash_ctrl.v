@@ -1,24 +1,24 @@
 `default_nettype none
 
 module spi_flash_ctrl #(
-    parameter [9:0] BLOCK_SIZE = 512
+    parameter [10:0] BLOCK_SIZE = 512
 ) (
     // connections to system logic
-    input  wire        i_clk,           // System clock input
-    input  wire [23:0] i_read_addr,     // Block read start address (byte-addressed)
-    input  wire        i_read_stb,      // Start read transaction
-    output reg         o_read_done_stb, // Read completion strobe
+    input  wire         i_clk,              // System clock input
+    input  wire [23:0]  i_read_addr,        // Block read start address (byte-addressed)
+    input  wire         i_read_stb,         // Start read transaction
+    output reg          o_read_done_stb,    // Read completion strobe
 
     // connections to BRAM
-    output reg         o_write_bram_stb,    // Read byte available strobe
-    output reg [8:0]   o_read_bram_addr,    // Read byte address modulo BLOCK_SIZE
-    output reg [7:0]   o_read_bram_data,    // Read byte data
+    output reg          o_write_bram_stb,   // Read byte available strobe
+    output reg  [9:0]   o_read_bram_addr,   // Read byte address modulo BLOCK_SIZE
+    output reg  [7:0]   o_read_bram_data,   // Read byte data
 
     // connections to SPI flash
-    output reg  o_spi_cs_n, // SPI flash chip select (active low)
-    output reg  o_spi_clk,  // SPI flash serial clock
-    output reg  o_spi_mosi, // SPI flash master to slave data
-    input  wire i_spi_miso  // SPI flash slave to master data
+    output reg          o_spi_cs_n,         // SPI flash chip select (active low)
+    output reg          o_spi_clk,          // SPI flash serial clock
+    output reg          o_spi_mosi,         // SPI flash master to slave data
+    input  wire         i_spi_miso          // SPI flash slave to master data
 );
 
 initial begin
@@ -44,7 +44,7 @@ reg [23:0] addr_pipe;
 
 reg [7:0] read_byte = 0;
 reg [3:0] read_bits = 0;
-reg [9:0] read_bytes = 0; // number of read bytes
+reg [10:0] read_bytes = 0; // number of bytes read
 
 // fsm logic
 // TODO: rewrite with clear separation between combinational and sequential logic

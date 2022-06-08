@@ -1,0 +1,91 @@
+[*]
+[*] GTKWave Analyzer v3.3.111 (w)1999-2020 BSI
+[*] Tue Jun  7 20:02:23 2022
+[*]
+[dumpfile] "(null)"
+[savefile] "/home/user/hw/electronics-prototyping/fusesoc-workspace/spi_flash_ctrl_tb.gtkw"
+[timestart] 0
+[size] 1904 1042
+[pos] -1 -1
+*-23.863930 34943150 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[treeopen] spi_flash_ctrl_tb.
+[treeopen] spi_flash_ctrl_tb.dut.
+[sst_width] 211
+[signals_width] 329
+[sst_expanded] 1
+[sst_vpaned_height] 297
+@200
+-System Clock and Reset
+@28
+[color] 1
+spi_flash_ctrl_tb.clk
+[color] 1
+spi_flash_ctrl_tb.rst
+[color] 1
+spi_flash_ctrl_tb.flash_reset_n
+@200
+-
+-Wishbone
+@28
+spi_flash_ctrl_tb.wb_blaster.i_test_stb
+@25
+spi_flash_ctrl_tb.wb_blaster.cnt[9:0]
+@200
+-
+@28
+[color] 2
+spi_flash_ctrl_tb.dut.wb_cyc_i
+[color] 2
+spi_flash_ctrl_tb.dut.wb_stb_i
+[color] 2
+spi_flash_ctrl_tb.dut.wb_we_i
+@22
+[color] 2
+spi_flash_ctrl_tb.dut.wb_adr_i[31:0]
+[color] 2
+spi_flash_ctrl_tb.dut.wb_dat_i[31:0]
+[color] 2
+spi_flash_ctrl_tb.dut.wb_dat_o[31:0]
+@28
+[color] 2
+spi_flash_ctrl_tb.dut.wb_ack_o
+@200
+-
+-SPI flash controller state
+@28
+spi_flash_ctrl_tb.dut.block_read_stb
+spi_flash_ctrl_tb.dut.ctrl.o_read_done_stb
+@2022
+^1 /home/user/hw/electronics-prototyping/fusesoc-workspace/racklet-cores/spi_flash_ctrl/gtkwave/state.txt
+spi_flash_ctrl_tb.dut.ctrl.state[3:0]
+@22
+spi_flash_ctrl_tb.dut.ctrl.addr_counter[4:0]
+spi_flash_ctrl_tb.dut.ctrl.addr_pipe[23:0]
+@24
+spi_flash_ctrl_tb.dut.ctrl.read_bytes[10:0]
+@200
+-
+-SPI
+@28
+[color] 3
+spi_flash_ctrl_tb.dut.o_spi_clk
+[color] 3
+spi_flash_ctrl_tb.dut.o_spi_cs_n
+[color] 3
+spi_flash_ctrl_tb.dut.o_spi_mosi
+[color] 3
+spi_flash_ctrl_tb.dut.i_spi_miso
+@200
+-
+-BRAM write port
+@22
+spi_flash_ctrl_tb.dut.a_din[7:0]
+@28
+spi_flash_ctrl_tb.dut.a_wr
+@200
+-
+-BRAM read port
+@22
+spi_flash_ctrl_tb.dut.b_dout[7:0]
+[pattern_trace] 1
+[pattern_trace] 0

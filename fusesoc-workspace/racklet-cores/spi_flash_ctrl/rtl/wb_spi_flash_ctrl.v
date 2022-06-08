@@ -13,14 +13,14 @@ module wb_spi_flash_ctrl(
 	input  wire         wb_stb_i,
     input  wire         wb_we_i,
     output reg          wb_ack_o,
-	input  wire [2:0]   wb_cti_i,
-	input  wire [1:0]   wb_bte_i,
+	// input  wire [2:0]   wb_cti_i,
+	// input  wire [1:0]   wb_bte_i,
 
     // SPI flash
-    output wire o_spi_cs_n, // SPI flash chip select (active low)   pin 15
-    output wire o_spi_clk,  // SPI flash serial clock               pin 14
-    output wire o_spi_mosi, // SPI flash master to slave data       pin 13
-    input  wire i_spi_miso  // SPI flash slave to master data       pin 12
+    output wire         o_spi_cs_n, // SPI flash chip select (active low)   pin 15
+    output wire         o_spi_clk,  // SPI flash serial clock               pin 14
+    output wire         o_spi_mosi, // SPI flash master to slave data       pin 13
+    input  wire         i_spi_miso  // SPI flash slave to master data       pin 12
 );
 
     reg wb_cyc_i_last;
@@ -29,25 +29,20 @@ module wb_spi_flash_ctrl(
     reg [3:0] state;
     localparam [3:0] ST_IDLE            = 4'd1,
                      ST_READ_BLOCK      = 4'd2,
-                     ST_WAIT_FOR_STB    = 4'd3,
-                     ST_BRAM_1          = 4'd4,
-                     ST_BRAM_2          = 4'd5,
-                     ST_BRAM_3          = 4'd6,
-                     ST_BRAM_4          = 4'd7;
+                     ST_ACK_BLOCK_READ  = 4'd3;
 
     // BRAM connections
     wire       a_wr;
-    wire [8:0] a_addr;
+    wire [9:0] a_addr;
     wire [7:0] a_din;
 
-    reg  [9:0] b_addr = 0;
-    wire [7:0] b_dout;
-
-    reg block_read_stb;
+    //reg block_read_stb;
+    wire block_aligned_addr = wb_adr_i[9:0] == 10'b0;
+    wire block_read_stb = wb_cyc_i_rising && block_aligned_addr;
     wire block_read_done;
 
     spi_flash_ctrl #(
-        .BLOCK_SIZE     ( 512 )
+        .BLOCK_SIZE     ( 1024 )
     ) ctrl (
         // Connections to system logic
         .i_clk              ( wb_clk_i        ),
@@ -68,8 +63,8 @@ module wb_spi_flash_ctrl(
     );
 
     sd_bram_block_dp  #(
-        .DATA ( 8 ),    // byte addressable
-        .ADDR ( 9 )     // 512 locations
+        .DATA ( 8 ),        // byte addressable
+        .ADDR ( 10 )        // 1024 locations
     ) bram (
         // Write port for data read from SPI flash
         .a_clk      ( wb_clk_i  ),
@@ -79,69 +74,38 @@ module wb_spi_flash_ctrl(
         // leave a_dout unconnected
 
         // Read-only port for WB interface
-        .b_clk      ( wb_clk_i  ),
-        .b_wr       ( 1'b0   ),  // read-only port 
-        .b_addr     ( b_addr ),
-        .b_dout     ( b_dout )
+        .b_clk      ( wb_clk_i      ),
+        .b_wr       ( 1'b0          ),  // read-only port 
+        .b_addr     ( wb_adr_i[9:0] ),
+
+        // FIXME: Convert 8-bit wide bram to 32-bit wishbone...
+        // Either:
+        //   * split bram block to four smaller bram blocks to get four read ports for 32-bit output per cycle, or
+        //   * read over 4 cycles with a state machine
+
+
+        .b_dout     ( wb_dat_o      )
         // leave b_din unconnected
     );
 
     always @(posedge wb_clk_i) begin
         wb_cyc_i_last <= wb_cyc_i;
-        wb_ack_o <= 1'b0;
-        block_read_stb <= 0;
 
         case(state)
             ST_IDLE: begin
-                if (wb_cyc_i_rising) begin
-                    b_addr <= 0;
-                    block_read_stb <= 1;
+                if (block_read_stb) begin
                     state <= ST_READ_BLOCK;
                 end
             end
 
             ST_READ_BLOCK: begin
                 if (block_read_done) begin
-                    state <= ST_WAIT_FOR_STB;
+                    state <= ST_ACK_BLOCK_READ;
                 end
             end
 
-            ST_WAIT_FOR_STB: begin
-                if (wb_stb_i) begin
-                    b_addr <= b_addr + 1;
-                    state <= ST_BRAM_1;
-                end
-            end
-
-            ST_BRAM_1: begin
-                b_addr <= b_addr + 1;
-                // wb_dat_o[7:0] <= b_dout;
-                wb_dat_o[31:24] <= b_dout;
-                state <= ST_BRAM_2;
-            end
-
-            ST_BRAM_2: begin
-                b_addr <= b_addr + 1;
-                // wb_dat_o[15:8] <= b_dout;
-                wb_dat_o[23:16] <= b_dout;
-                state <= ST_BRAM_3;
-            end
-
-            ST_BRAM_3: begin
-                b_addr <= b_addr + 1;
-                // wb_dat_o[23:16] <= b_dout;
-                wb_dat_o[15:8] <= b_dout;
-                state <= ST_BRAM_4;
-            end
-
-            ST_BRAM_4: begin
-                // wb_dat_o[31:24] <= b_dout;
-                wb_dat_o[7:0] <= b_dout;
-                wb_ack_o <= 1'b1;
-                state <= ST_WAIT_FOR_STB;
-                if (b_addr == 512) begin
-                    state <= ST_IDLE;
-                end
+            ST_ACK_BLOCK_READ: begin
+                state <= ST_IDLE;
             end
 
             default: begin
@@ -152,6 +116,13 @@ module wb_spi_flash_ctrl(
         // module reset
         if (wb_rst_i)
             state <= ST_IDLE;
+    end
+
+    always @(*) begin
+        if (block_aligned_addr)
+            wb_ack_o = state == ST_ACK_BLOCK_READ;
+        else
+            wb_ack_o = wb_stb_i && wb_cyc_i;
     end
 
 endmodule
