@@ -1,15 +1,21 @@
 [*]
 [*] GTKWave Analyzer v3.3.111 (w)1999-2020 BSI
-[*] Tue Jun  7 20:02:23 2022
+[*] Wed Jun  8 06:27:15 2022
 [*]
-[dumpfile] "(null)"
+[dumpfile] "/home/user/hw/electronics-prototyping/fusesoc-workspace/build/racklet_cores_spi_flash_ctrl_0.0.1/sim-icarus/testlog.vcd"
+[dumpfile_mtime] "Wed Jun  8 06:26:24 2022"
+[dumpfile_size] 17363
 [savefile] "/home/user/hw/electronics-prototyping/fusesoc-workspace/spi_flash_ctrl_tb.gtkw"
 [timestart] 0
 [size] 1904 1042
 [pos] -1 -1
-*-23.863930 34943150 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+*-23.863930 31900000 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
 [treeopen] spi_flash_ctrl_tb.
 [treeopen] spi_flash_ctrl_tb.dut.
+[treeopen] spi_flash_ctrl_tb.dut.genblk1[0].
+[treeopen] spi_flash_ctrl_tb.dut.genblk1[1].
+[treeopen] spi_flash_ctrl_tb.dut.genblk1[2].
+[treeopen] spi_flash_ctrl_tb.dut.genblk1[3].
 [sst_width] 211
 [signals_width] 329
 [sst_expanded] 1
@@ -28,7 +34,7 @@ spi_flash_ctrl_tb.flash_reset_n
 -Wishbone
 @28
 spi_flash_ctrl_tb.wb_blaster.i_test_stb
-@25
+@24
 spi_flash_ctrl_tb.wb_blaster.cnt[9:0]
 @200
 -
@@ -49,6 +55,11 @@ spi_flash_ctrl_tb.dut.wb_dat_o[31:0]
 @28
 [color] 2
 spi_flash_ctrl_tb.dut.wb_ack_o
+@2022
+^1 /home/user/hw/electronics-prototyping/fusesoc-workspace/racklet-cores/spi_flash_ctrl/gtkwave/wb_state.txt
+spi_flash_ctrl_tb.dut.state[3:0]
+@28
+spi_flash_ctrl_tb.dut.unaligned_read_stb
 @200
 -
 -SPI flash controller state
@@ -56,7 +67,7 @@ spi_flash_ctrl_tb.dut.wb_ack_o
 spi_flash_ctrl_tb.dut.block_read_stb
 spi_flash_ctrl_tb.dut.ctrl.o_read_done_stb
 @2022
-^1 /home/user/hw/electronics-prototyping/fusesoc-workspace/racklet-cores/spi_flash_ctrl/gtkwave/state.txt
+^2 /home/user/hw/electronics-prototyping/fusesoc-workspace/racklet-cores/spi_flash_ctrl/gtkwave/state.txt
 spi_flash_ctrl_tb.dut.ctrl.state[3:0]
 @22
 spi_flash_ctrl_tb.dut.ctrl.addr_counter[4:0]
@@ -84,8 +95,37 @@ spi_flash_ctrl_tb.dut.a_din[7:0]
 spi_flash_ctrl_tb.dut.a_wr
 @200
 -
--BRAM read port
+@23
+spi_flash_ctrl_tb.dut.rd_block_addr[7:0]
 @22
-spi_flash_ctrl_tb.dut.b_dout[7:0]
+spi_flash_ctrl_tb.dut.genblk1[0].bram.a_addr[7:0]
+spi_flash_ctrl_tb.dut.genblk1[0].bram.a_din[7:0]
+@200
+-BRAM 0
+@28
+spi_flash_ctrl_tb.dut.genblk1[0].bram.a_wr
+@22
+spi_flash_ctrl_tb.dut.genblk1[0].bram.b_dout[7:0]
+@200
+-BRAM 1
+@28
+spi_flash_ctrl_tb.dut.genblk1[1].bram.a_wr
+@22
+spi_flash_ctrl_tb.dut.genblk1[1].bram.b_dout[7:0]
+@200
+-BRAM 2
+@28
+spi_flash_ctrl_tb.dut.genblk1[2].bram.a_wr
+@22
+spi_flash_ctrl_tb.dut.genblk1[2].bram.b_dout[7:0]
+@200
+-BRAM 3
+@28
+spi_flash_ctrl_tb.dut.genblk1[3].bram.a_wr
+@22
+spi_flash_ctrl_tb.dut.genblk1[3].bram.b_dout[7:0]
+@200
+-
+-BRAM read port
 [pattern_trace] 1
 [pattern_trace] 0

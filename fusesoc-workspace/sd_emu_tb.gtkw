@@ -1,0 +1,52 @@
+[*]
+[*] GTKWave Analyzer v3.3.111 (w)1999-2020 BSI
+[*] Wed Jun  8 06:55:10 2022
+[*]
+[dumpfile] "/home/user/hw/electronics-prototyping/fusesoc-workspace/build/racklet_cores_sd_emu_0.0.1/sim-icarus/testlog.vcd"
+[dumpfile_mtime] "Wed Jun  8 06:47:26 2022"
+[dumpfile_size] 151535
+[savefile] "/home/user/hw/electronics-prototyping/fusesoc-workspace/sd_emu_tb.gtkw"
+[timestart] 0
+[size] 1904 1042
+[pos] -1 -1
+*-29.990894 6373640000 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[treeopen] sd_emu_tb.
+[sst_width] 211
+[signals_width] 271
+[sst_expanded] 1
+[sst_vpaned_height] 286
+@200
+-System Clock and Reset
+@28
+sd_emu_tb.dut.CLK
+@200
+-
+-SD
+@28
+sd_emu_tb.dut.i_sd_clk
+sd_emu_tb.dut.io_sd_cmd
+@22
+sd_emu_tb.dut.io_sd_dat[3:0]
+@200
+-
+-Wishbone
+@28
+sd_emu_tb.dut.wb_m2s_sdhc_cyc
+sd_emu_tb.dut.wb_m2s_sdhc_stb
+sd_emu_tb.dut.wb_m2s_sdhc_we
+@22
+sd_emu_tb.dut.wb_m2s_sdhc_adr[31:0]
+sd_emu_tb.dut.wb_s2m_sdhc_dat[31:0]
+sd_emu_tb.dut.wb_m2s_sdhc_dat[31:0]
+@28
+sd_emu_tb.dut.wb_s2m_sdhc_ack
+@200
+-
+-SPI
+@28
+sd_emu_tb.dut.o_spi_clk
+sd_emu_tb.dut.o_spi_cs_n
+sd_emu_tb.dut.o_spi_mosi
+sd_emu_tb.dut.i_spi_miso
+[pattern_trace] 1
+[pattern_trace] 0

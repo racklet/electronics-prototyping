@@ -10,9 +10,9 @@ module spi_flash_ctrl #(
     output reg          o_read_done_stb,    // Read completion strobe
 
     // connections to BRAM
-    output reg          o_write_bram_stb,   // Read byte available strobe
-    output reg  [9:0]   o_read_bram_addr,   // Read byte address modulo BLOCK_SIZE
-    output reg  [7:0]   o_read_bram_data,   // Read byte data
+    output reg          o_write_bram_stb,   // Write byte available strobe
+    output reg  [9:0]   o_write_bram_addr,  // Write byte address modulo BLOCK_SIZE
+    output reg  [7:0]   o_write_bram_data,  // Write byte data
 
     // connections to SPI flash
     output reg          o_spi_cs_n,         // SPI flash chip select (active low)
@@ -115,8 +115,8 @@ always @(posedge i_clk) begin
             // write byte to bram after reading last bit
             if (read_bits == 7) begin
                 o_write_bram_stb <= 1;
-                o_read_bram_data <= {read_byte[6:0], i_spi_miso};
-                o_read_bram_addr <= read_bytes;
+                o_write_bram_data <= {read_byte[6:0], i_spi_miso};
+                o_write_bram_addr <= read_bytes;
             end
         end else if (o_spi_clk == 1) begin
             if (read_bits == 8) begin

@@ -155,26 +155,7 @@ wire        wb_m2s_sdhc_stb;
 wire [31:0] wb_s2m_sdhc_dat;
 wire        wb_s2m_sdhc_ack;
 
-wb_a wb_slave(
-    .wb_clk_i(wb_clk),
-    .wb_rst_i(pll_rst),
-
-    .wb_adr_i(wb_m2s_sdhc_adr),
-    .wb_dat_i(wb_m2s_sdhc_dat),
-    .wb_sel_i(wb_m2s_sdhc_sel),
-    .wb_cyc_i(wb_m2s_sdhc_cyc),
-    .wb_stb_i(wb_m2s_sdhc_stb),
-    .wb_we_i(wb_m2s_sdhc_we),
-    // .wb_cti_i(wb_m2s_shdc_cti),
-    // .wb_bte_i(wb_m2s_sdhc_bti),
-    .wb_dat_o(wb_s2m_sdhc_dat),
-    .wb_ack_o(wb_s2m_sdhc_ack)
-    // .wb_err_o(wb_s2m_sdhc_err),
-    // .wb_rty_o(wb_s2m_sdhc_rty)
-);
-
-// wb_spi_flash_ctrl wb_spi_flash (
-//     // Wishbone Interface
+// wb_a wb_slave(
 //     .wb_clk_i(wb_clk),
 //     .wb_rst_i(pll_rst),
 // 
@@ -187,16 +168,35 @@ wb_a wb_slave(
 //     // .wb_cti_i(wb_m2s_shdc_cti),
 //     // .wb_bte_i(wb_m2s_sdhc_bti),
 //     .wb_dat_o(wb_s2m_sdhc_dat),
-//     .wb_ack_o(wb_s2m_sdhc_ack),
+//     .wb_ack_o(wb_s2m_sdhc_ack)
 //     // .wb_err_o(wb_s2m_sdhc_err),
 //     // .wb_rty_o(wb_s2m_sdhc_rty)
-// 
-//     // Connections to SPI flash
-//     .o_spi_cs_n ( o_spi_cs_n ),
-//     .o_spi_clk  ( o_spi_clk  ),
-//     .o_spi_mosi ( o_spi_mosi ),
-//     .i_spi_miso ( i_spi_miso )
 // );
+
+wb_spi_flash_ctrl wb_spi_flash (
+    // Wishbone Interface
+    .wb_clk_i(wb_clk),
+    .wb_rst_i(pll_rst),
+
+    .wb_cyc_i(wb_m2s_sdhc_cyc),
+    .wb_stb_i(wb_m2s_sdhc_stb),
+    .wb_we_i(wb_m2s_sdhc_we),
+    .wb_adr_i(wb_m2s_sdhc_adr),
+    .wb_dat_i(wb_m2s_sdhc_dat),
+    .wb_dat_o(wb_s2m_sdhc_dat),
+    .wb_ack_o(wb_s2m_sdhc_ack),
+    // .wb_sel_i(wb_m2s_sdhc_sel),
+    // .wb_cti_i(wb_m2s_shdc_cti),
+    // .wb_bte_i(wb_m2s_sdhc_bti),
+    // .wb_err_o(wb_s2m_sdhc_err),
+    // .wb_rty_o(wb_s2m_sdhc_rty)
+
+    // Connections to SPI flash
+    .o_spi_cs_n ( o_spi_cs_n ),
+    .o_spi_clk  ( o_spi_clk  ),
+    .o_spi_mosi ( o_spi_mosi ),
+    .i_spi_miso ( i_spi_miso )
+);
 
 // output wire        wbm_clk_o,
 // output wire [31:0] wbm_adr_o,

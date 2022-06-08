@@ -13,7 +13,7 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 */
-module sd_bram_block_dp #(
+module bram_dp #(
    parameter DATA = 32,
    parameter ADDR = 7
 ) (

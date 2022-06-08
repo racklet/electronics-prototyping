@@ -14,10 +14,10 @@ module simple_wb_master (
     input  wire         wb_ack_i
 );
 
-    reg [9:0] cnt = 0;
+    reg [10:0] cnt = 0;
     reg blasting_mode = 0;
 
-    assign wb_adr_o = {22'b0, cnt};
+    assign wb_adr_o = {22'b0, cnt[9:0]};
 
     always @(posedge wb_clk_i) begin
         if (wb_rst_i) begin
@@ -38,8 +38,13 @@ module simple_wb_master (
 
     always @(posedge wb_clk_i) begin
         if (blasting_mode) begin
-            if (wb_stb_o && wb_ack_i)
-                cnt <= cnt + 1;
+            if (cnt == 1024) begin
+                blasting_mode <= 0;
+                wb_cyc_o <= 0;
+                wb_stb_o <= 0;
+            end else if (wb_stb_o && wb_ack_i) begin
+                cnt <= cnt + 4;
+            end
         end
     end
 
