@@ -118,15 +118,15 @@ initial begin
     cycle_sd_clk(64, SD_DELAY_2);
 
     sd_command( 6'd17, 32'h00000000, 7'h2a, SD_DELAY_2 );    // CMD17  READ_SINGLE_BLOCK
-    cycle_sd_clk(10000, SD_DELAY_2);
+    cycle_sd_clk(1000000, SD_DELAY_2);
 
     sd_command( 6'd17, 32'h00000000, 7'h2a, SD_DELAY_2 );    // CMD17  READ_SINGLE_BLOCK
-    cycle_sd_clk(10000, SD_DELAY_2);
+    cycle_sd_clk(1000000, SD_DELAY_2);
 
     // another one!
     // TODO: calculate proper CRC value
-    sd_command( 6'd17, 32'h00000200, 7'h2a, SD_DELAY_2 );    // CMD17  READ_SINGLE_BLOCK
-    cycle_sd_clk(10000, SD_DELAY_2);
+    // sd_command( 6'd17, 32'h00000200, 7'h2a, SD_DELAY_2 );    // CMD17  READ_SINGLE_BLOCK
+    // cycle_sd_clk(1000000, SD_DELAY_2);
 
     $finish;
 end

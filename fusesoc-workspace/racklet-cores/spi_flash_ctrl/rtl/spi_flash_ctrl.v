@@ -44,6 +44,10 @@ module spi_flash_ctrl #(
     reg [4:0]  addr_counter;
     reg [23:0] addr_pipe;
 
+    wire spi_clk_stb = (spi_clk_cnt == SPI_CLK_DIV-1);
+    always @(posedge i_clk)
+        if (spi_clk_stb) spi_clk_cnt <= 0;
+
     reg [7:0] read_byte = 0;
     reg [3:0] read_bits = 0;
     reg [10:0] read_bytes = 0; // number of bytes read
@@ -81,63 +85,69 @@ module spi_flash_ctrl #(
             end
             
             S_SHIFT_CMD: begin
-                if (cmd_counter == 0 && o_spi_clk == 1)
-                begin
-                    state <= S_SHIFT_ADDR;
+                if (spi_clk_stb) begin
+                    if (cmd_counter == 0 && o_spi_clk == 1)
+                    begin
+                        state <= S_SHIFT_ADDR;
 
-                    addr_counter <= 23;
-                    o_spi_mosi <= addr_pipe[23];
-                    addr_pipe <= addr_pipe << 1;
-                end
+                        addr_counter <= 23;
+                        o_spi_mosi <= addr_pipe[23];
+                        addr_pipe <= addr_pipe << 1;
+                    end
 
-                if (o_spi_clk == 1)
-                begin
-                    o_spi_mosi <= cmd_pipe[7];
-                    cmd_counter <= cmd_counter-1;
-                    cmd_pipe <= cmd_pipe << 1;
+                    if (o_spi_clk == 1)
+                    begin
+                        o_spi_mosi <= cmd_pipe[7];
+                        cmd_counter <= cmd_counter-1;
+                        cmd_pipe <= cmd_pipe << 1;
+                    end
+                    o_spi_clk <= ~o_spi_clk;
                 end
-                o_spi_clk <= ~o_spi_clk;
             end
             
             S_SHIFT_ADDR: begin
-                if (addr_counter == 0 && o_spi_clk == 1)
-                begin
-                    state <= S_SHIFT_DATA;
+                if (spi_clk_stb) begin                    
+                    if (addr_counter == 0 && o_spi_clk == 1)
+                    begin
+                        state <= S_SHIFT_DATA;
+                    end
+                    if (o_spi_clk == 1)
+                    begin
+                        o_spi_mosi <= addr_pipe[23];
+                        addr_counter <= addr_counter-1;
+                        addr_pipe <= addr_pipe << 1;
+                    end
+                    o_spi_clk <= ~o_spi_clk;
                 end
-                if (o_spi_clk == 1)
-                begin
-                    o_spi_mosi <= addr_pipe[23];
-                    addr_counter <= addr_counter-1;
-                    addr_pipe <= addr_pipe << 1;
-                end
-                o_spi_clk <= ~o_spi_clk;
             end
             
             S_SHIFT_DATA: begin
-                o_spi_clk <= ~o_spi_clk;
-                if (o_spi_clk == 0)
-                begin
-                    // shift bit in from MISO line
-                    read_byte <= {read_byte[6:0], i_spi_miso};
-                    read_bits <= read_bits+1;
+                if (spi_clk_stb) begin                    
+                    o_spi_clk <= ~o_spi_clk;
+                    if (o_spi_clk == 0)
+                    begin
+                        // shift bit in from MISO line
+                        read_byte <= {read_byte[6:0], i_spi_miso};
+                        read_bits <= read_bits+1;
 
-                    // write byte to bram after reading last bit
-                    if (read_bits == 7) begin
-                        o_write_bram_stb <= 1;
-                        o_write_bram_data <= {read_byte[6:0], i_spi_miso};
-                        o_write_bram_addr <= read_bytes;
-                    end
-                end else if (o_spi_clk == 1) begin
-                    if (read_bits == 8) begin
-                        // reset counters for next byte
-                        read_bits <= 0;
-                        read_bytes <= read_bytes+1;
-                        
-                        // Go to IDLE state after read is done
-                        if (read_bytes+1 == BLOCK_SIZE) begin
-                            state <= S_IDLE;
-                            read_bytes <= 0;
-                            o_read_done_stb <= 1'b1;
+                        // write byte to bram after reading last bit
+                        if (read_bits == 7) begin
+                            o_write_bram_stb <= 1;
+                            o_write_bram_data <= {read_byte[6:0], i_spi_miso};
+                            o_write_bram_addr <= read_bytes;
+                        end
+                    end else if (o_spi_clk == 1) begin
+                        if (read_bits == 8) begin
+                            // reset counters for next byte
+                            read_bits <= 0;
+                            read_bytes <= read_bytes+1;
+                            
+                            // Go to IDLE state after read is done
+                            if (read_bytes+1 == BLOCK_SIZE) begin
+                                state <= S_IDLE;
+                                read_bytes <= 0;
+                                o_read_done_stb <= 1'b1;
+                            end
                         end
                     end
                 end
