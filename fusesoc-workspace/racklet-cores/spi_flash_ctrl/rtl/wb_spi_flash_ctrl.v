@@ -16,14 +16,15 @@ module wb_spi_flash_ctrl(
 	// input  wire [2:0]   wb_cti_i,
 	// input  wire [1:0]   wb_bte_i,
 
+    input  wire         abort_mission, // stop current transfer and move to idle state
+
     // SPI flash
     output wire         o_spi_cs_n, // SPI flash chip select (active low)   pin 15
     output wire         o_spi_clk,  // SPI flash serial clock               pin 14
     output wire         o_spi_mosi, // SPI flash master to slave data       pin 13
     input  wire         i_spi_miso  // SPI flash slave to master data       pin 12
 );
-
-    reg wb_cyc_i_last;
+    reg wb_cyc_i_last, wb_we_i_last;
     wire wb_cyc_i_rising = wb_cyc_i & ~wb_cyc_i_last;
 
     reg [3:0] state;
@@ -75,14 +76,14 @@ module wb_spi_flash_ctrl(
     genvar i;
     generate
         for (i = 0; i < 4; i = i + 1) begin
-            wire a_wr_i = a_wr && (wr_block_index == i);
+            wire a_wr_idx = a_wr && (wr_block_index == i);
             bram_dp  #(
                 .DATA ( 8 ),        // byte addressable
                 .ADDR ( 8 )         // 4*256 = 1024 locations
             ) bram (
                 // Write port for data read from SPI flash
                 .a_clk      ( wb_clk_i      ),
-                .a_wr       ( a_wr_i        ),
+                .a_wr       ( a_wr_idx      ),
                 .a_addr     ( wr_block_addr ),
                 .a_din      ( a_din         ),
                 // TODO: test if this is legal syntax
@@ -92,6 +93,7 @@ module wb_spi_flash_ctrl(
                 .b_clk      ( wb_clk_i      ),
                 .b_wr       ( 1'b0          ),  // read-only port 
                 .b_addr     ( rd_block_addr ),
+                //.b_dout     ( wb_dat_o[8*(3-i)+7:8*(3-i)] )
                 .b_dout     ( wb_dat_o[8*i+7:8*i] )
                 // leave b_din unconnected
             );
@@ -100,6 +102,7 @@ module wb_spi_flash_ctrl(
 
     always @(posedge wb_clk_i) begin
         wb_cyc_i_last <= wb_cyc_i;
+        wb_we_i_last <= wb_we_i;
 
         case(state)
             ST_IDLE: begin
@@ -142,6 +145,8 @@ module wb_spi_flash_ctrl(
     always @(*) begin
         if (block_aligned_addr)
             wb_ack_o = state == ST_ACK_BLOCK_READ;
+        else if (wb_we_i_last && wb_stb_i && wb_cyc_i)
+            wb_ack_o = 1'b0;
         else
             wb_ack_o = wb_stb_i && wb_cyc_i && (state == ST_BRAM_D);
     end

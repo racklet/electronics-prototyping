@@ -117,11 +117,98 @@ initial begin
     sd_command( 6'd6, 32'h00000002, 7'h65, SD_DELAY_2 );     // ACMD6 SET_BUS_WIDTH
     cycle_sd_clk(64, SD_DELAY_2);
 
-    sd_command( 6'd17, 32'h00000000, 7'h2a, SD_DELAY_2 );    // CMD17  READ_SINGLE_BLOCK
-    cycle_sd_clk(1000000, SD_DELAY_2);
+    //sd_command( 6'd17, 32'h00000000, 7'h2a, SD_DELAY_2 );    // CMD17  READ_SINGLE_BLOCK
+    //cycle_sd_clk(100000, SD_DELAY_2);
 
-    sd_command( 6'd17, 32'h00000000, 7'h2a, SD_DELAY_2 );    // CMD17  READ_SINGLE_BLOCK
-    cycle_sd_clk(1000000, SD_DELAY_2);
+    // sd_command( 6'd18, 32'h00000000, 7'h70, SD_DELAY_2 );    // CMD17  READ_MULTIPLE_BLOCK
+    // cycle_sd_clk(100000, SD_DELAY_2);
+
+    // sd_command( 6'd12, 32'h00000000, 7'h30, SD_DELAY_2 );    // CMD12  STOP_TRANSMISSION
+    // cycle_sd_clk(100000, SD_DELAY_2);
+
+    // sd_command( 6'd4, 32'h00000001, 7'h2b, SD_DELAY_2 );     // CMD4  SET_DSR
+    // cycle_sd_clk(100000, SD_DELAY_2);
+
+    // sd_command( 6'd17, 32'h00000000, 7'h2a, SD_DELAY_2 );    // CMD17  READ_SINGLE_BLOCK
+    // cycle_sd_clk(100000, SD_DELAY_2);
+
+    // start another block read before first finishes
+    sd_command( 6'd18, 32'h00000000, 7'h70, SD_DELAY_2 );    // CMD18  READ_MULTIPLE_BLOCK
+    cycle_sd_clk(92700, SD_DELAY_2);
+
+    sd_command( 6'd12, 32'h00000000, 7'h30, SD_DELAY_2 );    // CMD12 STOP_TRANSMISSION
+
+    cycle_sd_clk(1000, SD_DELAY_2);
+    sd_command( 6'd18, 32'h00000001, 7'h79, SD_DELAY_2 );    // CMD18  READ_MULTIPLE_BLOCK
+
+    cycle_sd_clk(100000, SD_DELAY_2);
+
+
+
+/** reset during read */
+//    /************************* Initialization Sequence ****************************/
+//    // Hold CS (dat[3]) high to enter SD mode
+//    sd_data_o = 4'b1111; sd_data_oe = 4'b1111;
+//    sd_command( 6'd0,  32'h00000000, 7'h4a, SD_DELAY_1 );    // CMD0   GO_IDLE_STATE
+//    sd_data_o = 4'b0000; sd_data_oe = 4'b0000;
+//    cycle_sd_clk(8, SD_DELAY_1);
+//
+//    sd_command( 6'd8,  32'h000001aa, 7'h43, SD_DELAY_1 );    // CMD8   SEND_IF_COND
+//    cycle_sd_clk(64, SD_DELAY_1);
+//
+//    sd_command( 6'd55, 32'h00000000, 7'h32, SD_DELAY_1 );    // CMD55  APP_CMD
+//    cycle_sd_clk(64, SD_DELAY_1);
+//    sd_command( 6'd41, 32'h40ff8000, 7'h0b, SD_DELAY_1 );    // ACMD41 SD_SEND_OP_COND
+//    cycle_sd_clk(64, SD_DELAY_1);
+//
+//    sd_command( 6'd2,  32'h00000000, 7'h26, SD_DELAY_1 );    // CMD2 ALL_SEND_CID
+//    cycle_sd_clk(150, SD_DELAY_1);
+//
+//    sd_command( 6'd3,  32'h00000000, 7'h10, SD_DELAY_1 );    // CMD3 SEND_RELATIVE_ADDR
+//    cycle_sd_clk(64, SD_DELAY_1);
+//
+//    sd_command( 6'd9,  32'h13370000, 7'h48, SD_DELAY_1 );    // CMD9 SEND_CSD
+//    cycle_sd_clk(150, SD_DELAY_1);
+//
+//    sd_command( 6'd7,  32'h13370000, 7'h5e, SD_DELAY_1 );    // CMD7 SELECT/DESELECT_CARD
+//    cycle_sd_clk(64, SD_DELAY_1);
+//
+//    sd_command( 6'd55, 32'h13370000, 7'h2d, SD_DELAY_1 );    // CMD55  APP_CMD
+//    cycle_sd_clk(64, SD_DELAY_1);
+//    sd_command( 6'd42, 32'h00000000, 7'h28, SD_DELAY_1 );    // ACMD42 SET_CLR_CARD_DETECT
+//    cycle_sd_clk(64, SD_DELAY_1);
+//
+//
+//    /***************************** Transfer Mode ********************************/
+//    cycle_sd_clk(1000, SD_DELAY_2);
+//    
+//    sd_command( 6'd55, 32'h13370000, 7'h2d, SD_DELAY_2 );    // CMD55  APP_CMD
+//    cycle_sd_clk(64, SD_DELAY_2);
+//    sd_command( 6'd6, 32'h00000002, 7'h65, SD_DELAY_2 );     // ACMD6 SET_BUS_WIDTH
+//    cycle_sd_clk(64, SD_DELAY_2);
+//
+//    //sd_command( 6'd17, 32'h00000000, 7'h2a, SD_DELAY_2 );    // CMD17  READ_SINGLE_BLOCK
+//    //cycle_sd_clk(100000, SD_DELAY_2);
+//
+//    // sd_command( 6'd18, 32'h00000000, 7'h70, SD_DELAY_2 );    // CMD17  READ_MULTIPLE_BLOCK
+//    // cycle_sd_clk(100000, SD_DELAY_2);
+//
+//    // sd_command( 6'd12, 32'h00000000, 7'h30, SD_DELAY_2 );    // CMD12  STOP_TRANSMISSION
+//    // cycle_sd_clk(100000, SD_DELAY_2);
+//
+//    // sd_command( 6'd4, 32'h00000001, 7'h2b, SD_DELAY_2 );     // CMD4  SET_DSR
+//    // cycle_sd_clk(100000, SD_DELAY_2);
+//
+//    sd_command( 6'd17, 32'h00000000, 7'h2a, SD_DELAY_2 );    // CMD17  READ_SINGLE_BLOCK
+//    cycle_sd_clk(100000, SD_DELAY_2);
+/** end reset during read **/
+
+    // sd_command( 6'd6, 32'h00fffff1, 7'hf, SD_DELAY_2 );     // CMD17  READ_SINGLE_BLOCK
+    // cycle_sd_clk(100000, SD_DELAY_2);
+
+    // another one (does this trigger SPI flash read?)
+    // sd_command( 6'd17, 32'h00000000, 7'h2a, SD_DELAY_2 );    // CMD17  READ_SINGLE_BLOCK
+    // cycle_sd_clk(100000, SD_DELAY_2);
 
     // another one!
     // TODO: calculate proper CRC value

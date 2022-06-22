@@ -57,15 +57,15 @@ assign io_sd_cmd = sd_cmd_t ? 1'bZ : sd_cmd_o;
 assign sd_cmd_i = io_sd_cmd;
 
 wire [3:0] sd_dat_i, sd_dat_o, sd_dat_t;
-// assign io_sd_dat[0] = sd_dat_t[0] ? 1'bZ : sd_dat_o[0];
-// assign sd_dat_i[0] = io_sd_dat[0];
-// assign io_sd_dat[1] = sd_dat_t[1] ? 1'bZ : sd_dat_o[1];
-// assign sd_dat_i[1] = io_sd_dat[1];
-// assign io_sd_dat[2] = sd_dat_t[2] ? 1'bZ : sd_dat_o[2];
-// assign sd_dat_i[2] = io_sd_dat[2];
-// assign io_sd_dat[3] = sd_dat_t[3] ? 1'bZ : sd_dat_o[3];
-// assign sd_dat_i[3] = io_sd_dat[3];
-assign io_sd_dat = sd_dat_t ? 4'bZ : sd_dat_o;
+assign io_sd_dat[0] = sd_dat_t[0] ? 1'bZ : sd_dat_o[0];
+assign sd_dat_i[0] = io_sd_dat[0];
+assign io_sd_dat[1] = sd_dat_t[1] ? 1'bZ : sd_dat_o[1];
+assign sd_dat_i[1] = io_sd_dat[1];
+assign io_sd_dat[2] = sd_dat_t[2] ? 1'bZ : sd_dat_o[2];
+assign sd_dat_i[2] = io_sd_dat[2];
+assign io_sd_dat[3] = sd_dat_t[3] ? 1'bZ : sd_dat_o[3];
+assign sd_dat_i[3] = io_sd_dat[3];
+//assign io_sd_dat = sd_dat_t ? 4'bZ : sd_dat_o;
 
 // SB_IO #(
 //     .PIN_TYPE(6'b101001)

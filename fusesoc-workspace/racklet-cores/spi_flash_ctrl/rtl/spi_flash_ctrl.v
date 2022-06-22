@@ -2,7 +2,7 @@
 
 module spi_flash_ctrl #(
     parameter [10:0] BLOCK_SIZE = 512,
-    parameter [7:0]  SPI_CLK_DIV = 50
+    parameter [7:0]  SPI_CLK_DIV = 10
 ) (
     // connections to system logic
     input  wire         i_clk,              // System clock input
@@ -25,99 +25,117 @@ module spi_flash_ctrl #(
     initial begin
         o_spi_cs_n = 1;
         o_spi_clk = 1;
-        o_spi_mosi = 1;
     end
 
     // flash read FSM
-    localparam [3:0] S_IDLE         = 3'h0,
+    localparam [2:0] S_IDLE         = 3'h0,
                      S_START        = 3'h1,
                      S_SHIFT_CMD    = 3'h2,
                      S_SHIFT_ADDR   = 3'h3,
                      S_SHIFT_DATA   = 3'h4;
 
-    reg [3:0] state = S_IDLE;
+    reg [2:0] state = S_IDLE;
     localparam [7:0] READ_CMD = 8'h03;
 
-    reg [7:0]  spi_clk_cnt;
-    reg [3:0]  cmd_counter;
-    reg [7:0]  cmd_pipe;
-    reg [4:0]  addr_counter;
-    reg [23:0] addr_pipe;
+    reg        bit_done     = 0;
+    reg [3:0]  cmd_counter  = 0;
+    reg [7:0]  cmd_pipe     = 8'hf;
+    reg [4:0]  addr_counter = 0;
+    reg [23:0] addr_pipe    = 24'hffffff;
 
-    wire spi_clk_stb = (spi_clk_cnt == SPI_CLK_DIV-1);
-    always @(posedge i_clk)
-        if (spi_clk_stb) spi_clk_cnt <= 0;
+    // SPI clock strobe
+    reg [7:0]  spi_clk_cnt = 0;
+    always @(posedge i_clk) begin
+        if (spi_clk_stb || i_read_stb)
+            spi_clk_cnt <= SPI_CLK_DIV;
+        else
+            spi_clk_cnt <= spi_clk_cnt - 1;
+    end
+    wire spi_clk_stb = (spi_clk_cnt == 0);
 
     reg [7:0] read_byte = 0;
     reg [3:0] read_bits = 0;
     reg [10:0] read_bytes = 0; // number of bytes read
+
+    // mosi
+    always @(*) begin
+        case(state)
+            S_IDLE:       o_spi_mosi = 1'b1;
+            S_START:      o_spi_mosi = 1'b1;
+            S_SHIFT_CMD:  o_spi_mosi = cmd_pipe[7];
+            S_SHIFT_ADDR: o_spi_mosi = addr_pipe[23];
+            S_SHIFT_DATA: o_spi_mosi = 1'b1;
+            default:      o_spi_mosi = 1'b1;
+        endcase
+    end
 
     // fsm logic
     // TODO: rewrite with clear separation between combinational and sequential logic
     always @(posedge i_clk) begin
         o_write_bram_stb <= 1'b0;
         o_read_done_stb <= 1'b0;
-        spi_clk_cnt <= spi_clk_cnt + 1;
         case(state)
             S_IDLE: begin
+                o_spi_cs_n <= 1;
+                o_spi_clk <= 1;
+
                 // start read transaction
-                if (i_read_stb)
-                begin
+                if (i_read_stb) begin
                     state <= S_START;
 
-                    spi_clk_cnt <= 0;
                     o_spi_cs_n <= 0;
-                    cmd_pipe <= READ_CMD;
-                    addr_pipe <= i_read_addr;
-                end else
-                begin
-                    o_spi_cs_n <= 1;
+                    bit_done <= 0;
                 end
             end
-            
+
+            // "start" bit for asserting CS before command bits
             S_START: begin
-                state <= S_SHIFT_CMD;
-                // set index and write most significant bit
-                cmd_counter <= 7;
-                o_spi_mosi <= cmd_pipe[7];
-                cmd_pipe <= cmd_pipe << 1;
-                o_spi_clk <= 0;
+                if (spi_clk_stb) begin
+                    bit_done <= !bit_done;
+
+                    if (bit_done) begin
+                        state <= S_SHIFT_CMD;
+
+                        bit_done <= 0;
+                        cmd_pipe <= READ_CMD;
+                        cmd_counter <= 7;
+                        o_spi_clk <= 0;
+                    end
+                end
             end
             
             S_SHIFT_CMD: begin
                 if (spi_clk_stb) begin
-                    if (cmd_counter == 0 && o_spi_clk == 1)
-                    begin
-                        state <= S_SHIFT_ADDR;
+                    bit_done <= !bit_done;
+                    o_spi_clk <= !o_spi_clk;
 
-                        addr_counter <= 23;
-                        o_spi_mosi <= addr_pipe[23];
-                        addr_pipe <= addr_pipe << 1;
-                    end
+                    if (bit_done) begin
+                        if (cmd_counter == 0) begin
+                            state <= S_SHIFT_ADDR;
 
-                    if (o_spi_clk == 1)
-                    begin
-                        o_spi_mosi <= cmd_pipe[7];
+                            addr_pipe <= i_read_addr;
+                            addr_counter <= 23;
+                        end
+
                         cmd_counter <= cmd_counter-1;
                         cmd_pipe <= cmd_pipe << 1;
                     end
-                    o_spi_clk <= ~o_spi_clk;
                 end
             end
             
             S_SHIFT_ADDR: begin
-                if (spi_clk_stb) begin                    
-                    if (addr_counter == 0 && o_spi_clk == 1)
-                    begin
-                        state <= S_SHIFT_DATA;
-                    end
-                    if (o_spi_clk == 1)
-                    begin
-                        o_spi_mosi <= addr_pipe[23];
+                if (spi_clk_stb) begin  
+                    bit_done <= !bit_done;
+                    o_spi_clk <= !o_spi_clk;
+
+                    if (bit_done) begin
+                        if (addr_counter == 0) begin
+                            state <= S_SHIFT_DATA;
+                        end
+
                         addr_counter <= addr_counter-1;
                         addr_pipe <= addr_pipe << 1;
                     end
-                    o_spi_clk <= ~o_spi_clk;
                 end
             end
             
@@ -126,7 +144,7 @@ module spi_flash_ctrl #(
                     o_spi_clk <= ~o_spi_clk;
                     if (o_spi_clk == 0)
                     begin
-                        // shift bit in from MISO line
+                        // shift bit in from MISO line (msb first)
                         read_byte <= {read_byte[6:0], i_spi_miso};
                         read_bits <= read_bits+1;
 
@@ -134,7 +152,7 @@ module spi_flash_ctrl #(
                         if (read_bits == 7) begin
                             o_write_bram_stb <= 1;
                             o_write_bram_data <= {read_byte[6:0], i_spi_miso};
-                            o_write_bram_addr <= read_bytes;
+                            o_write_bram_addr <= read_bytes[9:0];
                         end
                     end else if (o_spi_clk == 1) begin
                         if (read_bits == 8) begin
@@ -146,6 +164,7 @@ module spi_flash_ctrl #(
                             if (read_bytes+1 == BLOCK_SIZE) begin
                                 state <= S_IDLE;
                                 read_bytes <= 0;
+                                o_spi_clk <= 1;
                                 o_read_done_stb <= 1'b1;
                             end
                         end
