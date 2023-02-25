@@ -1,0 +1,3 @@
+(fp_lib_table
+  (lib (name "racklet")(type "KiCad")(uri "${KIPRJMOD}/../libs/racklet-kicad-lib/racklet.pretty")(options "")(descr ""))
+)
