@@ -1,3 +1,6 @@
 [submodule "kicad-projects/libs/racklet-kicad-lib"]
 	path = kicad-projects/libs/racklet-kicad-lib
 	url = ../racklet-kicad-lib.git
+[submodule "kicad-projects/libs/kicad-pmod"]
+	path = kicad-projects/libs/kicad-pmod
+	url = git@github.com:chiplet/kicad-pmod.git
