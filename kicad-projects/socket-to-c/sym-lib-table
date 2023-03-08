@@ -1,0 +1,4 @@
+(sym_lib_table
+  (version 7)
+  (lib (name "racklet")(type "KiCad")(uri "${KIPRJMOD}/../libs/racklet-kicad-lib/racklet.kicad_sym")(options "")(descr ""))
+)
