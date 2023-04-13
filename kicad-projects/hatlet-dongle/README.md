@@ -12,6 +12,7 @@ A pin jumper is used to select the source of the +5VSB supply between:
 - USB type C connector
 - Banana jack
 
+## Pictures
 <table>
     <tr>
         <th>Front</th>
