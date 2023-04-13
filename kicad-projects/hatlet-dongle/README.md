@@ -12,5 +12,14 @@ A pin jumper is used to select the source of the +5VSB supply between:
 - USB type C connector
 - Banana jack
 
-![hatlet-dongle front view](./pictures/hatlet-dongle-0.1.0-front-alpha.png)
-![hatlet-dongle back view](./pictures/hatlet-dongle-0.1.0-back-alpha.png)
+<table>
+    <tr>
+        <th>Front</th>
+        <th>Back</th>
+    </tr>
+    <tr>
+        <td><img alt="hatlet-dongle front view" src=./pictures/hatlet-dongle-0.1.0-front-alpha.png></td>
+        <td><img alt="hatlet-dongle back view" src=./pictures/hatlet-dongle-0.1.0-back-alpha.png></td>
+    </tr>
+</table>
+
