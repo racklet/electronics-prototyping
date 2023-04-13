@@ -44,6 +44,7 @@ Cargo.lock
 *.sch-bak
 *~
 _autosave-*
+\#auto_saved_files#
 *-save.pro
 *-save.kicad_pcb
 *-cache.dcm
