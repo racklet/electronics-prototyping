@@ -5,6 +5,10 @@ hatlet is a small RP2040 dev board that:
 - uses the racklet backplane header for power input and USB communication
 - has buttons for bootsel _and_ reset!
 
+## Pinout
+![pinout diagram](./pinout.svg)
+
+## Pictures
 <table>
     <tr>
         <th>Front</th>
