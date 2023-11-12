@@ -4,3 +4,6 @@
 [submodule "kicad-projects/libs/kicad-pmod"]
 	path = kicad-projects/libs/kicad-pmod
 	url = git@github.com:chiplet/kicad-pmod.git
+[submodule "kicad-projects/libs/microsd_breakout"]
+	path = kicad-projects/libs/microsd_breakout
+	url = git@github.com:chiplet/microsd_breakout.git
