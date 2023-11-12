@@ -414,7 +414,7 @@
     "pinned_symbol_libs": []
   },
   "meta": {
-    "filename": "pmod-microsd-socket.kicad_pro",
+    "filename": "pmod-microsd-snooper.kicad_pro",
     "version": 1
   },
   "net_settings": {
