@@ -644,11 +644,6 @@
     (uuid ff9b2482-a950-4d36-a693-a27a743251d7)
   )
 
-  (text "Signal traces routed as single-ended 50Ω microstrips"
-    (at 76.835 57.785 0)
-    (effects (font (size 1.27 1.27)) (justify left bottom))
-    (uuid 1feecbe8-39de-4927-b157-aef96c4b7c8a)
-  )
   (text "SD card decoupling" (at 193.675 56.515 0)
     (effects (font (size 1.27 1.27)) (justify left bottom))
     (uuid 485bf54e-dddd-4040-b2d0-3777dabf7dd8)
@@ -707,7 +702,7 @@
     (pin "8" (uuid 18638f70-8d2f-4333-b25e-b8356f581e5b))
     (pin "9" (uuid 87ad4b9a-50a8-4929-8d58-19b85c1877ff))
     (instances
-      (project "pmod-microsd-socket"
+      (project "pmod-microsd-snooper"
         (path "/3e223295-1bcd-481b-890e-ced5dbc15ca3"
           (reference "J1") (unit 1)
         )
@@ -732,7 +727,7 @@
     )
     (pin "1" (uuid eebebfbe-4fd0-4c0f-9e79-3e2d6bcebf79))
     (instances
-      (project "pmod-microsd-socket"
+      (project "pmod-microsd-snooper"
         (path "/3e223295-1bcd-481b-890e-ced5dbc15ca3"
           (reference "#PWR013") (unit 1)
         )
@@ -757,7 +752,7 @@
     )
     (pin "1" (uuid f55f4986-1537-4a28-8fbc-32c87c0e1a79))
     (instances
-      (project "pmod-microsd-socket"
+      (project "pmod-microsd-snooper"
         (path "/3e223295-1bcd-481b-890e-ced5dbc15ca3"
           (reference "#PWR012") (unit 1)
         )
@@ -782,7 +777,7 @@
     )
     (pin "1" (uuid afaa132e-4b0d-4dff-b194-cb75adeaea78))
     (instances
-      (project "pmod-microsd-socket"
+      (project "pmod-microsd-snooper"
         (path "/3e223295-1bcd-481b-890e-ced5dbc15ca3"
           (reference "#PWR05") (unit 1)
         )
@@ -807,7 +802,7 @@
     )
     (pin "1" (uuid 98e0994c-e5d6-4347-8639-8beb6f9f1b84))
     (instances
-      (project "pmod-microsd-socket"
+      (project "pmod-microsd-snooper"
         (path "/3e223295-1bcd-481b-890e-ced5dbc15ca3"
           (reference "#PWR017") (unit 1)
         )
@@ -832,7 +827,7 @@
     )
     (pin "1" (uuid 7a07312a-edb1-496f-86ca-fe1dbfd79dc0))
     (instances
-      (project "pmod-microsd-socket"
+      (project "pmod-microsd-snooper"
         (path "/3e223295-1bcd-481b-890e-ced5dbc15ca3"
           (reference "#PWR01") (unit 1)
         )
@@ -858,7 +853,7 @@
     (pin "1" (uuid de326fa0-d2e9-442f-aad1-ebba0b480e43))
     (pin "2" (uuid bee156a0-1c9c-4f61-a3dd-913a78fde626))
     (instances
-      (project "pmod-microsd-socket"
+      (project "pmod-microsd-snooper"
         (path "/3e223295-1bcd-481b-890e-ced5dbc15ca3"
           (reference "C1") (unit 1)
         )
@@ -884,7 +879,7 @@
     (pin "1" (uuid 1ed5783a-cc3e-4ff6-a8d6-91b397d93e08))
     (pin "2" (uuid 71710bca-dcf0-4e5c-9f11-d54f4b7babe7))
     (instances
-      (project "pmod-microsd-socket"
+      (project "pmod-microsd-snooper"
         (path "/3e223295-1bcd-481b-890e-ced5dbc15ca3"
           (reference "C3") (unit 1)
         )
@@ -909,7 +904,7 @@
     )
     (pin "1" (uuid 9fa16b05-7a33-4fef-9cc7-435f29794ecc))
     (instances
-      (project "pmod-microsd-socket"
+      (project "pmod-microsd-snooper"
         (path "/3e223295-1bcd-481b-890e-ced5dbc15ca3"
           (reference "#PWR09") (unit 1)
         )
@@ -934,7 +929,7 @@
     )
     (pin "1" (uuid faa8f980-05f7-4e2b-956a-34575042ca65))
     (instances
-      (project "pmod-microsd-socket"
+      (project "pmod-microsd-snooper"
         (path "/3e223295-1bcd-481b-890e-ced5dbc15ca3"
           (reference "#PWR014") (unit 1)
         )
@@ -959,7 +954,7 @@
     )
     (pin "1" (uuid 70750d20-47a4-4247-94dd-09b2971df2b8))
     (instances
-      (project "pmod-microsd-socket"
+      (project "pmod-microsd-snooper"
         (path "/3e223295-1bcd-481b-890e-ced5dbc15ca3"
           (reference "#PWR06") (unit 1)
         )
@@ -984,7 +979,7 @@
     )
     (pin "1" (uuid e46c1abe-ce14-48a2-b833-daa4fe4a021d))
     (instances
-      (project "pmod-microsd-socket"
+      (project "pmod-microsd-snooper"
         (path "/3e223295-1bcd-481b-890e-ced5dbc15ca3"
           (reference "#PWR015") (unit 1)
         )
@@ -1009,7 +1004,7 @@
     )
     (pin "1" (uuid f15aa767-0af5-41e4-bd68-adc13830eb4a))
     (instances
-      (project "pmod-microsd-socket"
+      (project "pmod-microsd-snooper"
         (path "/3e223295-1bcd-481b-890e-ced5dbc15ca3"
           (reference "#PWR08") (unit 1)
         )
@@ -1034,7 +1029,7 @@
     )
     (pin "1" (uuid df051dda-7c3a-446f-9061-5e8c7fc6f8cd))
     (instances
-      (project "pmod-microsd-socket"
+      (project "pmod-microsd-snooper"
         (path "/3e223295-1bcd-481b-890e-ced5dbc15ca3"
           (reference "#PWR010") (unit 1)
         )
@@ -1070,7 +1065,7 @@
     (pin "8" (uuid d69871b1-2d45-43b9-b55a-ede155f8b59a))
     (pin "9" (uuid 3806299a-ff25-4a4e-8913-9676d6736763))
     (instances
-      (project "pmod-microsd-socket"
+      (project "pmod-microsd-snooper"
         (path "/3e223295-1bcd-481b-890e-ced5dbc15ca3"
           (reference "J4") (unit 1)
         )
@@ -1095,7 +1090,7 @@
     )
     (pin "1" (uuid f26686a7-9eda-4112-b340-60042800f6db))
     (instances
-      (project "pmod-microsd-socket"
+      (project "pmod-microsd-snooper"
         (path "/3e223295-1bcd-481b-890e-ced5dbc15ca3"
           (reference "#PWR02") (unit 1)
         )
@@ -1120,7 +1115,7 @@
     )
     (pin "1" (uuid 9e2d97e1-87f5-47fe-bed3-96c1dff57c09))
     (instances
-      (project "pmod-microsd-socket"
+      (project "pmod-microsd-snooper"
         (path "/3e223295-1bcd-481b-890e-ced5dbc15ca3"
           (reference "#PWR016") (unit 1)
         )
@@ -1155,7 +1150,7 @@
     (pin "8" (uuid c358a73d-499e-43cb-a56b-2e559e0e7c38))
     (pin "9" (uuid 0e0f8a4c-bd8e-4b0c-83de-6ec4e19a5d57))
     (instances
-      (project "pmod-microsd-socket"
+      (project "pmod-microsd-snooper"
         (path "/3e223295-1bcd-481b-890e-ced5dbc15ca3"
           (reference "J3") (unit 1)
         )
@@ -1180,7 +1175,7 @@
     )
     (pin "1" (uuid 317f0a99-3977-4292-9c03-33bf5524a4d8))
     (instances
-      (project "pmod-microsd-socket"
+      (project "pmod-microsd-snooper"
         (path "/3e223295-1bcd-481b-890e-ced5dbc15ca3"
           (reference "#PWR03") (unit 1)
         )
@@ -1206,7 +1201,7 @@
     (pin "1" (uuid 099b2656-8446-4b17-a7ac-021df66eec8f))
     (pin "2" (uuid d2ddb2c5-f05d-4890-950e-d10a01bd2c39))
     (instances
-      (project "pmod-microsd-socket"
+      (project "pmod-microsd-snooper"
         (path "/3e223295-1bcd-481b-890e-ced5dbc15ca3"
           (reference "C2") (unit 1)
         )
@@ -1232,7 +1227,7 @@
     (pin "1" (uuid 288b8c3e-6ac5-4782-be84-41a67059e51d))
     (pin "2" (uuid d6a38333-eb29-4583-a693-52a9eea7d0dc))
     (instances
-      (project "pmod-microsd-socket"
+      (project "pmod-microsd-snooper"
         (path "/3e223295-1bcd-481b-890e-ced5dbc15ca3"
           (reference "R1") (unit 1)
         )
@@ -1257,7 +1252,7 @@
     )
     (pin "1" (uuid 6fe8b908-e8d1-4f32-96cc-5c60418ad20e))
     (instances
-      (project "pmod-microsd-socket"
+      (project "pmod-microsd-snooper"
         (path "/3e223295-1bcd-481b-890e-ced5dbc15ca3"
           (reference "#PWR07") (unit 1)
         )
@@ -1282,7 +1277,7 @@
     )
     (pin "1" (uuid d2fce34b-369f-43ba-b04a-3718688f5b42))
     (instances
-      (project "pmod-microsd-socket"
+      (project "pmod-microsd-snooper"
         (path "/3e223295-1bcd-481b-890e-ced5dbc15ca3"
           (reference "#PWR04") (unit 1)
         )
@@ -1307,7 +1302,7 @@
     )
     (pin "1" (uuid 88cfa58d-0436-4bf2-8b89-afca17285b03))
     (instances
-      (project "pmod-microsd-socket"
+      (project "pmod-microsd-snooper"
         (path "/3e223295-1bcd-481b-890e-ced5dbc15ca3"
           (reference "#PWR011") (unit 1)
         )
